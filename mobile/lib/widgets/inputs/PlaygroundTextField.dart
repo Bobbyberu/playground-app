@@ -10,7 +10,7 @@ class PlaygroundTextField extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return new TextField(
-        cursorColor: Colors.blueGrey,
+        cursorColor: Theme.of(context).cursorColor,
         decoration: InputDecoration(
             hintText: hintText,
             fillColor: Colors.white,
@@ -45,21 +45,21 @@ class PlaygroundTextFormField extends StatelessWidget{
         decoration: new InputDecoration(
           border: OutlineInputBorder(
               borderSide: BorderSide(
-                  color: Colors.green,
+                  color: Theme.of(context).primaryColor,
                   width: 1
               )
           ),
           contentPadding: EdgeInsets.only(left: 24,top: 10,bottom: 10),
           hintText: this.hintText,
           hintStyle: TextStyle(
-            color: Colors.grey,
+            color: Theme.of(context).primaryColorLight,
             fontStyle: FontStyle.italic
           )
 
         ),
       style: TextStyle(
           fontSize: 22,
-          color: Colors.black87
+          color: Theme.of(context).primaryColorDark
       ),
 
     );

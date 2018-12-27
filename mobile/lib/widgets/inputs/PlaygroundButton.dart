@@ -17,7 +17,7 @@ class PlaygroundButton extends StatelessWidget {
         ),
       ),
       textColor: Colors.white,
-      color: Colors.green,
+      color: Theme.of(context).primaryColor,
       onPressed: _onTap,
       padding: EdgeInsets.only(left: 16, right: 16, bottom: 12, top: 12),
     );

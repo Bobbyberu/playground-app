@@ -18,7 +18,7 @@ class PlaygroundCheckboxState extends State<PlaygroundCheckbox> {
   Widget build(BuildContext context) {
     return Checkbox(
       value: widget.value,
-      activeColor: Colors.green,
+      activeColor: Theme.of(context).primaryColor,
       onChanged: widget.onChanged,
       tristate: true,
     );
