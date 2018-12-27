@@ -11,8 +11,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Playground',
       theme: ThemeData(
+        primarySwatch:      Colors.green,
         primaryColor:       Colors.green[500],
-        primaryColorLight:  Colors.grey[300]
+        primaryColorLight:  Colors.grey[300],
+        primaryColorDark:   Colors.green[900]
       ),
       home: new StartPage(),
     );
