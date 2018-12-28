@@ -124,8 +124,8 @@ class AddPlaygroundPageContainerState extends State<AddPlaygroundPageContainer> 
                                     child: new IconButton(
                                         icon: new Icon(Icons.camera_alt, color: Colors.white),
                                         onPressed: () async {
-                                          playgroundImg = await ImagePicker.pickImage(source: ImageSource.gallery);
-                                          setState(() {});
+                                          File selectedImg = await ImagePicker.pickImage(source: ImageSource.gallery);
+                                          setState(() { if(selectedImg != null) playgroundImg = selectedImg; });
                                         },
                                         splashColor: Theme.of(context).primaryColor
                                     )
