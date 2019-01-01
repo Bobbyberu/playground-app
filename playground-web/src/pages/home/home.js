@@ -31,9 +31,6 @@ export default class Home extends Component {
         })
     }
 
-    handleClick(){
-
-    }
 
     render() {
         return (
@@ -53,9 +50,6 @@ export default class Home extends Component {
                         </Popup>
                     </Marker>
                 </Map>
-                <button onClick={this.handleClick}>
-                    Add playground
-                </button>
             </div>
         );
     }

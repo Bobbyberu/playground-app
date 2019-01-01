@@ -3,8 +3,8 @@ h1 {
 }
 
 .fullscreen {
-    position: relative;
-    top: 0;
+    position: absolute;
+    top: 75px;
     left: 0;
     bottom: 50px;
     right: 0;
