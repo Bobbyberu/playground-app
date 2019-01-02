@@ -7,6 +7,7 @@ import ButtonAdd from "./add-playground/button-add";
 import ModalPlayground from "./add-playground/modal-playground"
 import PlaygroundAPI from '../../services/playground-api';
 import L from 'leaflet';
+import PlaygroundAPI from '../../services/playground-api';
 
 var Tools = require('../../services/tools');
 
