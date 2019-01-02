@@ -3,6 +3,8 @@ import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
 import PlaygroundDetails from '../playground-details/playground-details';
 import './home.css';
 import NavBar from "../../common-components/nav-bar/nav-bar";
+import PlaygroundAPI from '../../services/playground-api';
+
 var Tools = require('../../services/tools');
 
 export default class Home extends Component {
@@ -13,12 +15,14 @@ export default class Home extends Component {
             zoom: 15,
             name: '',
             adress: '',
+            playgrounds: undefined
         }
+        this.api = new PlaygroundAPI();
     }
 
     componentDidMount() {
         let currentLocation, currentName, currentAdress;
-        Tools.getLocation(function(position) {
+        Tools.getLocation(function (position) {
             currentLocation = [position.coords.latitude, position.coords.longitude];
             this.setState({
                 location: currentLocation
@@ -30,10 +34,17 @@ export default class Home extends Component {
             name: 'Abdel la cisah akay limpulsif',
             adress: '53 rue des pruniers 69007 Lyon',
         })
+        this.api.getSearchResult('test')
+            .then((response) => {
+                this.setState({
+                    playgrounds: response
+                });
+            });
     }
 
 
     render() {
+        console.log(this.state.playgrounds);
         return (
             <div>
                 <NavBar />

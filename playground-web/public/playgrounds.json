@@ -1,0 +1,85 @@
+{
+    "result": [
+        {
+            "id": 1,
+            "name": "playground IUT",
+            "private": false,
+            "latitude": 45.785501,
+            "longitude": 4.882760,
+            "list_players": null,
+            "average_mark": 3.5,
+            "sports": [
+                {
+                    "id": 1,
+                    "name": "Basketball"
+                },
+                {
+                    "id": 4,
+                    "name": "Voleyball"
+                },
+                {
+                    "id": 11,
+                    "name": "Course à pied"
+                }
+            ],
+            "couvert": false,
+            "description": "Playground cool pour les iut",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Empty_set.svg/600px-Empty_set.svg.png",
+            "surface": "Dur"
+        },
+        {
+            "id": 7,
+            "name": "Gymnase Colette Besson",
+            "private": true,
+            "latitude": 45.784994,
+            "longitude": 4.873195,
+            "list_players": null,
+            "average_mark": 4.9,
+            "sports": [
+                {
+                    "id": 1,
+                    "name": "Basketball"
+                },
+                {
+                    "id": 3,
+                    "name": "Handball"
+                },
+                {
+                    "id": 16,
+                    "name": "Musculation"
+                }
+            ],
+            "couvert": true,
+            "description": "Gymnase multi-sport appartenant à l'INSA",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Empty_set.svg/600px-Empty_set.svg.png",
+            "surface": "Dur"
+        },
+        {
+            "id": 12,
+            "name": "Gymnase UFRAPS",
+            "private": true,
+            "latitude": 45.781167,
+            "longitude": 4.862988,
+            "list_players": null,
+            "average_mark": 4.9,
+            "sports": [
+                {
+                    "id": 9,
+                    "name": "Badminton"
+                },
+                {
+                    "id": 3,
+                    "name": "Handball"
+                },
+                {
+                    "id": 8,
+                    "name": "Escalade"
+                }
+            ],
+            "couvert": true,
+            "description": "Gymnase multi-sport pour les étudiants de Lyon 1",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Empty_set.svg/600px-Empty_set.svg.png",
+            "surface": "Dur"
+        }
+    ]
+}
