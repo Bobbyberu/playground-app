@@ -115,22 +115,29 @@ class AddPlaygroundPageContainerState extends State<AddPlaygroundPageContainer> 
                   // Photo
                   new Container(
                     constraints: new BoxConstraints.expand(
-                      height: 180
+                      height: 160
                     ),
                     child: new Stack(
                       fit: StackFit.passthrough,
                       children: <Widget>[
                         (playgroundImg == null) ?
-                          Image.asset(
-                            'images/default_playground.png',
-                            fit: BoxFit.fitWidth,
-                            height: 180.0,
-
+                          new Container(
+                            height: 160,
+                            color: Theme.of(context).primaryColorDark,
+                            child: Image.asset(
+                              'images/default_playground.png',
+                              fit: BoxFit.cover,
+                              height: 160.0,
+                            )
                           ) :
-                          Image.file(
-                            playgroundImg,
-                            fit: BoxFit.fitWidth,
-                            height: 180.0,
+                          new Container(
+                            height: 160,
+                            color: Theme.of(context).primaryColorDark,
+                            child: Image.file(
+                              playgroundImg,
+                              fit: BoxFit.fitWidth,
+                              height: 160.0,
+                            )
                           ),
                         new Positioned(
                             bottom: 4,
@@ -192,13 +199,13 @@ class AddPlaygroundPageContainerState extends State<AddPlaygroundPageContainer> 
 
                                   new Padding(
                                       padding: EdgeInsets.only(left: 12),
-                                      child: new PlaygroundFormLabel("24 Rue Anatole Talent")
+                                      child: new PlaygroundFormLabel("Adresse")
                                   ),
                                   new Padding(
                                     padding: EdgeInsets.all(12),
                                     child: new PlaygroundTextFormField(
                                         value: newPlayground.name,
-                                        hintText: "Adresse",
+                                        hintText: "24 Rue Anatole Talent",
                                         obscureText: false,
                                         validator : (value) {
                                           if(value.isEmpty) return "Le champ Adresse est obligatoire";
@@ -221,13 +228,13 @@ class AddPlaygroundPageContainerState extends State<AddPlaygroundPageContainer> 
                                           children: <Widget>[
 
                                             new Padding(
-                                                padding: EdgeInsets.all(8),
+                                                padding: EdgeInsets.all(4),
                                                 child: new Row(
                                                   mainAxisSize: MainAxisSize.max,
                                                   mainAxisAlignment: MainAxisAlignment.start,
                                                   children: [
                                                     new PlaygroundFormLabel("Sports"),
-                                                    new IconButton(icon: new Icon(Icons.add), onPressed: () {
+                                                    new IconButton(icon: new Icon(Icons.add_circle, color: Theme.of(context).primaryColor), onPressed: () {
                                                       _openDialogAddItemSelection(context);
                                                     })
                                                   ]
@@ -274,7 +281,7 @@ class AddPlaygroundPageContainerState extends State<AddPlaygroundPageContainer> 
                                     child: new PlaygroundTextFormField(
                                       hintText: "Le terrain offre 4 paniers et deux cages",
                                       obscureText: false,
-                                      maxLines: 4,
+                                      maxLines: 3,
                                       onSaved: (value) {
                                         newPlayground.description = value.trim();
                                       },

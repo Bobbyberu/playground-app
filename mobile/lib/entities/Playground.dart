@@ -13,6 +13,7 @@ class Playground {
   double averageMark;
   Set<Sport> sports;
   bool isCovered;
+  String imgPath;
   String description;
 
   Playground(){
@@ -23,6 +24,7 @@ class Playground {
     this.longitude = 0;
     this.averageMark = 0;
     this.isCovered = false;
+    this.imgPath = "";
     this.description = "";
 
     this.listPlayers = Set<User>();

@@ -50,27 +50,38 @@ class PlaygroundSportSelectionState extends State<PlaygroundSportSelection> {
     return new Scaffold(
       appBar: new AppBar(),
       body: new Material(
-        child: new Padding(
-          padding: EdgeInsets.all(8),
-          child: new Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              new PlaygroundFormLabel("Selectionner des sports"),
-              new Container(
-                child: new Column(
-                  children: listSports,
-                ),
+
+        child: new SingleChildScrollView(
+
+          child: new ConstrainedBox(
+            constraints: new BoxConstraints(),
+            child: new Padding(
+              padding: EdgeInsets.all(8),
+              child: new Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                   new Padding(
+                     padding: EdgeInsets.all(8),
+                     child: new PlaygroundFormLabel("Selectionner des sports")
+                   ),
+
+                    new Column(
+                      children: listSports,
+                    ),
+
+                  new PlaygroundButton(
+                    "Valider",
+                    () {
+                      Navigator.of(context).pop(selectedSports);
+                    }
+                  )
+                ],
               ),
-  
-              new PlaygroundButton(
-                "Valider",
-                () {
-                  Navigator.of(context).pop(selectedSports);
-                }
-              )
-            ],
-          ),
-        ),
+            ),
+          )
+
+       )
+
       )
     );
   }

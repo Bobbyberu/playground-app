@@ -59,7 +59,7 @@ class PlaygroundTextFormField extends StatelessWidget{
 
       ),
       style: TextStyle(
-          fontSize: 22,
+          fontSize: 16,
           color: Theme.of(context).primaryColorDark
       ),
       keyboardType: TextInputType.multiline,

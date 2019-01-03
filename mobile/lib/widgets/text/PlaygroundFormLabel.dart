@@ -11,7 +11,7 @@ class PlaygroundFormLabel extends StatelessWidget {
     return new Text(
       this.text,
       style: new TextStyle(
-          fontSize: 22
+          fontSize: 16
       )
     );
   }
