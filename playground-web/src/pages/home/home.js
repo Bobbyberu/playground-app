@@ -9,7 +9,7 @@ var Tools = require('../../services/tools');
 
 export default class Home extends Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             location: undefined,
             zoom: 15,
@@ -50,8 +50,7 @@ export default class Home extends Component {
                 <NavBar />
                 <Map center={this.state.location} zoom={this.state.zoom} className="fullscreen">
                     <TileLayer
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                        url="https://api.mapbox.com/styles/v1/playground-app/cjqgjco2v0en02squr5fkrcb9/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoicGxheWdyb3VuZC1hcHAiLCJhIjoiY2pxZ2piYXdhMDBkOTQzcG5zcG9idWNrMCJ9.H64SLGKZlHfQeDTBGidTqQ"
                     />
                     <Marker position={this.state.location}>
                         <Popup>
