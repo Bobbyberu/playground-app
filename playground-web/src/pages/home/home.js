@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
 import PlaygroundDetails from '../playground-details/playground-details';
 import './home.css';
+import NavBar from "../../common-components/nav-bar/nav-bar";
 var Tools = require('../../services/tools');
 
 export default class Home extends Component {
@@ -35,6 +36,7 @@ export default class Home extends Component {
     render() {
         return (
             <div>
+                <NavBar />
                 <Map center={this.state.location} zoom={this.state.zoom} className="fullscreen">
                     <TileLayer
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
