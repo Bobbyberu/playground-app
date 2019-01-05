@@ -14,14 +14,18 @@ class PlaygroundMarker extends Marker {
       width: 50.0,
       height: 50.0,
       builder: (context) => new Container(
-        child: IconButton(
+        child: new InkWell(
+          child: Image.asset("images/playgroundMarker.png", width: 30, height: 30,),
+          onTap: onPressed,
+        ) 
+          /*IconButton(
           icon: Icon(Icons.location_on),
           splashColor: Colors.green[100],
           highlightColor: Colors.green[100],
           color: Colors.green[500],
           iconSize: 50.0,
           onPressed: onPressed
-        ),
+        )*/,
       )
   );
 

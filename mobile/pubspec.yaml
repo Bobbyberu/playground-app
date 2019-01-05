@@ -18,6 +18,7 @@ dependencies:
   flutter_launcher_icons: "^0.7.0"
   image_picker:
   flutter_map: ^0.1.4
+  splashscreen:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -41,8 +42,10 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - images/logo_alpha.png
     - images/default_playground.png
     - images/playground_placeholder.png
+    - images/playgroundMarker.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

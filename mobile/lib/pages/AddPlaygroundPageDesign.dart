@@ -8,6 +8,8 @@ import 'package:Playground/widgets/inputs/PlaygroundButton.dart';
 import 'package:Playground/widgets/inputs/PlaygroundCheckbox.dart';
 import 'package:Playground/widgets/inputs/PlaygroundSportSelection.dart';
 import 'package:Playground/widgets/inputs/PlaygroundTextField.dart';
+import 'package:Playground/widgets/style/PlaygorundTextFieldStyle.dart';
+import 'package:Playground/widgets/style/PlaygroundLabelStyle.dart';
 import 'package:Playground/widgets/text/PlaygroundFormLabel.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -135,7 +137,7 @@ class AddPlaygroundPageContainerState extends State<AddPlaygroundPageContainer> 
                             color: Theme.of(context).primaryColorDark,
                             child: Image.file(
                               playgroundImg,
-                              fit: BoxFit.fitWidth,
+                              fit: BoxFit.cover,
                               height: 160.0,
                             )
                           ),
@@ -180,14 +182,14 @@ class AddPlaygroundPageContainerState extends State<AddPlaygroundPageContainer> 
 
                                   new Padding(
                                       padding: EdgeInsets.only(left: 12),
-                                      child: new PlaygroundFormLabel("Nom")
+                                      child: new Text("Nom", style: PlaygroundLabelStyle.getStyle(context))
                                   ),
                                   new Padding(
                                     padding: EdgeInsets.all(12),
-                                    child: new PlaygroundTextFormField(
-                                        value: newPlayground.name,
-                                        hintText: "Terrain Dinton",
-                                        obscureText: false,
+                                    child: new TextFormField(
+                                        initialValue: newPlayground.name,
+                                        style: PlaygroundTextFieldStyle.getStyle(context),
+                                        decoration: PlaygroundTextFieldStyle.getDecoration(context, "Terrain Dinton"),
                                         validator : (value) {
                                           if(value.isEmpty) return "Le champ Nom est obligatoire";
                                         },
@@ -199,14 +201,13 @@ class AddPlaygroundPageContainerState extends State<AddPlaygroundPageContainer> 
 
                                   new Padding(
                                       padding: EdgeInsets.only(left: 12),
-                                      child: new PlaygroundFormLabel("Adresse")
+                                      child: new Text("Adresse", style: PlaygroundLabelStyle.getStyle(context))
                                   ),
                                   new Padding(
                                     padding: EdgeInsets.all(12),
-                                    child: new PlaygroundTextFormField(
-                                        value: newPlayground.name,
-                                        hintText: "24 Rue Anatole Talent",
-                                        obscureText: false,
+                                    child: new TextFormField(
+                                        style: PlaygroundTextFieldStyle.getStyle(context),
+                                        decoration: PlaygroundTextFieldStyle.getDecoration(context, "24 Rue Anatole Talent"),
                                         validator : (value) {
                                           if(value.isEmpty) return "Le champ Adresse est obligatoire";
                                         },
@@ -233,7 +234,7 @@ class AddPlaygroundPageContainerState extends State<AddPlaygroundPageContainer> 
                                                   mainAxisSize: MainAxisSize.max,
                                                   mainAxisAlignment: MainAxisAlignment.start,
                                                   children: [
-                                                    new PlaygroundFormLabel("Sports"),
+                                                    new Text("Sports", style: PlaygroundLabelStyle.getStyle(context)),
                                                     new IconButton(icon: new Icon(Icons.add_circle, color: Theme.of(context).primaryColor), onPressed: () {
                                                       _openDialogAddItemSelection(context);
                                                     })
@@ -274,14 +275,15 @@ class AddPlaygroundPageContainerState extends State<AddPlaygroundPageContainer> 
 
                                   new Padding(
                                       padding: EdgeInsets.only(left: 12),
-                                      child: new PlaygroundFormLabel("Description")
+                                      child: new Text("Description", style: PlaygroundLabelStyle.getStyle(context))
                                   ),
                                   new Padding(
                                     padding: EdgeInsets.all(12),
-                                    child: new PlaygroundTextFormField(
-                                      hintText: "Le terrain offre 4 paniers et deux cages",
-                                      obscureText: false,
+                                    child: new TextFormField(
+                                      style: PlaygroundTextFieldStyle.getStyle(context),
+                                      decoration: PlaygroundTextFieldStyle.getDecoration(context, "Le terrain offre 4 paniers et deux cages"),
                                       maxLines: 3,
+                                      keyboardType: TextInputType.multiline,
                                       onSaved: (value) {
                                         newPlayground.description = value.trim();
                                       },
@@ -306,7 +308,7 @@ class AddPlaygroundPageContainerState extends State<AddPlaygroundPageContainer> 
                                                     });
                                                   }
                                               ),
-                                              new PlaygroundFormLabel("Privé")
+                                              new Text("Privé", style: PlaygroundLabelStyle.getStyle(context))
                                             ],
                                           )
                                       ),
@@ -324,7 +326,7 @@ class AddPlaygroundPageContainerState extends State<AddPlaygroundPageContainer> 
                                                     });
                                                   }
                                               ),
-                                              new PlaygroundFormLabel("Couvert")
+                                              new Text("Couvert", style: PlaygroundLabelStyle.getStyle(context))
                                             ],
                                           )
                                       )
