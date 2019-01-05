@@ -4,9 +4,9 @@ h1 {
 
 .fullscreen {
     position: absolute;
-    top: 75px;
+    top: 65px;
     left: 0;
-    bottom: 50px;
+    bottom: 0;
     right: 0;
     overflow: auto;
 }
