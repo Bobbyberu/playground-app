@@ -26,7 +26,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<User> getUsersById(@PathVariable(value = "id") Long userId) throws ResourceNotFoundException {
+    public ResponseEntity<User> getUsersById(@PathVariable(value = "id") int userId) throws ResourceNotFoundException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
         return new ResponseEntity<>(user, HttpStatus.OK);
@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable(value = "id") Long userId, @Valid @RequestBody User userDetails)
+    public ResponseEntity<User> updateUser(@PathVariable(value = "id") int userId, @Valid @RequestBody User userDetails)
             throws ResourceNotFoundException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
@@ -60,7 +60,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public Map<String, Boolean> deleteUser(@PathVariable(value = "id") Long userId) throws ResourceNotFoundException {
+    public Map<String, Boolean> deleteUser(@PathVariable(value = "id") int userId) throws ResourceNotFoundException {
         User user = userRepository.findById(userId)
                         .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
         userRepository.delete(user);
