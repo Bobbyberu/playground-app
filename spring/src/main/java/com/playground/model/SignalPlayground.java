@@ -4,21 +4,22 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
+
 @Entity
-@Table(name = "signal_comment")
+@Table(name = "signal_playground")
 @EntityListeners(AuditingEntityListener.class)
-public class signalComment {
+public class SignalPlayground {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     @OneToOne
-    private Comment comment;
-    @OneToOne
     private User author;
+    @OneToOne
+    private Playground playground;
     private String description;
 
-    public signalComment() {
+    public SignalPlayground() {
     }
 
     public int getId() {
@@ -29,20 +30,20 @@ public class signalComment {
         this.id = id;
     }
 
-    public Comment getComment() {
-        return comment;
-    }
-
-    public void setComment(Comment comment) {
-        this.comment = comment;
-    }
-
     public User getAuthor() {
         return author;
     }
 
     public void setAuthor(User author) {
         this.author = author;
+    }
+
+    public Playground getPlayground() {
+        return playground;
+    }
+
+    public void setPlayground(Playground playground) {
+        this.playground = playground;
     }
 
     public String getDescription() {
