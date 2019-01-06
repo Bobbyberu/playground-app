@@ -26,7 +26,7 @@ public class SportController {
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<Sport> getSportsById(@PathVariable(value = "id") Long sportId) throws ResourceNotFoundException {
+    public ResponseEntity<Sport> getSportsById(@PathVariable(value = "id") int sportId) throws ResourceNotFoundException {
         Sport sport = sportRepository.findById(sportId)
                 .orElseThrow(() -> new ResourceNotFoundException("Sport with id " + sportId + " not found"));
         return new ResponseEntity<>(sport, HttpStatus.OK);
@@ -38,7 +38,7 @@ public class SportController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Sport> updateSport(@PathVariable(value = "id") Long sportId, @Valid @RequestBody Sport sportDetails)
+    public ResponseEntity<Sport> updateSport(@PathVariable(value = "id") int sportId, @Valid @RequestBody Sport sportDetails)
             throws ResourceNotFoundException {
         Sport sport = sportRepository.findById(sportId)
                 .orElseThrow(() -> new ResourceNotFoundException("Sport with id " + sportId + " not found"));
@@ -48,7 +48,7 @@ public class SportController {
     }
 
     @DeleteMapping("/{id}")
-    public Map<String, Boolean> deleteSport(@PathVariable(value = "id") Long sportId) throws ResourceNotFoundException {
+    public Map<String, Boolean> deleteSport(@PathVariable(value = "id") int sportId) throws ResourceNotFoundException {
         Sport sport = sportRepository.findById(sportId)
                 .orElseThrow(() -> new ResourceNotFoundException("Sport with id " + sportId + " not found"));
         sportRepository.delete(sport);
