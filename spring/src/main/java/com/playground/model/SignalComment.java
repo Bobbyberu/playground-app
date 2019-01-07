@@ -12,9 +12,9 @@ public class SignalComment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    @OneToOne
+    @ManyToOne
     private Comment comment;
-    @OneToOne
+    @ManyToOne
     private User author;
     private String description;
 

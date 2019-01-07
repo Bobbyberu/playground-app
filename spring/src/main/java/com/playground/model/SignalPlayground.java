@@ -13,9 +13,9 @@ public class SignalPlayground {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    @OneToOne
+    @ManyToOne
     private User author;
-    @OneToOne
+    @ManyToOne
     private Playground playground;
     private String description;
 

@@ -5,16 +5,16 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "hours")
+@Table(name = "comment")
 @EntityListeners(AuditingEntityListener.class)
 public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    @OneToOne
+    @ManyToOne
     private Playground playground;
-    @OneToOne
+    @ManyToOne
     private User author;
     private boolean archived;
     private String comment;
