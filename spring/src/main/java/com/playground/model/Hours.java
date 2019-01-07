@@ -13,7 +13,7 @@ public class Hours {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    @OneToOne
+    @ManyToOne
     private Playground playground;
     private Date Opening;
     private Date close;
