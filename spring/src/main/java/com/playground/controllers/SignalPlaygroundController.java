@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +22,12 @@ public class SignalPlaygroundController {
     private SignalPlaygroundRepository signalPlaygroundRepository;
 
     @GetMapping(value = "/", produces = "application/json")
-    public List<SignalPlayground> getAllSignalPlaygrounds() {
-        return signalPlaygroundRepository.findAll();
+    public ResponseEntity<List<SignalPlayground>> getAllSignalPlaygrounds() {
+        ArrayList<SignalPlayground> listSignalPlaygrounds = new ArrayList<>();
+        for (SignalPlayground signalPlayground : signalPlaygroundRepository.findAll()) {
+            listSignalPlaygrounds.add(signalPlayground);
+        }
+        return new ResponseEntity<>(listSignalPlaygrounds,HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")

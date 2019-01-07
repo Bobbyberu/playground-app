@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +22,12 @@ public class SportController {
     private SportRepository sportRepository;
 
     @GetMapping(value = "/", produces = "application/json")
-    public List<Sport> getAllSports() {
-        return sportRepository.findAll();
+    public ResponseEntity<List<Sport>> getAllSports() {
+        ArrayList<Sport> listSports = new ArrayList<>();
+        for (Sport sport : sportRepository.findAll()) {
+            listSports.add(sport);
+        }
+        return new ResponseEntity<>(listSports,HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")

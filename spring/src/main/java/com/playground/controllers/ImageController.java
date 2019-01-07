@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +22,12 @@ public class ImageController {
     private ImageRepository imageRepository;
 
     @GetMapping(value = "/", produces = "application/json")
-    public List<Image> getAllImages() {
-        return imageRepository.findAll();
+    public ResponseEntity<List<Image>> getAllImages() {
+        ArrayList<Image> listImages = new ArrayList<>();
+        for (Image image : imageRepository.findAll()) {
+            listImages.add(image);
+        }
+        return new ResponseEntity<>(listImages,HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")

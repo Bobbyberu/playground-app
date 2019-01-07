@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.xml.ws.Response;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +23,12 @@ public class SessionController {
     private SessionRepository sessionRepository;
 
     @GetMapping(value = "/", produces = "application/json")
-    public List<Session> getAllSessions() {
-        return sessionRepository.findAll();
+    public ResponseEntity<List<Session>> getAllSessions() {
+        ArrayList<Session> listSessions = new ArrayList<>();
+        for (Session session : sessionRepository.findAll()) {
+            listSessions.add(session);
+        }
+        return new ResponseEntity<>(listSessions,HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")

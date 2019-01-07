@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +22,12 @@ public class CommentController {
     private CommentRepository commentRepository;
 
     @GetMapping(value = "/", produces = "application/json")
-    public List<Comment> getAllComments() {
-        return commentRepository.findAll();
+    public ResponseEntity<List<Comment>> getAllComments() {
+        ArrayList<Comment> listComments = new ArrayList<>();
+        for (Comment comment : commentRepository.findAll()) {
+            listComments.add(comment);
+        }
+        return new ResponseEntity<>(listComments,HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")
