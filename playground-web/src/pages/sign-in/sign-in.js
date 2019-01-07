@@ -9,7 +9,6 @@ export default class SignIn extends Component {
         return (
             <div>
                 <h1>SignIn</h1>
-                <Searchbar />
             </div>
         )
     }
