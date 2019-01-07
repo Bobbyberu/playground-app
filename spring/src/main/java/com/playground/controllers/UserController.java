@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +22,12 @@ public class UserController {
     private UserRepository userRepository;
 
     @GetMapping(value = "/", produces = "application/json")
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public ResponseEntity<List<User>> getAllUsers() {
+        ArrayList<User> listUsers = new ArrayList<>();
+        for (User user : userRepository.findAll()) {
+            listUsers.add(user);
+        }
+        return new ResponseEntity<>(listUsers,HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")

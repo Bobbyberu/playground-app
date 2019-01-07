@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +22,12 @@ public class HoursController {
     private HoursRepository hoursRepository;
 
     @GetMapping(value = "/", produces = "application/json")
-    public List<Hours> getAllHourss() {
-        return hoursRepository.findAll();
+    public ResponseEntity<List<Hours>> getAllHours() {
+        ArrayList<Hours> listHours = new ArrayList<>();
+        for (Hours hours : hoursRepository.findAll()) {
+            listHours.add(hours);
+        }
+        return new ResponseEntity<>(listHours,HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +22,12 @@ public class RoleController {
     private RoleRepository roleRepository;
 
     @GetMapping(value = "/", produces = "application/json")
-    public List<Role> getAllRoles() {
-        return roleRepository.findAll();
+    public ResponseEntity<List<Role>> getAllRoles() {
+        ArrayList<Role> listRoles = new ArrayList<>();
+        for (Role role : roleRepository.findAll()) {
+            listRoles.add(role);
+        }
+        return new ResponseEntity<>(listRoles,HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")
