@@ -7,6 +7,7 @@ class Playground {
   int id;
   String name;
   bool isPrivate;
+  String adresse;
   double latitude;
   double longitude;
   Set<User> listPlayers;
@@ -19,6 +20,7 @@ class Playground {
   Playground(){
     this.id = 0;
     this.name = "";
+    this.adresse = "";
     this.isPrivate = false;
     this.latitude = 0;
     this.longitude = 0;

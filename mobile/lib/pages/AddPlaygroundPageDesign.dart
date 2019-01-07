@@ -2,15 +2,12 @@ import 'dart:io';
 
 import 'package:Playground/entities/Playground.dart';
 import 'package:Playground/entities/Sport.dart';
-import 'package:Playground/pages/MainPage.dart';
 import 'package:Playground/services/PlaygroundService.dart';
 import 'package:Playground/widgets/inputs/PlaygroundButton.dart';
 import 'package:Playground/widgets/inputs/PlaygroundCheckbox.dart';
 import 'package:Playground/widgets/inputs/PlaygroundSportSelection.dart';
-import 'package:Playground/widgets/inputs/PlaygroundTextField.dart';
 import 'package:Playground/widgets/style/PlaygorundTextFieldStyle.dart';
 import 'package:Playground/widgets/style/PlaygroundLabelStyle.dart';
-import 'package:Playground/widgets/text/PlaygroundFormLabel.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -355,7 +352,7 @@ class AddPlaygroundPageContainerState extends State<AddPlaygroundPageContainer> 
                                                 actions: <Widget>[
                                                   new FlatButton(
                                                     onPressed: () {
-                                                      Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (context) => new MainPage()));
+                                                      Navigator.pushReplacementNamed(context, '/home');
                                                     },
                                                     child: new Text("Ok"))
                                                 ],

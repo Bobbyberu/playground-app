@@ -103,7 +103,7 @@ class PlaygroundDetails extends StatelessWidget {
                             ),
 
                             new Text(
-                              "24 rue du plaisir, 69100 Lyon",
+                              this.playground.adresse,
                               style: new TextStyle(
                                 color: Colors.grey[700],
                               ),
