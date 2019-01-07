@@ -15,14 +15,14 @@ public class Session {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
-    @OneToOne
+    @ManyToOne
     private User creator;
-    @OneToOne
+    @ManyToOne
     private Playground playground;
     @OneToMany
     private Set<User> participants;
     private boolean isPrivate;
-    @OneToOne
+    @ManyToOne
     private Sport sport;
     private int maxPLayers;
     private Date date;

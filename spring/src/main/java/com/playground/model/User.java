@@ -27,7 +27,7 @@ public class User {
     @OneToMany
     private Set<Playground> favouritePlaygrounds;
     private String city;
-    @OneToOne
+    @ManyToOne
     private Role role;
     private boolean enabled;
     private boolean archived;
