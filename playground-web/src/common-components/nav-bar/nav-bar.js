@@ -35,7 +35,10 @@ const styles = {
         marginRight: 20,
     },
     root: {
-        positionAbsolute: true,
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        zIndex: 1000,
     },
     list: {
         width: 250,

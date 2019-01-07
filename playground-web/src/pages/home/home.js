@@ -3,6 +3,8 @@ import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
 import PlaygroundDetails from '../playground-details/playground-details';
 import './home.css';
 import NavBar from "../../common-components/nav-bar/nav-bar";
+import ButtonAdd from "./add-playground/button-add";
+import ModalPlayground from "./add-playground/modal-playground"
 var Tools = require('../../services/tools');
 
 export default class Home extends Component {
@@ -13,12 +15,14 @@ export default class Home extends Component {
             zoom: 15,
             name: '',
             adress: '',
+            // modale
+            isOpen: false,
         }
     }
 
     componentDidMount() {
         let currentLocation, currentName, currentAdress;
-        Tools.getLocation(function(position) {
+        Tools.getLocation(function (position) {
             currentLocation = [position.coords.latitude, position.coords.longitude];
             this.setState({
                 location: currentLocation
@@ -31,11 +35,17 @@ export default class Home extends Component {
             adress: '53 rue des pruniers 69007 Lyon',
         })
     }
+    
+    displayModal = () => {
+        this.setState({
+            isOpen: !this.state.isOpen
+        })
+    }
 
 
     render() {
         return (
-            <div>
+            <div className="home">
                 <NavBar />
                 <Map center={this.state.location} zoom={this.state.zoom} className="fullscreen">
                     <TileLayer
@@ -52,6 +62,9 @@ export default class Home extends Component {
                         </Popup>
                     </Marker>
                 </Map>
+                <ButtonAdd onClick={this.displayModal} />
+                <ModalPlayground show={this.state.isOpen}
+                    onClose={this.displayModal} />
             </div>
         );
     }
