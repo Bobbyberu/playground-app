@@ -44,7 +44,6 @@ export default class Home extends Component {
 
 
     render() {
-        console.log(this.state.playgrounds);
         return (
             <div>
                 <NavBar />

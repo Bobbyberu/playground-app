@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Searchbar from '../home/components/searchbar';
 
 export default class SignIn extends Component {
     constructor(props) {
@@ -10,7 +9,6 @@ export default class SignIn extends Component {
         return (
             <div>
                 <h1>SignIn</h1>
-                <Searchbar />
             </div>
         )
     }
