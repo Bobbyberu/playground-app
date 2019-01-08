@@ -3,6 +3,7 @@
         {
             "id": 1,
             "name": "playground IUT",
+            "address": "104 Boulevard Niels Bohr, 69100 Villeurbanne",
             "private": false,
             "latitude": 45.785501,
             "longitude": 4.882760,
@@ -30,6 +31,7 @@
         {
             "id": 7,
             "name": "Gymnase Colette Besson",
+            "address": "52 Boulevard Niels Bohr, 69100 Villeurbanne",
             "private": true,
             "latitude": 45.784994,
             "longitude": 4.873195,
@@ -57,6 +59,7 @@
         {
             "id": 12,
             "name": "Gymnase UFRAPS",
+            "address": "27 Boulevard du 11 Novembre 1918, 69100 Villeurbanne",
             "private": true,
             "latitude": 45.781167,
             "longitude": 4.862988,
@@ -84,6 +87,7 @@
         {
             "id": 21,
             "name": "City stade Villié-Morgon",
+            "address": "Rue Rabelais, 69910 Villié-Morgon",
             "private": false,
             "latitude": 46.162214,
             "longitude": 4.683728,
@@ -111,6 +115,7 @@
         {
             "id": 29,
             "name": "Gymnase Philippe Gardent",
+            "address": "Avenue de Verdun, 69220 Belleville",
             "private": false,
             "latitude": 46.101927,
             "longitude": 4.738398,
@@ -142,6 +147,7 @@
         {
             "id": 32,
             "name": "Stade de Roland Garros",
+            "address": "51 Boulevard d'Auteuil, 92100 Boulogne-Billancourt",
             "private": true,
             "latitude": 48.847543,
             "longitude": 2.246484,
@@ -161,6 +167,7 @@
         {
             "id": 44,
             "name": "Stade Geoffroy Guichard de l'ASSE",
+            "address": "14 Rue Paul et Pierre Guichard, 42000 Saint-Étienne",
             "private": true,
             "latitude": 45.460935,
             "longitude": 4.390138,

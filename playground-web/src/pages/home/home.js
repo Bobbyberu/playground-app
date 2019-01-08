@@ -4,8 +4,19 @@ import PlaygroundDetails from '../playground-details/playground-details';
 import './home.css';
 import NavBar from "../../common-components/nav-bar/nav-bar";
 import PlaygroundAPI from '../../services/playground-api';
+import L from 'leaflet';
 
 var Tools = require('../../services/tools');
+
+const playgroundMarkerIcon = new L.icon({
+    iconUrl: require('../../assets/img/playgroundMarker.png'),
+    iconRetinaUrl: require('../../assets/img/playgroundMarker.png'),
+    iconAnchor: [23, 50],
+    popupAnchor: [10, -44],
+    iconSize: [70, 70],
+    shadowSize: [68, 95],
+    shadowAnchor: [20, 92],
+});
 
 export default class Home extends Component {
     constructor(props) {
@@ -15,9 +26,10 @@ export default class Home extends Component {
             zoom: 15,
             name: '',
             adress: '',
-            playgrounds: undefined
+            playgrounds: []
         }
         this.api = new PlaygroundAPI();
+        this.renderPlaygrounds = this.renderPlaygrounds.bind(this);
     }
 
     componentDidMount() {
@@ -42,8 +54,27 @@ export default class Home extends Component {
             });
     }
 
+    renderPlaygrounds() {
+        let playgrounds = this.state.playgrounds;
+
+        return (
+            <div>
+                {playgrounds.map(playground => (
+                    <Marker position={[playground.latitude, playground.longitude]} icon={playgroundMarkerIcon}>
+                        <Popup>
+                            <PlaygroundDetails
+                                name={playground.name}
+                                adress={playground.address}
+                            />
+                        </Popup>
+                    </Marker>
+                ))}
+            </div>
+        );
+    }
 
     render() {
+        console.log(this.state.playgrounds);
         return (
             <div>
                 <NavBar />
@@ -51,15 +82,7 @@ export default class Home extends Component {
                     <TileLayer
                         url="https://api.mapbox.com/styles/v1/playground-app/cjqgjco2v0en02squr5fkrcb9/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoicGxheWdyb3VuZC1hcHAiLCJhIjoiY2pxZ2piYXdhMDBkOTQzcG5zcG9idWNrMCJ9.H64SLGKZlHfQeDTBGidTqQ"
                     />
-                    <Marker position={this.state.location}>
-                        <Popup>
-                            {/* Afficher le composant détails du playground avec les props associées au marqueur*/}
-                            <PlaygroundDetails
-                                name={this.state.name}
-                                adress={this.state.adress}
-                            />
-                        </Popup>
-                    </Marker>
+                    {this.renderPlaygrounds()}
                 </Map>
             </div>
         );
