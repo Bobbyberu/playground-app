@@ -1,0 +1,188 @@
+{
+    "result": [
+        {
+            "id": 1,
+            "name": "playground IUT",
+            "address": "104 Boulevard Niels Bohr, 69100 Villeurbanne",
+            "private": false,
+            "latitude": 45.785501,
+            "longitude": 4.882760,
+            "list_players": null,
+            "average_mark": 3.5,
+            "sports": [
+                {
+                    "id": 1,
+                    "name": "Basketball"
+                },
+                {
+                    "id": 4,
+                    "name": "Voleyball"
+                },
+                {
+                    "id": 11,
+                    "name": "Course à pied"
+                }
+            ],
+            "couvert": false,
+            "description": "Playground cool pour les iut",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Empty_set.svg/600px-Empty_set.svg.png",
+            "surface": "Dur"
+        },
+        {
+            "id": 7,
+            "name": "Gymnase Colette Besson",
+            "address": "52 Boulevard Niels Bohr, 69100 Villeurbanne",
+            "private": true,
+            "latitude": 45.784994,
+            "longitude": 4.873195,
+            "list_players": null,
+            "average_mark": 4.9,
+            "sports": [
+                {
+                    "id": 1,
+                    "name": "Basketball"
+                },
+                {
+                    "id": 3,
+                    "name": "Handball"
+                },
+                {
+                    "id": 16,
+                    "name": "Musculation"
+                }
+            ],
+            "couvert": true,
+            "description": "Gymnase multi-sport appartenant à l'INSA",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Empty_set.svg/600px-Empty_set.svg.png",
+            "surface": "Dur"
+        },
+        {
+            "id": 12,
+            "name": "Gymnase UFRAPS",
+            "address": "27 Boulevard du 11 Novembre 1918, 69100 Villeurbanne",
+            "private": true,
+            "latitude": 45.781167,
+            "longitude": 4.862988,
+            "list_players": null,
+            "average_mark": 4.9,
+            "sports": [
+                {
+                    "id": 9,
+                    "name": "Badminton"
+                },
+                {
+                    "id": 3,
+                    "name": "Handball"
+                },
+                {
+                    "id": 8,
+                    "name": "Escalade"
+                }
+            ],
+            "couvert": true,
+            "description": "Gymnase multi-sport pour les étudiants de Lyon 1",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Empty_set.svg/600px-Empty_set.svg.png",
+            "surface": "Dur"
+        },
+        {
+            "id": 21,
+            "name": "City stade Villié-Morgon",
+            "address": "Rue Rabelais, 69910 Villié-Morgon",
+            "private": false,
+            "latitude": 46.162214,
+            "longitude": 4.683728,
+            "list_players": null,
+            "average_mark": 4.99,
+            "sports": [
+                {
+                    "id": 2,
+                    "name": "Football"
+                },
+                {
+                    "id": 34,
+                    "name": "Ultimate"
+                },
+                {
+                    "id": 11,
+                    "name": "Course à pied"
+                }
+            ],
+            "couvert": false,
+            "description": "Terrain en syntéthique ouvert à tous les habitants de la commune de Villié-Morgon",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Empty_set.svg/600px-Empty_set.svg.png",
+            "surface": "Synthé"
+        },
+        {
+            "id": 29,
+            "name": "Gymnase Philippe Gardent",
+            "address": "Avenue de Verdun, 69220 Belleville",
+            "private": false,
+            "latitude": 46.101927,
+            "longitude": 4.738398,
+            "list_players": null,
+            "average_mark": 3.2,
+            "sports": [
+                {
+                    "id": 1,
+                    "name": "Basketball"
+                },
+                {
+                    "id": 2,
+                    "name": "Football"
+                },
+                {
+                    "id": 3,
+                    "name": "Handball"
+                },
+                {
+                    "id": 56,
+                    "name": "Futsal"
+                }
+            ],
+            "couvert": true,
+            "description": "Complexe sportif appartenant à la ville de Belleville",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Empty_set.svg/600px-Empty_set.svg.png",
+            "surface": "Dur"
+        },
+        {
+            "id": 32,
+            "name": "Stade de Roland Garros",
+            "address": "51 Boulevard d'Auteuil, 92100 Boulogne-Billancourt",
+            "private": true,
+            "latitude": 48.847543,
+            "longitude": 2.246484,
+            "list_players": null,
+            "average_mark": 1.2,
+            "sports": [
+                {
+                    "id": 6,
+                    "name": "Tennis"
+                }
+            ],
+            "couvert": false,
+            "description": "Tout le monde connait Roland Garros non?",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Empty_set.svg/600px-Empty_set.svg.png",
+            "surface": "Terre battue"
+        },
+        {
+            "id": 44,
+            "name": "Stade Geoffroy Guichard de l'ASSE",
+            "address": "14 Rue Paul et Pierre Guichard, 42000 Saint-Étienne",
+            "private": true,
+            "latitude": 45.460935,
+            "longitude": 4.390138,
+            "list_players": null,
+            "average_mark": 4.2,
+            "sports": [
+                {
+                    "id": 2,
+                    "name": "Football"
+                }
+            ],
+            "couvert": false,
+            "description": "Alleeeeeeeeeeeez les veeeerts",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Empty_set.svg/600px-Empty_set.svg.png",
+            "surface": "Pelouse"
+        }
+    ]
+}

@@ -5,11 +5,24 @@ import './home.css';
 import NavBar from "../../common-components/nav-bar/nav-bar";
 import ButtonAdd from "./add-playground/button-add";
 import ModalPlayground from "./add-playground/modal-playground"
+import PlaygroundAPI from '../../services/playground-api';
+import L from 'leaflet';
+
 var Tools = require('../../services/tools');
+
+const playgroundMarkerIcon = new L.icon({
+    iconUrl: require('../../assets/img/playgroundMarker.png'),
+    iconRetinaUrl: require('../../assets/img/playgroundMarker.png'),
+    iconAnchor: [23, 50],
+    popupAnchor: [10, -44],
+    iconSize: [70, 70],
+    shadowSize: [68, 95],
+    shadowAnchor: [20, 92],
+});
 
 export default class Home extends Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             location: undefined,
             zoom: 15,
@@ -17,7 +30,10 @@ export default class Home extends Component {
             adress: '',
             // modale
             isOpen: false,
+            playgrounds: []
         }
+        this.api = new PlaygroundAPI();
+        this.renderPlaygrounds = this.renderPlaygrounds.bind(this);
     }
 
     componentDidMount() {
@@ -34,6 +50,12 @@ export default class Home extends Component {
             name: 'Abdel la cisah akay limpulsif',
             adress: '53 rue des pruniers 69007 Lyon',
         })
+        this.api.getSearchResult('test')
+            .then((response) => {
+                this.setState({
+                    playgrounds: response
+                });
+            });
     }
     
     displayModal = () => {
@@ -42,25 +64,35 @@ export default class Home extends Component {
         })
     }
 
+    renderPlaygrounds() {
+        let playgrounds = this.state.playgrounds;
 
-    render() {
         return (
-            <div className="home">
-                <NavBar />
-                <Map center={this.state.location} zoom={this.state.zoom} className="fullscreen">
-                    <TileLayer
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                    />
-                    <Marker position={this.state.location}>
+            <div>
+                {playgrounds.map(playground => (
+                    <Marker position={[playground.latitude, playground.longitude]} icon={playgroundMarkerIcon}>
                         <Popup>
-                            {/* Afficher le composant détails du playground avec les props associées au marqueur*/}
                             <PlaygroundDetails
-                                name={this.state.name}
-                                adress={this.state.adress}
+                                name={playground.name}
+                                adress={playground.address}
                             />
                         </Popup>
                     </Marker>
+                ))}
+            </div>
+        );
+    }
+
+    render() {
+        console.log(this.state.playgrounds);
+        return (
+            <div>
+                <NavBar />
+                <Map center={this.state.location} zoom={this.state.zoom} className="fullscreen">
+                    <TileLayer
+                        url="https://api.mapbox.com/styles/v1/playground-app/cjqgjco2v0en02squr5fkrcb9/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoicGxheWdyb3VuZC1hcHAiLCJhIjoiY2pxZ2piYXdhMDBkOTQzcG5zcG9idWNrMCJ9.H64SLGKZlHfQeDTBGidTqQ"
+                    />
+                    {this.renderPlaygrounds()}
                 </Map>
                 <ButtonAdd onClick={this.displayModal} />
                 <ModalPlayground show={this.state.isOpen}
