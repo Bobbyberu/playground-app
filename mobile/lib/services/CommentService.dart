@@ -17,12 +17,12 @@ class CommentService {
 
     Comment comment2 = new Comment();
     comment2.comment = "Ouffissime !";
-    comment2.mark = 5;
+    comment2.mark = 4;
     comments.add(comment2);
 
     Comment comment3 = new Comment();
     comment3.comment = "ça va, ça passe";
-    comment3.mark = 2.5;
+    comment3.mark = 3;
     comments.add(comment3);
 
     Comment comment4 = new Comment();

@@ -20,6 +20,7 @@ dependencies:
   flutter_map: ^0.1.4
   splashscreen:
   datetime_picker_formfield: ^0.1.4
+  http:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

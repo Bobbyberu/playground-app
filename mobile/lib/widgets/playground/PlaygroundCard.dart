@@ -40,10 +40,11 @@ class PlaygroundCard extends StatelessWidget {
             ),
 
             new IconButton(
-                icon: new Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.grey[300],
-                )
+              icon: new Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.grey[300],
+              ),
+              onPressed: () {},
             )
 
           ],
