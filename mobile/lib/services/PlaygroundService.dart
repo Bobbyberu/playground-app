@@ -5,11 +5,19 @@ import 'package:Playground/entities/Sport.dart';
 
 class PlaygroundService {
 
+  /**
+   * Save a playground to the database
+   * return bool success
+   */
   Future<bool> save(Playground playground, File img) async{
     // TODO call ws to save the playground object
     return true;
   }
 
+  /**
+   * Retrieve a list of all the playground near the user location
+   * return List of playgrounds
+   */
   List<Playground> getPlaygroundsNearMe() {
 
     Playground playground1 = new Playground();
@@ -42,12 +50,16 @@ class PlaygroundService {
     return playgrounds;
   }
 
+  /**
+   * Retrieve a list of playgrounds by search terms
+   * return list of playgrounds
+   */
   List<Playground> search(String search) {
     // TODO call  ws
 
     Playground playground1 = new Playground();
     playground1.name = "Playground A";
-    playground1.adresse = "45 Avenue Alain Ouakbarre";
+    playground1.address = "45 Avenue Alain Ouakbarre";
     playground1.description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
     playground1.imgPath = "https://proxy.duckduckgo.com/iu/?u=http%3A%2F%2Fblog.oxforddictionaries.com%2Fwp-content%2Fuploads%2Fmountain-names.jpg&f=1";
     playground1.latitude = 45.764546;

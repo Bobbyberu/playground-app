@@ -1,6 +1,10 @@
 import 'package:Playground/entities/Playground.dart';
 import 'package:Playground/entities/User.dart';
 
+/**
+ * Comment entity class
+ * Comment represents a comment made by a user on a playground with a mark
+ */
 class Comment {
 
   int id;

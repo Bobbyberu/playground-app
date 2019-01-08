@@ -1,7 +1,10 @@
 import 'package:Playground/services/AuthService.dart';
-import 'package:Playground/widgets/SettingsMenuLink.dart';
+import 'package:Playground/widgets/menu/SettingsMenuLink.dart';
 import 'package:flutter/material.dart';
 
+/**
+ * Widget page of the profile menu
+ */
 class ProfilePage extends StatelessWidget {
 
   AuthService _authService = new AuthService();
@@ -75,7 +78,7 @@ class ProfilePage extends StatelessWidget {
               new SettingsMenuLink(label: "CGU", icon: Icons.format_align_justify, onTap: () { Navigator.pushNamed(context, '/cgu'); }),
               new Divider(),
 
-              new SettingsMenuLink(label: "Déconnexion", icon: Icons.exit_to_app, onTap: () {
+              new SettingsMenuLink(label: "Déconnexion", icon: Icons.exit_to_app, onTap: () async {
                 /* TODO logout */
                 _authService.logout();
                 Navigator.pushReplacementNamed(context, '/');

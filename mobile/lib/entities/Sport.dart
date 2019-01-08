@@ -1,4 +1,6 @@
-
+/**
+ * Sport entity class
+ */
 class Sport implements Comparable<Sport>{
 
   int id;

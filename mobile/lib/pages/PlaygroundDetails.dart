@@ -4,6 +4,10 @@ import 'package:Playground/services/CommentService.dart';
 import 'package:Playground/widgets/map/PlaygroundShowOnMap.dart';
 import 'package:flutter/material.dart';
 
+
+/**
+ * Widget to display a playground details
+ */
 class PlaygroundDetails extends StatelessWidget {
   
   final Playground playground;
@@ -103,7 +107,7 @@ class PlaygroundDetails extends StatelessWidget {
                             ),
 
                             new Text(
-                              this.playground.adresse,
+                              this.playground.address,
                               style: new TextStyle(
                                 color: Colors.grey[700],
                               ),

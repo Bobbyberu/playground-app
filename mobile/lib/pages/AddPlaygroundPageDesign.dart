@@ -11,6 +11,11 @@ import 'package:Playground/widgets/style/PlaygroundLabelStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+
+/**
+ * Page for submitting a new playground to the database
+ * User enter informations about a playground (locations, available sports, picture, ...) and submit it to the server
+ */
 class AddPlaygroundPageDesign extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => new AddPlaygroundPageDesignState();
@@ -39,6 +44,9 @@ class AddPlaygroundPageContainerState extends State<AddPlaygroundPageContainer> 
   File playgroundImg = null;
 
 
+  /**
+   * Navigate to a new component to select and return a list of sports
+   */
   Future _openDialogAddItemSelection(BuildContext context) async {
 
     Set<Sport> sports = await Navigator.of(context).push(
