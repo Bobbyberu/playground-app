@@ -2,6 +2,7 @@ import 'package:Playground/entities/Comment.dart';
 import 'package:Playground/entities/Playground.dart';
 import 'package:Playground/services/CommentService.dart';
 import 'package:Playground/widgets/map/PlaygroundShowOnMap.dart';
+import 'package:Playground/widgets/playground/CommentStars.dart';
 import 'package:flutter/material.dart';
 
 
@@ -133,15 +134,11 @@ class PlaygroundDetails extends StatelessWidget {
                     ),
 
                     new Padding(
-                      padding: EdgeInsets.only(top: 18, left: 8),
+                      padding: EdgeInsets.only(top: 18, left: 4),
                       child: new Row ( //AVIS
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          new Icon(
-                            Icons.star,
-                            color: Colors.grey[700],
-                            size: 24,
-                          ),
+                          new CommentsStars(mark:_commentService.getAverageOfComment(comments), markMax:5, color: Colors.grey[700]),
                           new Padding(
                             padding: EdgeInsets.only(left: 8, top: 2),
                             child: new Text(

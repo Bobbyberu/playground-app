@@ -24,6 +24,7 @@ class PlaygroundService {
     playground1.name = "Playground 1";
     playground1.description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
     playground1.imgPath = "https://proxy.duckduckgo.com/iu/?u=http%3A%2F%2Fblog.oxforddictionaries.com%2Fwp-content%2Fuploads%2Fmountain-names.jpg&f=1";
+    playground1.address = "25 Impasse des marroniers";
     playground1.latitude = 45.764045;
     playground1.longitude = 4.835675;
     playground1.sports.add(new Sport(1,"Basketball"));
