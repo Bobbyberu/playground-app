@@ -12,15 +12,18 @@
             "sports": [
                 {
                     "id": 1,
-                    "name": "Basketball"
+                    "name": "Basketball",
+                    "emoji": "🏀"
                 },
                 {
                     "id": 4,
-                    "name": "Voleyball"
+                    "name": "Voleyball",
+                    "emoji": "🏐"
                 },
                 {
                     "id": 11,
-                    "name": "Course à pied"
+                    "name": "Course à pied",
+                    "emoji": "🏃"
                 }
             ],
             "couvert": false,
@@ -40,15 +43,18 @@
             "sports": [
                 {
                     "id": 1,
-                    "name": "Basketball"
+                    "name": "Basketball",
+                    "emoji": "🏀"
                 },
                 {
                     "id": 3,
-                    "name": "Handball"
+                    "name": "Handball",
+                    "emoji": "🤾"
                 },
                 {
                     "id": 16,
-                    "name": "Musculation"
+                    "name": "Musculation",
+                    "emoji": "🏋️‍♂️"
                 }
             ],
             "couvert": true,
@@ -68,15 +74,18 @@
             "sports": [
                 {
                     "id": 9,
-                    "name": "Badminton"
+                    "name": "Badminton",
+                    "emoji": "🏸"
                 },
                 {
                     "id": 3,
-                    "name": "Handball"
+                    "name": "Handball",
+                    "emoji": "🤾"
                 },
                 {
                     "id": 8,
-                    "name": "Escalade"
+                    "name": "Escalade",
+                    "emoji": "🧗‍♂️"
                 }
             ],
             "couvert": true,
@@ -96,15 +105,18 @@
             "sports": [
                 {
                     "id": 2,
-                    "name": "Football"
+                    "name": "Football",
+                    "emoji": "⚽"
                 },
                 {
                     "id": 34,
-                    "name": "Ultimate"
+                    "name": "Ultimate",
+                    "emoji": "🥏"
                 },
                 {
                     "id": 11,
-                    "name": "Course à pied"
+                    "name": "Course à pied",
+                    "emoji": "🏃"
                 }
             ],
             "couvert": false,
@@ -124,19 +136,23 @@
             "sports": [
                 {
                     "id": 1,
-                    "name": "Basketball"
+                    "name": "Basketball",
+                    "emoji": "🏀"
                 },
                 {
                     "id": 2,
-                    "name": "Football"
+                    "name": "Football",
+                    "emoji": "⚽"
                 },
                 {
                     "id": 3,
-                    "name": "Handball"
+                    "name": "Handball",
+                    "emoji": "🤾"
                 },
                 {
                     "id": 56,
-                    "name": "Futsal"
+                    "name": "Futsal",
+                    "emoji": "⚽"
                 }
             ],
             "couvert": true,
@@ -156,7 +172,8 @@
             "sports": [
                 {
                     "id": 6,
-                    "name": "Tennis"
+                    "name": "Tennis",
+                    "emoji": "🎾"
                 }
             ],
             "couvert": false,
@@ -176,7 +193,8 @@
             "sports": [
                 {
                     "id": 2,
-                    "name": "Football"
+                    "name": "Football",
+                    "emoji": "⚽"
                 }
             ],
             "couvert": false,

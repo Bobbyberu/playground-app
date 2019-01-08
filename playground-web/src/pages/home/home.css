@@ -14,10 +14,6 @@ h1 {
     top: 5rem;
 }
 
-.leaflet-popup {
-
-}
-
 .leaflet-popup .leaflet-popup-content {
     margin: 0;
     width: auto !important;
