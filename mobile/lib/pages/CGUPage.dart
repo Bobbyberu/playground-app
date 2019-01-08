@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+/**
+ * Page widget to display the CGU
+ */
 class CGUPage extends StatelessWidget {
 
   @override

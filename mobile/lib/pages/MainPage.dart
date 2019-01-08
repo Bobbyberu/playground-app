@@ -3,12 +3,19 @@ import 'package:Playground/entities/Playground.dart';
 import 'package:Playground/pages/PlaygroundDetails.dart';
 import 'package:Playground/widgets/map/PlaygroundMarker.dart';
 import 'package:Playground/widgets/playground/PlaygroundCard.dart';
-import 'package:Playground/pages/AddPlaygroundPageDesign.dart';
 import 'package:Playground/services/PlaygroundService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 
+
+/**
+ * Home page widget of the application
+ * Page that display
+ *  - Map
+ *  - Searchbar
+ *  - Links to "Add playground" page and "Profile" page
+ */
 class MainPage extends StatefulWidget {
 
   @override
@@ -93,9 +100,6 @@ class MainPageState extends State<MainPage> {
               ) : new Column()
             ],
           )
-
-
-
         )
       ),
     );

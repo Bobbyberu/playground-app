@@ -1,9 +1,13 @@
-import 'package:Playground/pages/MainPage.dart';
-import 'package:Playground/pages/SignUpPage.dart';
 import 'package:Playground/services/AuthService.dart';
+import 'package:Playground/validators/EmailValidator.dart';
 import 'package:Playground/widgets/style/PlaygroundLoginTextFieldStyle.dart';
 import 'package:flutter/material.dart';
 
+/**
+ * Widget page for login.
+ * First page the user should see if not connected
+ * Simple form email/password to authenticate in the application
+ */
 class LoginPage extends StatefulWidget {
 
   //TODO check if user already connected ==> redirect to /home
@@ -72,6 +76,7 @@ class LoginPageState extends State<LoginPage> {
                 decoration: PlaygroundLoginTextFieldStyle.getDecoration(context, "Email", Icons.mail_outline),
                 validator: (value) {
                   if (value.isEmpty) return "Le champ Email est obligatoire";
+                  if (!EmailValidator.isEmail(value)) return "L'email n'est pas valide";
                 },
                 onSaved: (value) {
                   _email = value;
@@ -133,18 +138,32 @@ class LoginPageState extends State<LoginPage> {
 
             new Padding(
               padding: EdgeInsets.only(top:18, bottom: 50, left:24, right: 24),
-              child: GestureDetector(
-                child: new Text(
-                  "Pas encore inscrit ? Inscrivez-vous",
-                  style: new TextStyle(
-                    color: Colors.white,
-                    fontSize: 16
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  new Text(
+                    "Pas encore inscrit ? ",
+                    style: new TextStyle(
+                        color: Colors.white,
+                        fontSize: 16
+                    ),
                   ),
-                ),
-                onTap: () {
-                  Navigator.pushNamed(context, '/signup');
-                },
+                  GestureDetector(
+                    child: new Text(
+                      "Inscrivez-vous",
+                      style: new TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        decoration: TextDecoration.underline
+                      )
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/signup');
+                    },
+                  )
+                ],
               )
+
             ),
 
 

@@ -3,6 +3,9 @@ import 'package:Playground/entities/Sport.dart';
 
 class SportService {
 
+  /**
+   * Retrieve all sports
+   */
   List<Sport> getSports() {
     List<Sport> sports = new List<Sport>();
     sports.add(new Sport(1, "Basketball"));

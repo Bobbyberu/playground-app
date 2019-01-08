@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/splash',
       routes: {
         '/' : (context) => new StartPage(),
-        '/splash'         : (context) => new PlaygroundSlashScreen(),
+        '/splash'         : (context) => new PlaygroundSplashScreen(),
         '/login'          : (context) => new LoginPage(),
         '/signup'         : (context) => new SignUpPage(),
         '/home'           : (context) => new MainPage(),
@@ -38,14 +38,14 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class PlaygroundSlashScreen extends StatefulWidget {
+class PlaygroundSplashScreen extends StatefulWidget {
 
   @override
-  State<StatefulWidget> createState() => new PlaygroundSlashScreenState();
+  State<StatefulWidget> createState() => new PlaygroundSplashScreenState();
 
 }
 
-class PlaygroundSlashScreenState extends State<PlaygroundSlashScreen> {
+class PlaygroundSplashScreenState extends State<PlaygroundSplashScreen> {
 
   @override
   Widget build(BuildContext context) {
