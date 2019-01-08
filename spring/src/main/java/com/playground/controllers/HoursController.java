@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/hourss")
+@RequestMapping("/hours")
 public class HoursController {
 
     @Autowired
@@ -31,7 +31,7 @@ public class HoursController {
     }
 
     @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<Hours> getHourssById(@PathVariable(value = "id") int hoursId) throws ResourceNotFoundException {
+    public ResponseEntity<Hours> getHoursById(@PathVariable(value = "id") int hoursId) throws ResourceNotFoundException {
         Hours hours = hoursRepository.findById(hoursId)
                 .orElseThrow(() -> new ResourceNotFoundException("Hours with id " + hoursId + " not found"));
         return new ResponseEntity<>(hours, HttpStatus.OK);
