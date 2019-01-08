@@ -2,15 +2,35 @@
 
 Mobile app for Playground
 
-## Getting Started
+## Installation
 
-This project is a starting point for a Flutter application.
+### Requirements
 
-A few resources to get you started if this is your first Flutter project:
+- Android Studio (optionnal but easier)
+- Dart SDK
+- [Flutter] (https://flutter.io/docs/get-started/install/)
+- Android/iOS Simulator or an Android/iOS device
 
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
+### Dependencies
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+In the `mobile` folder type the following command :
+`flutter package get` to install project dependencies.
+
+### Run the project
+
+#### Via Android Studio
+
+Open the projet as a flutter projet (you may need to install the flutter plugin for Android Studio first).
+Just open a device (virtual or not) and click the run button.
+
+### Via command line
+
+First start your virtual device or connect a smartphone to your computer.
+
+Go in the `mobile` folder and type `flutter devices` to list all your available devices. The one you connected should appear.
+
+Run the command `flutter run` to build and start your application. Do not disconnect your device.
+
+And voilà !
+
+For more information about the flutter commands type `flutter -h`
