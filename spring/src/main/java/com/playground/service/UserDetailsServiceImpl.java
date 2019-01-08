@@ -23,6 +23,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         com.playground.model.User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new ResourceNotFoundException("User with username " + username + " not found"));
-        return User.withUsername(user.getUsername()).password(user.getPassword()).roles("USER").build();
+        return User.withUsername(user.getUsername()).password(user.getPassword()).roles(user.getRole().getName()).build();
     }
 }
