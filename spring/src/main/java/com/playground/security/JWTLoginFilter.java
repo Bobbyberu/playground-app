@@ -1,6 +1,8 @@
 package com.playground.security;
 
 import com.playground.service.TokenAuthenticationService;
+import org.apache.commons.io.IOUtils;
+import org.json.JSONObject;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -9,10 +11,10 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.Collections;
 
 public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
@@ -24,10 +26,13 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException {
+            throws AuthenticationException, IOException {
 
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+        String jsonString = IOUtils.toString(request.getInputStream(), Charset.defaultCharset());
+        JSONObject json = new JSONObject(jsonString);
+
+        String username = json.getString("username");
+        String password = json.getString("password");
 
         System.out.printf("JWTLoginFilter.attemptAuthentication: username/password= %s,%s", username, password);
         System.out.println();
