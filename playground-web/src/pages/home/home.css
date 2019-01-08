@@ -9,3 +9,20 @@ h1 {
     bottom: 0;
     right: 0;
 }
+
+.leaflet-top {
+    top: 5rem;
+}
+
+.leaflet-popup {
+
+}
+
+.leaflet-popup .leaflet-popup-content {
+    margin: 0;
+    width: auto !important;
+}
+
+.leaflet-popup .leaflet-popup-content-wrapper{
+    padding: 0;
+}

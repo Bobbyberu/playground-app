@@ -19,14 +19,10 @@ import ListItemIcon from "@material-ui/core/ListItemIcon/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText/ListItemText";
 import Divider from "@material-ui/core/Divider/Divider";
 import Drawer from "@material-ui/core/Drawer/Drawer";
-import MailIcon from '@material-ui/icons/Mail';
 import AddIcon from '@material-ui/icons/AddBox';
-import FriendsIcon from '@material-ui/icons/ContactPhone';
 import ProfileIcon from '@material-ui/icons/People';
-import HistoryIcon from '@material-ui/icons/People';
 import UserIcon from '@material-ui/icons/AccountBox';
 import LocationIcon from '@material-ui/icons/LocationCity';
-import OpinionIcon from '@material-ui/icons/Feedback';
 
 import Searchbar from '../../pages/home/components/searchbar/searchbar';
 

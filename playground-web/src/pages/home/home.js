@@ -26,8 +26,6 @@ export default class Home extends Component {
         this.state = {
             location: undefined,
             zoom: 15,
-            name: '',
-            adress: '',
             // modale
             isOpen: false,
             playgrounds: []
@@ -37,7 +35,7 @@ export default class Home extends Component {
     }
 
     componentDidMount() {
-        let currentLocation, currentName, currentAdress;
+        let currentLocation;
         Tools.getLocation(function (position) {
             currentLocation = [position.coords.latitude, position.coords.longitude];
             this.setState({
@@ -45,11 +43,7 @@ export default class Home extends Component {
             });
         }.bind(this));
 
-        // Récupérer les propriétés lieés au terrain du marqueur, pour l'instant de la position courante
-        this.setState({
-            name: 'Abdel la cisah akay limpulsif',
-            adress: '53 rue des pruniers 69007 Lyon',
-        })
+        // Récupérer les propriétés lieés aux terrains
         this.api.getSearchResult('test')
             .then((response) => {
                 this.setState({
@@ -73,8 +67,7 @@ export default class Home extends Component {
                     <Marker position={[playground.latitude, playground.longitude]} icon={playgroundMarkerIcon}>
                         <Popup>
                             <PlaygroundDetails
-                                name={playground.name}
-                                adress={playground.address}
+                                playground = {playground}
                             />
                         </Popup>
                     </Marker>
