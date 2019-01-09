@@ -30,3 +30,11 @@
     transform: rotate(360deg);
   }
 }
+
+html, body {
+  background-image: url(./assets/img/playground.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  margin: 0;
+  height: 100%;
+}
