@@ -1,11 +1,15 @@
 
 import 'package:Playground/entities/Sport.dart';
 import 'package:Playground/entities/User.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-/**
- * Playground entity class
- * Playground is the main object of the application. It contains informations about its location, comments, sports available,...
- */
+part 'Playground.g.dart';
+
+///
+///Playground entity class
+///Playground is the main object of the application. It contains informations about its location, comments, sports available,...
+///
+@JsonSerializable(nullable: false)
 class Playground {
 
   int id;
@@ -14,29 +18,37 @@ class Playground {
   String address;
   double latitude;
   double longitude;
-  Set<User> listPlayers;
   double averageMark;
-  Set<Sport> sports;
-  bool isCovered;
+  bool covered;
   String imgPath;
   String description;
 
-  Playground(){
-    this.id = 0;
-    this.name = "";
-    this.address = "";
-    this.isPrivate = false;
-    this.latitude = 0;
-    this.longitude = 0;
-    this.averageMark = 0;
-    this.isCovered = false;
-    this.imgPath = "";
-    this.description = "";
+  Set<Sport> sports;
+  Set<User> listPlayers;
 
-    this.listPlayers = Set<User>();
+  Playground({
+    this.id,
+    this.name,
+    this.isPrivate,
+    this.address,
+    this.latitude,
+    this.longitude,
+    this.averageMark,
+    this.covered,
+    this.imgPath,
+    this.description,
+    this.sports,
+    this.listPlayers
+  }) {
+    this.address = "";
+    this.description = "";
+    this.isPrivate = false;
+    this.covered = false;
     this.sports = new Set<Sport>();
+    this.listPlayers = new Set<User>();
   }
 
-  Set<Sport> get psports => sports;
-  set (Set<Sport> sports) => this.sports = sports;
+  factory Playground.fromJson(Map<String, dynamic> json) => _$PlaygroundFromJson(json);
+  Map<String, dynamic> toJson() => _$PlaygroundToJson(this);
+
 }
