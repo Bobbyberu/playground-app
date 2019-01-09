@@ -27,11 +27,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
                 // No need authentication.
-                .antMatchers("/").permitAll() //
                 .antMatchers(HttpMethod.POST, "/users/signup").permitAll()
-                .antMatchers(HttpMethod.GET, "/users/name/*").permitAll()
                 .antMatchers(HttpMethod.GET, "/users/login").permitAll()
-                .antMatchers(HttpMethod.POST, "/roles").permitAll()
                 // Need authentication.
                 .anyRequest().authenticated()
                 //

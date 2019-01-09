@@ -25,11 +25,11 @@ public class User implements UserDetails {
     private String password;
     @OneToOne
     private Image avatar;
-    @OneToMany
+    @ManyToMany
     private Set<User> friends;
-    @OneToMany
+    @ManyToMany
     private Set<Sport> favouriteSports;
-    @OneToMany
+    @ManyToMany
     private Set<Playground> favouritePlaygrounds;
     private String city;
     @ManyToOne
@@ -98,7 +98,6 @@ public class User implements UserDetails {
         return null;
     }
 
-    @JsonIgnore
     public String getPassword() {
         return password;
     }

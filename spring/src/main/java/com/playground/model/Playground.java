@@ -25,8 +25,11 @@ public class Playground {
     private Image image;
     @OneToMany
     private Set<User> players;
-    @OneToMany
+    @ManyToMany
     private Set<Sport> sports;
+    private String city;
+    private String address;
+
 
     public Playground() {
     }
@@ -125,5 +128,21 @@ public class Playground {
 
     public void setSports(Set<Sport> sports) {
         this.sports = sports;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
