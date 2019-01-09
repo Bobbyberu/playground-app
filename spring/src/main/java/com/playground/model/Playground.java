@@ -30,7 +30,6 @@ public class Playground {
     private String city;
     private String address;
 
-
     public Playground() {
     }
 

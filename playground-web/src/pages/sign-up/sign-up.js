@@ -420,3 +420,4 @@ class SignUp extends Component {
 }
 
 export default withStyles(styles)(SignUp);
+
