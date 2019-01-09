@@ -3,6 +3,8 @@ import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
 import PlaygroundDetails from '../playground-details/playground-details';
 import './home.css';
 import NavBar from "../../common-components/nav-bar/nav-bar";
+import ButtonAdd from "./add-playground/button-add";
+import ModalPlayground from "./add-playground/modal-playground"
 import PlaygroundAPI from '../../services/playground-api';
 import L from 'leaflet';
 
@@ -24,8 +26,8 @@ export default class Home extends Component {
         this.state = {
             location: undefined,
             zoom: 15,
-            name: '',
-            adress: '',
+            // modale
+            isOpen: false,
             playgrounds: []
         }
         this.api = new PlaygroundAPI();
@@ -33,7 +35,7 @@ export default class Home extends Component {
     }
 
     componentDidMount() {
-        let currentLocation, currentName, currentAdress;
+        let currentLocation;
         Tools.getLocation(function (position) {
             currentLocation = [position.coords.latitude, position.coords.longitude];
             this.setState({
@@ -41,17 +43,19 @@ export default class Home extends Component {
             });
         }.bind(this));
 
-        // Récupérer les propriétés lieés au terrain du marqueur, pour l'instant de la position courante
-        this.setState({
-            name: 'Abdel la cisah akay limpulsif',
-            adress: '53 rue des pruniers 69007 Lyon',
-        })
+        // Récupérer les propriétés lieés aux terrains
         this.api.getSearchResult('test')
             .then((response) => {
                 this.setState({
                     playgrounds: response
                 });
             });
+    }
+    
+    displayModal = () => {
+        this.setState({
+            isOpen: !this.state.isOpen
+        })
     }
 
     renderPlaygrounds() {
@@ -63,8 +67,7 @@ export default class Home extends Component {
                     <Marker position={[playground.latitude, playground.longitude]} icon={playgroundMarkerIcon}>
                         <Popup>
                             <PlaygroundDetails
-                                name={playground.name}
-                                adress={playground.address}
+                                playground = {playground}
                             />
                         </Popup>
                     </Marker>
@@ -84,6 +87,9 @@ export default class Home extends Component {
                     />
                     {this.renderPlaygrounds()}
                 </Map>
+                <ButtonAdd onClick={this.displayModal} />
+                <ModalPlayground show={this.state.isOpen}
+                    onClose={this.displayModal} />
             </div>
         );
     }

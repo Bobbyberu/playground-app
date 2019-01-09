@@ -4,12 +4,21 @@ h1 {
 
 .fullscreen {
     position: absolute;
-    top: 65px;
+    top: 0;
     left: 0;
     bottom: 0;
     right: 0;
-    overflow: auto;
 }
 
+.leaflet-top {
+    top: 5rem;
+}
 
+.leaflet-popup .leaflet-popup-content {
+    margin: 0;
+    width: auto !important;
+}
 
+.leaflet-popup .leaflet-popup-content-wrapper{
+    padding: 0;
+}
