@@ -48,6 +48,7 @@ public class SportController {
         Sport sport = sportRepository.findById(sportId)
                 .orElseThrow(() -> new ResourceNotFoundException("Sport with id " + sportId + " not found"));
         sport.setName(sportDetails.getName());
+        sport.setSymbol(sportDetails.getSymbol());
         final Sport updatedSport = sportRepository.save(sport);
         return ResponseEntity.ok(updatedSport);
     }

@@ -2,12 +2,18 @@ package com.playground.controllers;
 
 import com.playground.model.User;
 import com.playground.repository.UserRepository;
+import com.playground.service.TokenAuthenticationService;
 import com.playground.utils.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +23,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+
+    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
     private UserRepository userRepository;
@@ -30,15 +38,23 @@ public class UserController {
         return new ResponseEntity<>(listUsers,HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<User> getUsersById(@PathVariable(value = "id") int userId) throws ResourceNotFoundException {
+    @GetMapping(value = "/id/{id}", produces = "application/json")
+    public ResponseEntity<User> getUserById(@PathVariable(value = "id") int userId) throws ResourceNotFoundException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PostMapping("/")
+    @GetMapping(value = "/name/{username}", produces = "application/json")
+    public ResponseEntity<User> getUserByUsername(@PathVariable(value = "username") String username) throws ResourceNotFoundException {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User with username " + username + " not found"));
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @PostMapping("/signup")
     public User createUser(@Valid @RequestBody User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
