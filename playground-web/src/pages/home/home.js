@@ -51,7 +51,7 @@ export default class Home extends Component {
                 });
             });
     }
-    
+
     displayModal = () => {
         this.setState({
             isOpen: !this.state.isOpen
@@ -64,10 +64,10 @@ export default class Home extends Component {
         return (
             <div>
                 {playgrounds.map(playground => (
-                    <Marker position={[playground.latitude, playground.longitude]} icon={playgroundMarkerIcon}>
+                    <Marker key={playground.id} position={[playground.latitude, playground.longitude]} icon={playgroundMarkerIcon}>
                         <Popup>
                             <PlaygroundDetails
-                                playground = {playground}
+                                playground={playground}
                             />
                         </Popup>
                     </Marker>
@@ -77,7 +77,6 @@ export default class Home extends Component {
     }
 
     render() {
-        console.log(this.state.playgrounds);
         return (
             <div>
                 <NavBar />

@@ -127,7 +127,7 @@ class Searchbar extends React.Component {
         };
 
         return (
-            <div class="search-autosuggest">
+            <div className="search-autosuggest">
                 <Autosuggest
                     suggestions={playgrounds_suggested}
                     renderInputComponent={this.renderInputComponent}
