@@ -3,6 +3,10 @@ import 'package:Playground/entities/Comment.dart';
 
 class CommentService {
 
+  /**
+   * Retrieve the comments of a specified playground
+   * return List of Comment
+   */
   List<Comment> getCommentsOfPlayground(int idPlayground) {
     List<Comment> comments = new List();
 
@@ -13,12 +17,12 @@ class CommentService {
 
     Comment comment2 = new Comment();
     comment2.comment = "Ouffissime !";
-    comment2.mark = 5;
+    comment2.mark = 4;
     comments.add(comment2);
 
     Comment comment3 = new Comment();
     comment3.comment = "ça va, ça passe";
-    comment3.mark = 2.5;
+    comment3.mark = 3;
     comments.add(comment3);
 
     Comment comment4 = new Comment();
@@ -29,6 +33,10 @@ class CommentService {
     return comments;
   }
 
+  /**
+   * Calculate average mark of all the comments of a playground
+   * return double average
+   */
   double getAverageOfComment(List<Comment> comments) {
     double sum = 0;
     comments.forEach((c) { sum += c.mark; });

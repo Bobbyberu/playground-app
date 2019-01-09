@@ -1,3 +1,9 @@
+import 'package:Playground/pages/AddPlaygroundPageDesign.dart';
+import 'package:Playground/pages/CGUPage.dart';
+import 'package:Playground/pages/LoginPage.dart';
+import 'package:Playground/pages/MainPage.dart';
+import 'package:Playground/pages/ProfilePage.dart';
+import 'package:Playground/pages/SignUpPage.dart';
 import 'package:Playground/pages/StartPage.dart';
 import 'package:flutter/material.dart';
 import 'package:splashscreen/splashscreen.dart';
@@ -17,19 +23,29 @@ class MyApp extends StatelessWidget {
         primaryColorLight:  Colors.grey[300],
         primaryColorDark:   Colors.green[900]
       ),
-      home: new PlaygroundSlapshScreen()
+      initialRoute: '/splash',
+      routes: {
+        '/' : (context) => new StartPage(),
+        '/splash'         : (context) => new PlaygroundSplashScreen(),
+        '/login'          : (context) => new LoginPage(),
+        '/signup'         : (context) => new SignUpPage(),
+        '/home'           : (context) => new MainPage(),
+        '/cgu'            : (context) => new CGUPage(),
+        '/newplayground'  : (context) => new AddPlaygroundPageDesign(),
+        '/profile'        : (context) => new ProfilePage(),
+      }
     );
   }
 }
 
-class PlaygroundSlapshScreen extends StatefulWidget {
+class PlaygroundSplashScreen extends StatefulWidget {
 
   @override
-  State<StatefulWidget> createState() => new PlaygroundSlapshScreenState();
+  State<StatefulWidget> createState() => new PlaygroundSplashScreenState();
 
 }
 
-class PlaygroundSlapshScreenState extends State<PlaygroundSlapshScreen> {
+class PlaygroundSplashScreenState extends State<PlaygroundSplashScreen> {
 
   @override
   Widget build(BuildContext context) {

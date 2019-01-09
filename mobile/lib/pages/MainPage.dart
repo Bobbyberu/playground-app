@@ -2,12 +2,20 @@
 import 'package:Playground/entities/Playground.dart';
 import 'package:Playground/pages/PlaygroundDetails.dart';
 import 'package:Playground/widgets/map/PlaygroundMarker.dart';
-import 'package:Playground/pages/AddPlaygroundPageDesign.dart';
+import 'package:Playground/widgets/playground/PlaygroundCard.dart';
 import 'package:Playground/services/PlaygroundService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 
+
+/**
+ * Home page widget of the application
+ * Page that display
+ *  - Map
+ *  - Searchbar
+ *  - Links to "Add playground" page and "Profile" page
+ */
 class MainPage extends StatefulWidget {
 
   @override
@@ -18,12 +26,21 @@ class MainPage extends StatefulWidget {
 class MainPageState extends State<MainPage> {
 
   PlaygroundService _playgroundService = new PlaygroundService();
+  List<Playground> results;
+  bool searching;
+
+  @override
+  void initState() {
+    searching = false;
+    results = _playgroundService.getPlaygroundsNearMe();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
 
     List<Marker> markers = new List<Marker>();
-    _playgroundService.getPlaygroundsNearMe().forEach((pg) { markers.add(new PlaygroundMarker(
+    results.forEach((pg) { markers.add(new PlaygroundMarker(
         playground: pg,
         onPressed : () {
           Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new PlaygroundDetails(playground: pg)));
@@ -32,35 +49,58 @@ class MainPageState extends State<MainPage> {
 
 
     var searchBar = new Container(
-      height: 54,
       width: MediaQuery.of(context).size.width,
-      child: new FractionallySizedBox(
-        widthFactor: 0.9,
-        child: new Container(
-            decoration: new BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.green, width: 1, style: BorderStyle.solid),
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [ new BoxShadow(
-                    color: Theme.of(context).primaryColorDark,
-                    blurRadius: 2,
-                    offset: Offset(0, 1)
-                )]
-            ),
-            child: new FractionallySizedBox(
-                widthFactor: 0.95,
-                child: new TextField(
-                  style: new TextStyle(
-                    color: Theme.of(context).primaryColorDark,
-                    fontSize: 24,
-                  ),
-                  decoration: new InputDecoration(
-                    border: InputBorder.none,
-                    suffixIcon: new Icon(Icons.search),
-                  ),
+      decoration: new BoxDecoration(
+        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+        color: (searching) ? Colors.white : Colors.transparent
+      ),
+      child: new SafeArea(
+        child: new Padding(
+          padding: EdgeInsets.only(top:12, bottom: 12, left: 12, right: 12),
+          child:  new Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              new TextField(
+                style: new TextStyle(
+                  color: Theme.of(context).primaryColorDark,
+                  fontSize: 18,
+                ),
+                decoration: new InputDecoration(
+                  border: OutlineInputBorder(borderSide: BorderSide(style: BorderStyle.solid,width: 2,color: Theme.of(context).primaryColorLight), borderRadius: BorderRadius.circular(10)),
+                  suffixIcon: (searching) ? new Icon(Icons.clear) : new Icon(Icons.search),
+                  contentPadding: EdgeInsets.only(left: 12),
+                  hintText: "Rechercher un terrain",
+                  filled: true,
+                  fillColor: Colors.white
+                ),
+                onSubmitted: (value) {
+                  setState(() {
+                    results = _playgroundService.search(value);
+                    searching = (value.length > 0);
+                  });
+                },
+              ),
+
+              (searching) ?
+              new Padding(
+                padding: EdgeInsets.only(top: 18),
+                child:new Column( // Results
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    new Padding(
+                      padding: EdgeInsets.only(left: 12, bottom: 8),
+                      child: new Text(results.length.toString() + " résultat(s) trouvés")
+                    ),
+                    new Column(
+                      children: List.generate(results.length, (index) => new Padding(padding: EdgeInsets.only(bottom: 4), child: new PlaygroundCard(results.elementAt(index)))),
+                    )
+                  ],
                 )
-            )
-        ),
+              ) : new Column()
+            ],
+          )
+        )
       ),
     );
 
@@ -84,7 +124,6 @@ class MainPageState extends State<MainPage> {
                       new TileLayerOptions(
                           backgroundColor: Theme.of(context).primaryColorLight,
                           urlTemplate: "https://api.mapbox.com/styles/v1/playground-app/cjqgjco2v0en02squr5fkrcb9/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoicGxheWdyb3VuZC1hcHAiLCJhIjoiY2pxZ2piYXdhMDBkOTQzcG5zcG9idWNrMCJ9.H64SLGKZlHfQeDTBGidTqQ",
-                          //subdomains: ['a','b','c']
                       ),
                       new MarkerLayerOptions(
                           markers: markers
@@ -96,22 +135,64 @@ class MainPageState extends State<MainPage> {
 
 
               new Positioned(
-                  top: 40,
+                  top: 0,
                   child: searchBar
               ),
 
-              new Positioned(
-                key: new Key("add_button"),
-                right: 20,
-                bottom: 20,
-                child: new FloatingActionButton(
-                    child: new Icon(Icons.add),
-                    backgroundColor: Theme.of(context).primaryColor,
-                    onPressed: () {
-                      Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new AddPlaygroundPageDesign()));
-                    }
-                ),
-              )
+              new Align(
+                alignment: Alignment.bottomRight,
+                child: new Padding(
+                  padding: EdgeInsets.all(24),
+                  child: new Container(
+                    constraints: BoxConstraints.tightFor(width: 60,height: 60),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: Theme.of(context).primaryColor,
+                      boxShadow: [new BoxShadow(
+                        color: Theme.of(context).primaryColorDark,
+                        blurRadius: 6.0,
+                        spreadRadius: 1
+                      ),]
+                    ),
+                    child: new IconButton(
+                        icon: new Icon(Icons.add, color: Colors.white),
+                        tooltip: "Nouveau playground",
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/newplayground');
+                        }
+                    ),
+                  )
+                )
+              ),
+
+              new Align(
+                alignment: Alignment.bottomLeft,
+                child: new Padding(
+                    padding: EdgeInsets.all(24),
+                    child: new Container(
+                      constraints: BoxConstraints.tightFor(width:60, height:60),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        color: Theme.of(context).primaryColor,
+                        boxShadow: [new BoxShadow(
+                            color: Theme.of(context).primaryColorDark,
+                            blurRadius: 6.0,
+                            spreadRadius: 1
+                        ),]
+                      ),
+                      child: new IconButton(
+                          icon: new Icon(Icons.person, color: Colors.white),
+                          tooltip: "Profil",
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/profile');
+                          }
+                      ),
+                    )
+                )
+              ),
+
             ],
           ),
         )

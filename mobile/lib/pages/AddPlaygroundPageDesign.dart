@@ -2,18 +2,20 @@ import 'dart:io';
 
 import 'package:Playground/entities/Playground.dart';
 import 'package:Playground/entities/Sport.dart';
-import 'package:Playground/pages/MainPage.dart';
 import 'package:Playground/services/PlaygroundService.dart';
 import 'package:Playground/widgets/inputs/PlaygroundButton.dart';
 import 'package:Playground/widgets/inputs/PlaygroundCheckbox.dart';
 import 'package:Playground/widgets/inputs/PlaygroundSportSelection.dart';
-import 'package:Playground/widgets/inputs/PlaygroundTextField.dart';
 import 'package:Playground/widgets/style/PlaygorundTextFieldStyle.dart';
 import 'package:Playground/widgets/style/PlaygroundLabelStyle.dart';
-import 'package:Playground/widgets/text/PlaygroundFormLabel.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+
+/**
+ * Page for submitting a new playground to the database
+ * User enter informations about a playground (locations, available sports, picture, ...) and submit it to the server
+ */
 class AddPlaygroundPageDesign extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => new AddPlaygroundPageDesignState();
@@ -38,10 +40,13 @@ class AddPlaygroundPageContainer extends StatefulWidget {
 class AddPlaygroundPageContainerState extends State<AddPlaygroundPageContainer> {
 
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  final Playground newPlayground = new Playground();
+  Playground newPlayground = new Playground();
   File playgroundImg = null;
 
 
+  ///
+  ///Navigate to a new component to select and return a list of sports
+  ///
   Future _openDialogAddItemSelection(BuildContext context) async {
 
     Set<Sport> sports = await Navigator.of(context).push(
@@ -58,6 +63,55 @@ class AddPlaygroundPageContainerState extends State<AddPlaygroundPageContainer> 
         newPlayground.sports = sports;
       }
     });
+  }
+
+  ///
+  /// Validate form and call ws to add the new playground
+  ///
+  Future validateForm() async {
+    if(_formKey.currentState.validate()){
+      _formKey.currentState.save();
+      PlaygroundService playgroundService = new PlaygroundService();
+      await playgroundService.save(newPlayground, playgroundImg).then((result) {
+        if (result) {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return new AlertDialog(
+                  title: new Text("Validation"),
+                  content: new Text("Le nouveau playground a été ajouté !"),
+                  actions: <Widget>[
+                    new FlatButton(
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(context, '/home');
+                        },
+                        child: new Text("Ok")
+                    )
+                  ],
+                );
+              }
+          );
+        } else {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return new AlertDialog(
+                  title: new Text("Oh oh..."),
+                  content: new Text("Un problème est venu lors de la validation. Veuillez réessayer plus tard."),
+                  actions: <Widget>[
+                    new FlatButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: new Text("Ok")
+                    )
+                  ],
+                );
+              }
+          );
+        }
+      });
+    }
   }
 
 
@@ -318,11 +372,11 @@ class AddPlaygroundPageContainerState extends State<AddPlaygroundPageContainer> 
                                           child: new Row(
                                             children: <Widget>[
                                               new PlaygroundCheckbox(
-                                                  value: newPlayground.isCovered,
+                                                  value: newPlayground.covered,
                                                   onChanged: (value) {
                                                     if (value == null) value = false;
                                                     setState(() {
-                                                      newPlayground.isCovered = value;
+                                                      newPlayground.covered = value;
                                                     });
                                                   }
                                               ),
@@ -341,30 +395,7 @@ class AddPlaygroundPageContainerState extends State<AddPlaygroundPageContainer> 
                                 padding: EdgeInsets.all(12),
                                 child:new PlaygroundButton(
                                   "Valider",
-                                  () => setState(() async {
-                                    if(_formKey.currentState.validate()){
-                                      PlaygroundService playgroundService = new PlaygroundService();
-                                      bool result = await playgroundService.save(newPlayground, playgroundImg);
-                                      if (result) {
-                                        showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return new AlertDialog(
-                                                title: new Text("Validation"),
-                                                content: new Text("Le nouveau playground a été ajouté !"),
-                                                actions: <Widget>[
-                                                  new FlatButton(
-                                                    onPressed: () {
-                                                      Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (context) => new MainPage()));
-                                                    },
-                                                    child: new Text("Ok"))
-                                                ],
-                                              );
-                                            }
-                                        );
-                                      }
-                                    }
-                                  })
+                                  validateForm
                                 )
                               )
 

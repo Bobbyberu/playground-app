@@ -21,10 +21,19 @@ class PlaygroundSportSelectionState extends State<PlaygroundSportSelection> {
   Set<Sport> availableSports;
   Set<Sport> selectedSports;
 
+  void loadAllSport() async {
+    SportService sportService = new SportService();
+    await sportService.getSports().then((response) {
+      setState(() {
+        this.availableSports = response;
+      });
+    });
+  }
+
   @override
   void initState(){
-    SportService sportService = new SportService();
-    this.availableSports = sportService.getSports().toSet();
+    this.availableSports = new Set<Sport>();
+    loadAllSport();
     this.selectedSports = new Set();
     this.selectedSports.addAll(widget.playground.sports);
     super.initState();

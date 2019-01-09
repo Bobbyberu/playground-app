@@ -11,21 +11,13 @@ class PlaygroundMarker extends Marker {
 
   PlaygroundMarker({this.latLng, this.playground, this.onPressed}) : super (
       point: (playground != null) ? new LatLng(playground.latitude, playground.longitude) : latLng,
-      width: 50.0,
-      height: 50.0,
+      width: 60.0,
+      height: 60.0,
       builder: (context) => new Container(
         child: new InkWell(
-          child: Image.asset("images/playgroundMarker.png", width: 30, height: 30,),
+          child: Image.asset("images/playgroundMarker.png", width: 60, height: 60),
           onTap: onPressed,
-        ) 
-          /*IconButton(
-          icon: Icon(Icons.location_on),
-          splashColor: Colors.green[100],
-          highlightColor: Colors.green[100],
-          color: Colors.green[500],
-          iconSize: 50.0,
-          onPressed: onPressed
-        )*/,
+        ),
       )
   );
 

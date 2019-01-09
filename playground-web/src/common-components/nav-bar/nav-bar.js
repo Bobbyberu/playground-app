@@ -23,7 +23,7 @@ import AddIcon from '@material-ui/icons/AddBox';
 import ProfileIcon from '@material-ui/icons/People';
 import UserIcon from '@material-ui/icons/AccountBox';
 import LocationIcon from '@material-ui/icons/LocationCity';
-
+import OpinionIcon from '@material-ui/icons/Feedback';
 import Searchbar from '../../pages/home/components/searchbar/searchbar';
 
 // MUI theme
