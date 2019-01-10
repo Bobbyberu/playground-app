@@ -16,8 +16,6 @@ class StartPage extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    print("StartPage connected");
-    print((this.connected != null && this.connected));
     return (this.connected != null && this.connected) ? new MainPage() : new LoginPage();
   }
 
