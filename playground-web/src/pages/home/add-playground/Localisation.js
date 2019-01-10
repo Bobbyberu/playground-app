@@ -35,6 +35,7 @@ class Localisation extends React.Component {
 					name="address"
 					margin="normal"
 					variant="outlined"
+					required
 					autoFocus
 				/>
 				<TextField
@@ -45,6 +46,7 @@ class Localisation extends React.Component {
 					name="cp"
 					margin="normal"
 					variant="outlined"
+					required
 				/>
 				<TextField
 					id="ville-input"
@@ -54,6 +56,7 @@ class Localisation extends React.Component {
 					name="ville"
 					margin="normal"
 					variant="outlined"
+					required
 				/>
 			</form>
 		);

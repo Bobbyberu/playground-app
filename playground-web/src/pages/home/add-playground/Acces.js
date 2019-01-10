@@ -47,7 +47,7 @@ class Acces extends React.Component {
 						<div className="row">
 							{
 								days.map((day) => (
-									<div className="col-4">
+									<div className="col-6">
 										<ListItem key={day} dense>
 											<div className="col-4">
 												<ListItemText primary={day} dense />
