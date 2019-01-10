@@ -28,19 +28,17 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException {
-        String username;
-        String password;
 
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Headers", "*");
         response.setHeader("Access-Control-Expose-Headers", "*");
-        
+
         String jsonString = IOUtils.toString(request.getInputStream(), Charset.defaultCharset());
         if (!StringUtils.isEmpty(jsonString)) {
             JSONObject json = new JSONObject(jsonString);
 
-            username = json.getString("username");
-            password = json.getString("password");
+        String username = json.getString("mail");
+        String password = json.getString("password");
 
             System.out.printf("JWTLoginFilter.attemptAuthentication: username/password= %s,%s", username, password);
             System.out.println();
@@ -56,14 +54,8 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authResult) {
 
-        System.out.println("JWTLoginFilter.successfulAuthentication:");
-
         // Write Authorization to Headers of Response.
         TokenAuthenticationService.addAuthentication(response, authResult.getName());
-
-        String authorizationString = response.getHeader("Authorization");
-
-        System.out.println("Authorization String=" + authorizationString);
     }
 
 }
