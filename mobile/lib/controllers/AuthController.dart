@@ -16,4 +16,8 @@ class AuthController extends CommonController {
     return post(route + "login", credentials);
   }
 
+
+  Future logout() {
+    return post(route + "login", new Map<String,String>());
+  }
 }
