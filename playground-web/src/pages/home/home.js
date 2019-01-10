@@ -26,7 +26,7 @@ export default class Home extends Component {
         this.state = {
             location: undefined,
             zoom: 15,
-            // modale
+            // modal
             isOpen: false,
             playgrounds: []
         }
