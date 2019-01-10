@@ -17,7 +17,6 @@ class CommonController {
       "Accept" : "application/json",
       "Authorization" : (token == null) ? "" : token
     };
-    print(headers);
 
     return headers;
   }
