@@ -1,67 +1,99 @@
 package com.playground.controllers;
 
 import com.playground.model.Comment;
-import com.playground.repository.CommentRepository;
+import com.playground.service.CommentService;
 import com.playground.utils.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+/**
+ * Class CommentController
+ */
 @RestController
 @RequestMapping("/comments")
 public class CommentController {
 
+    /** CommentService commentService */
+    private final CommentService commentService;
+
+    /**
+     * CommentController Constructor
+     *
+     * @param commentService CommentService
+     */
     @Autowired
-    private CommentRepository commentRepository;
-
-    @GetMapping(value = "/", produces = "application/json")
-    public ResponseEntity<List<Comment>> getAllComments() {
-        ArrayList<Comment> listComments = new ArrayList<>();
-        for (Comment comment : commentRepository.findAll()) {
-            listComments.add(comment);
-        }
-        return new ResponseEntity<>(listComments,HttpStatus.OK);
+    public CommentController(CommentService commentService) {
+        this.commentService = commentService;
     }
 
+    /**
+     * Return all comments
+     *
+     * @return List<Comment>
+     */
+    @GetMapping(produces = "application/json")
+    public List<Comment> getComments() {
+        return commentService.getComments();
+    }
+
+    /**
+     * Return one comment by id
+     *
+     * @param id int
+     * @return Comment
+     * @throws ResourceNotFoundException No Comment Found
+     */
     @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<Comment> getCommentsById(@PathVariable(value = "id") int commentId) throws ResourceNotFoundException {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + commentId + " not found"));
-        return new ResponseEntity<>(comment, HttpStatus.OK);
+    public Comment getComment(@PathVariable("id") int id) throws ResourceNotFoundException {
+        return commentService.getComment(id);
     }
 
-    @PostMapping(value = "/", consumes = "application/json")
-    public Comment createComment(@Valid @RequestBody Comment comment) {
-        return commentRepository.save(comment);
+    /**
+     * Create a comment and return it
+     *
+     * @param comment Comment
+     * @return Comment
+     */
+    @PostMapping(consumes = "application/json")
+    public Comment createComment(@RequestBody Comment comment) {
+        return commentService.createComment(comment);
     }
 
+    /**
+     * Update a comment and return it
+     *
+     * @param id int
+     * @param comment Comment
+     * @return Comment
+     * @throws ResourceNotFoundException No Comment Found
+     */
     @PutMapping("/{id}")
-    public ResponseEntity<Comment> updateComment(@PathVariable(value = "id") int commentId, @Valid @RequestBody Comment commentDetails)
-            throws ResourceNotFoundException {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + commentId + " not found"));
-        comment.setArchived(commentDetails.isArchived());
-        comment.setMark(commentDetails.getMark());
-        comment.setComment(commentDetails.getComment());
-        final Comment updatedComment = commentRepository.save(comment);
-        return ResponseEntity.ok(updatedComment);
+    public Comment updateComment(@PathVariable("id") int id, @RequestBody Comment comment) throws ResourceNotFoundException {
+        return commentService.updateComment(id, comment);
     }
 
+    /**
+     * Delete a comment
+     *
+     * @param id int
+     * @throws ResourceNotFoundException No Comment Found
+     */
     @DeleteMapping("/{id}")
-    public Map<String, Boolean> deleteComment(@PathVariable(value = "id") int commentId) throws ResourceNotFoundException {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + commentId + " not found"));
-        commentRepository.delete(comment);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", Boolean.TRUE);
-        return response;
+    public void deleteComment(@PathVariable("id") int id) throws ResourceNotFoundException {
+        commentService.deleteComment(id);
     }
 
+    /**
+     * Archived a comment
+     *
+     * @param id int
+     * @return Comment
+     * @throws ResourceNotFoundException No Comment Found
+     */
+    @GetMapping("/{id}/archived")
+    public Comment archivedComment(@PathVariable("id") int id) throws ResourceNotFoundException {
+        return commentService.archivedComment(id);
+    }
 }
