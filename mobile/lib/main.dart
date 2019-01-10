@@ -1,3 +1,4 @@
+import 'package:Playground/controllers/SportController.dart';
 import 'package:Playground/pages/AddPlaygroundPageDesign.dart';
 import 'package:Playground/pages/CGUPage.dart';
 import 'package:Playground/pages/LoginPage.dart';
@@ -5,6 +6,8 @@ import 'package:Playground/pages/MainPage.dart';
 import 'package:Playground/pages/ProfilePage.dart';
 import 'package:Playground/pages/SignUpPage.dart';
 import 'package:Playground/pages/StartPage.dart';
+import 'package:Playground/services/SportService.dart';
+import 'package:Playground/services/TokenManager.dart';
 import 'package:flutter/material.dart';
 import 'package:splashscreen/splashscreen.dart';
 
@@ -47,11 +50,35 @@ class PlaygroundSplashScreen extends StatefulWidget {
 
 class PlaygroundSplashScreenState extends State<PlaygroundSplashScreen> {
 
+  bool connected;
+
+  void checkConnection() async {
+    // TODO replace by a true check ws
+    await TokenManager.getInstance().getToken();
+    SportController controller = new SportController();
+    await controller.getAllSports().then((response) {
+      setState(() {
+        connected = (response.statusCode != null && response.statusCode == 200);
+      });
+    }).catchError((error){
+      setState(() {
+        connected = false;
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    connected = false;
+    checkConnection();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return new SplashScreen(
       seconds: 3,
-      navigateAfterSeconds: new StartPage(),
+      navigateAfterSeconds: new StartPage(connected: connected),
       image: Image.asset("images/logo_alpha.png"),
       photoSize: 80,
       title: new Text(""),

@@ -79,7 +79,6 @@ class ProfilePage extends StatelessWidget {
               new Divider(),
 
               new SettingsMenuLink(label: "Déconnexion", icon: Icons.exit_to_app, onTap: () async {
-                /* TODO logout */
                 _authService.logout();
                 Navigator.pushReplacementNamed(context, '/');
               }),
