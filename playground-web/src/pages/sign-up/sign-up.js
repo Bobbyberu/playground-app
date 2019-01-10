@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import grey from '@material-ui/core/colors/grey';
 import green from '@material-ui/core/colors/green';
 import red from '@material-ui/core/colors/red';
 import FormControl from '@material-ui/core/FormControl';
@@ -20,54 +18,27 @@ import { withStyles } from '@material-ui/core/styles';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import './sign-up.css';
 
-const theme = createMuiTheme({
-    palette: {
-        primary: {
-            main: grey[700]
-        },
-        secondary: {
-            main: grey[50]
-        }
+const styles = ({
+    title: {
+        color: '#fff',
+        marginTop: 30,
+        marginBottom: 20
     },
-    overrides: {
-        MuiInputBase: {
-            root: {
-                borderRadius: '4px',
-                background: '#fff',
-                backgroundColor: '#fff',
-            }
-        },
-        MuiFormHelperText: {
-            contained: {
-                position: 'absolute',
-                margin: 0,
-                marginLeft: 10,
-                marginTop: 80
-            }
-        },
-        textvalidatorDate: {
-            MuiFormHelperText: {
-                contained: {
-                    marginTop: 80
-                }
-            }
-        }
-    }
-});
-
-const styles = theme => ({
     text: {
         color: '#fff'
     },
     container: {
-        backgroundColor: '#fff'
-    },
-    margin: {
-        margin: theme.spacing.unit,
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translateX(-50%) translateY(-50%)',
+        backgroundColor: 'rgba(0,0,0,0.7)',
+        borderRadius: 10,
+        width: 800,
     },
     textvalidator: {
         width: 450,
-        margin: 30
+        margin: 20
     },
     rowCentered: {
         width: 450,
@@ -179,7 +150,6 @@ class SignUp extends Component {
 
     handleErrors(errors) {
         const isValid = this.state.termsOfUse;
-        console.log(this.state);
         if (isValid === null) {
             this.setState({
                 termsOfUse: false
@@ -217,10 +187,10 @@ class SignUp extends Component {
     render() {
         const content = this.state.finalized ? this.renderFinalized(this.props) : this.renderForm(this.props);
         return (
-            <MuiThemeProvider theme={theme}>
+            <React.Fragment>
                 {content}
-            </MuiThemeProvider >
-        )
+            </React.Fragment>
+        );
     }
 
     renderFinalized(props) {
@@ -237,8 +207,8 @@ class SignUp extends Component {
     renderForm(props) {
         const { classes } = props;
         return (
-            <div className="container">
-                <h1 className={classes.text}>Inscription</h1>
+            <div className={classes.container + " container"}>
+                <h1 className={classes.title}>Inscription</h1>
 
                 <ValidatorForm
                     ref="form"
@@ -401,8 +371,8 @@ class SignUp extends Component {
                     <div className="col-12">
                         <div className={classes.rowCentered}>
                             <Checkbox name="termsOfUse"
-                                onChange={this.handleInputChange}
                                 checked={this.state.termsOfUse}
+                                onChange={this.handleInputChange}
                                 style={{ color: '#fff' }}
                             />
                             <span className={classes.text}>J'accepte les conditions d'utilisation</span>
