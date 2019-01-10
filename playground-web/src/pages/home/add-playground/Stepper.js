@@ -44,7 +44,7 @@ function getStepContent(stepIndex) {
 		case 4:
 			return <Description />
 		default:
-			return 'Unknown stepIndex';
+			return 'Etape inconnue';
 	}
 }
 
@@ -96,8 +96,8 @@ class StepperModal extends React.Component {
 					{/* Affichage du boutton 'Reset' une fois que toutes les étapes sont complétées */}
 					{this.state.activeStep === steps.length ? (
 						<div>
-							<Typography className={classes.instructions}>All steps completed</Typography>
-							<Button onClick={this.handleReset}>Reset</Button>
+							<Typography className={classes.instructions}>Toutes les étapes ont été complétées.</Typography>
+							<Button className={classes.Button} onClick={this.handleReset}>Réinitialiser</Button>
 						</div>
 					) : (
 							<div>
@@ -108,11 +108,11 @@ class StepperModal extends React.Component {
 										onClick={this.handleBack}
 										className={classes.Button}
 									>
-										Back
+										Précédent
                    					 </Button>
 									{/* Affichage du boutton 'finish' si on est sur la dernière étape */}
 									<Button variant="contained" color="primary" onClick={this.handleNext} className={classes.Button}>
-										{activeStep === steps.length - 1 ? 'Finish' : 'Next'}
+										{activeStep === steps.length - 1 ? 'Finir' : 'Suivant'}
 									</Button>
 								</div>
 							</div>
