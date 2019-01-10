@@ -1,4 +1,5 @@
 
+import 'package:Playground/entities/User.dart';
 import 'package:Playground/services/TokenManager.dart';
 import 'package:http/http.dart' as http;
 
@@ -16,8 +17,7 @@ class AuthService {
     bool res = false;
 
     await _controller.postCredentials(email, password).then((response) async {
-      http.Response resp = response as http.Response;
-
+      print(response.statusCode);
       res = response.statusCode == 200;
       print(res);
       var headers = response.headers as Map<String,String>;
@@ -38,9 +38,17 @@ class AuthService {
   ///Create a new user account
   ///return bool (success)
   ///
-  Future<bool> signup() async {
-    //TODO
-    return true;
+  Future<bool> signUp(User newUser) async {
+    bool res = false;
+
+    await _controller.postUser(newUser).then((response) async {
+      print(response.statusCode);
+      res = response.statusCode == 200;
+    }).catchError((error){
+      _controller.printError(error);
+    });
+
+    return res;
   }
 
   ///
