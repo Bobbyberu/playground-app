@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import green from '@material-ui/core/colors/green';
+import { Link } from 'react-router-dom';
 
 import { withStyles } from '@material-ui/core/styles';
 import { fade } from '@material-ui/core/styles/colorManipulator';
@@ -9,32 +8,28 @@ import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import Account from '@material-ui/icons/AccountCircle';
 
+import Divider from "@material-ui/core/Divider/Divider";
+import Drawer from "@material-ui/core/Drawer/Drawer";
 import List from "@material-ui/core/List/List";
 import ListItem from "@material-ui/core/ListItem/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText/ListItemText";
-import Divider from "@material-ui/core/Divider/Divider";
-import Drawer from "@material-ui/core/Drawer/Drawer";
+import Snackbar from '@material-ui/core/Snackbar';
+
+import Searchbar from '../../pages/home/components/searchbar/searchbar';
+import AuthService from '../../services/auth';
+
 import AddIcon from '@material-ui/icons/AddBox';
 import ProfileIcon from '@material-ui/icons/People';
 import UserIcon from '@material-ui/icons/AccountBox';
 import LocationIcon from '@material-ui/icons/LocationCity';
-import OpinionIcon from '@material-ui/icons/Feedback';
-import Searchbar from '../../pages/home/components/searchbar/searchbar';
-
-// MUI theme
-const theme = createMuiTheme({
-    palette: {
-        primary: {
-            main: green[500],
-            contrastText: '#fff'
-        }
-    }
-});
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import Account from '@material-ui/icons/AccountCircle';
+import ExitToApp from '@material-ui/icons/ExitToApp';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import Close from '@material-ui/icons/Close';
 
 // Styles
 const styles = theme => ({
@@ -104,14 +99,40 @@ const styles = theme => ({
     overlay: {
         zIndex: 1000,
         marginRight: 40
-    }
+    },
+    link: {
+        color: fade(theme.palette.common.white, 1),
+        '&:hover': {
+            textDecoration: 'none',
+            color: fade(theme.palette.common.white, 0.8),
+        },
+    },
+    closeSnackbar: {
+        padding: theme.spacing.unit / 2,
+    },
 });
 
 // Composant pour le menu et la barre de navigation latérale dynamique
 class NavBar extends React.Component {
-    state = {
-        left: false,
-    };
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            left: false,
+            loggedIn: false,
+            snackbarOpen: false
+        };
+
+        this.authService = new AuthService();
+        this.logout = this.logout.bind(this);
+    }
+
+    componentDidMount() {
+        this.setState({
+            loggedIn: this.authService.loggedIn()
+        });
+    }
 
     //fonction pour ouvrir ou fermer le menu
     toggleDrawer = (side, open) => () => {
@@ -119,6 +140,46 @@ class NavBar extends React.Component {
             [side]: open,
         });
     };
+
+    // log out the user and toggle the snackbar
+    logout() {
+        this.authService.logout();
+        this.setState({
+            loggedIn: false,
+            snackbarOpen: true
+        });
+    }
+
+    handleSnackbarClose(event, reason) {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        this.setState({
+            snackbarOpen: false
+        });
+    }
+
+    renderLoginPart() {
+        const { classes } = this.props;
+
+        if (this.state.loggedIn) {
+            return (
+                <Button className={classes.button} onClick={this.logout} color="inherit">
+                    <ExitToApp />
+                </Button>
+            );
+        } else {
+            return (
+                <Link to="/login" className={classes.link}>
+                    <Button className={classes.button} color="inherit">
+                        Login
+                    <Account />
+                    </Button>
+                </Link>
+            );
+        }
+    }
 
     render() {
         const { classes } = this.props;
@@ -149,46 +210,69 @@ class NavBar extends React.Component {
         );
 
         return (
-            <MuiThemeProvider theme={theme}>
-                <div className={classes.root}>
-                    {/* Création de la barre de menu */}
-                    <AppBar position="static">
-                        <Toolbar>
-                            {/* Icone du menu avec ouverture du menu coulissant au clic*/}
-                            <IconButton className={classes.menuButton}
-                                color="inherit"
-                                aria-label="Menu"
-                                onClick={this.toggleDrawer('left', true)}
+            <div className={classes.root}>
+                {/* Création de la barre de menu */}
+                <AppBar position="static">
+                    <Toolbar>
+                        {/* Icone du menu avec ouverture du menu coulissant au clic*/}
+                        <IconButton className={classes.menuButton}
+                            color="inherit"
+                            aria-label="Menu"
+                            onClick={this.toggleDrawer('left', true)}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                        {/* Gestion de la fermeture du menu(drawer) avec appel de la sideList (affichée si open = true, invisible si open = false */}
+                        <Drawer open={this.state.left} onClose={this.toggleDrawer('left', false)}>
+                            <div
+                                tabIndex={0}
+                                role="button"
+                                onClick={this.toggleDrawer('left', false)}
+                                onKeyDown={this.toggleDrawer('left', false)}
                             >
-                                <MenuIcon />
-                            </IconButton>
-                            {/* Gestion de la fermeture du menu(drawer) avec appel de la sideList (affichée si open = true, invisible si open = false */}
-                            <Drawer open={this.state.left} onClose={this.toggleDrawer('left', false)}>
-                                <div
-                                    tabIndex={0}
-                                    role="button"
-                                    onClick={this.toggleDrawer('left', false)}
-                                    onKeyDown={this.toggleDrawer('left', false)}
-                                >
-                                    {sideList}
-                                </div>
-                            </Drawer>
-                            <div className={classes.navbarRight}>
-                                <Typography variant="title" color="inherit" className={classes.title} noWrap>
-                                    Playground
-                                </Typography>
-                                <div className={classes.overlay}>
-                                    <Searchbar />
-                                </div>
+                                {sideList}
                             </div>
-                            <Button className={classes.button} color="inherit">
-                                Login
-                            <Account />
-                            </Button>
-                        </Toolbar>
-                    </AppBar>
+                        </Drawer>
+                        <div className={classes.navbarRight}>
+                            <Typography variant="title" color="inherit" className={classes.title} noWrap>
+                                Playground
+                                </Typography>
+                            <div className={classes.overlay}>
+                                <Searchbar />
+                            </div>
+                        </div>
+                        <div>
+                            {this.renderLoginPart()}
+                        </div>
+                    </Toolbar>
+                </AppBar>
+
+                <div>
+                    <Snackbar anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                        open={this.state.snackbarOpen}
+                        autoHideDuration={6000}
+                        onClose={this.handleSnackbarClose.bind(this)}
+                        ContentProps={{
+                            'aria-describedby': 'message-id',
+                        }}
+                        message={<span id="message-id"><CheckCircleIcon /> Vous êtes déconnecté</span>}
+                        action={[
+                            <IconButton
+                                key="close"
+                                aria-label="Close"
+                                color="inherit"
+                                className={classes.closeSnackbar}
+                                onClick={this.handleSnackbarClose.bind(this)}
+                            >
+                                <Close />
+                            </IconButton>,
+                        ]}
+                    />
                 </div>
-            </MuiThemeProvider>
+            </div>
         )
     }
 }
