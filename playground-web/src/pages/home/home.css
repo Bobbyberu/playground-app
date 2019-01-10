@@ -11,7 +11,7 @@ h1 {
 }
 
 .leaflet-top {
-    top: 5rem;
+    top: 5rem !important;
 }
 
 .leaflet-popup .leaflet-popup-content {

@@ -7,12 +7,13 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
+import Stepper from './Stepper';
 
 const styles = {
+
 };
 
 class ModalPlayground extends React.Component {
-
     constructor(props) {
         super(props)
         this.state = {
@@ -32,7 +33,7 @@ class ModalPlayground extends React.Component {
 
     handleClose = () => {
         this.setState({ open: false });
-    };
+    };  
 
     handleChange(event) {
         this.setState({ value: event.target.value });
@@ -49,20 +50,14 @@ class ModalPlayground extends React.Component {
         const { open } = this.state;
         return (
             <div>
-                <Dialog open={open} onClose={this.handleClose} >
+                <Dialog open={open} onClose={this.handleClose} maxWidth={"md"} fullWidth >
                     <DialogTitle id="form-dialog-title">Ajouter un nouveau terrain</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
-                            Pour ajouter un nouveau terrain veuillez remplir les champs du formulaire suivant.
-                            La description du terrain est conseillée, mais pas obligatoire.
+                            Veillez à compléter chaque étape du formulaire avant de passer à la suivante.
                         </DialogContentText>
-                        <form onSubmit={this.handleSubmit}>
-                            <label>
-                                Nom du terrain:
-                                <input type="text" value={this.state.value} onChange={this.handleChange} />
-                            </label>
-                        </form>
                     </DialogContent>
+                    <Stepper />
                     <DialogActions>
                         <Button onClick={this.handleClose} color="primary">
                             Annuler

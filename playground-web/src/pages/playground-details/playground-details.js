@@ -102,7 +102,7 @@ const PlaygroundDetails = ({ playground, classes }) => (
                 {/* Informations sur le playground*/}
                 <CardContent>
                     <div className={classes.section1}>
-                        <Typography className={classes.title} gutterBottom variant="h5" component="h2">
+                        <Typography className={classes.title} gutterBottom variant="h5">
                             {playground.name}
                         </Typography>
                         <Typography className={classes.subtitle} component="h3">
