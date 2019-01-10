@@ -51,20 +51,8 @@ public class PlaygroundController {
         return new ResponseEntity<>(playground, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/")
-    public Playground createPlayground() {
-        Playground playground = new Playground();
-        playground.setCovered(false);
-        playground.setLatitude(45.7854453);
-        playground.setLongitude(4.8823925);
-        playground.setName("Terrains de l'INSA");
-        playground.setDescription("Des terrains appartenant aux charlots de l'INSA");
-        Set<Sport> sports = new HashSet<>();
-        sports.add(sportRepository.findById(1).get());
-        sports.add(sportRepository.findById(3).get());
-        playground.setSports(sports);
-        playground.setAddress("Boulevard Niels Bohr");
-        playground.setCity("Villeurbanne");
+    @PostMapping(value = "", consumes = "application/json")
+    public Playground createPlayground(@Valid @RequestBody Playground playground) {
         return playgroundRepository.save(playground);
     }
 
