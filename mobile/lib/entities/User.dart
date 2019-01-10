@@ -23,7 +23,11 @@ class User {
   Set<Sport> favouriteSports;
   Set<Playground> favouritePlaygrounds;
 
-  User({this.username, this.mail, this.birthDate, this.password, this.city, this.enabled, this.archived, this.banned, this.friends, this.favouriteSports, this.favouritePlaygrounds});
+  User({this.username, this.mail, this.birthDate, this.password, this.city, this.enabled, this.archived, this.banned, this.friends, this.favouriteSports, this.favouritePlaygrounds}){
+    this.friends = new Set();
+    this.favouritePlaygrounds = new Set();
+    this.favouriteSports = new Set();
+  }
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
   Map<String, dynamic> toJson() => _$UserToJson(this);

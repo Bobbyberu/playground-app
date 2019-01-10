@@ -30,6 +30,7 @@ class TokenManager {
   }
 
   void cleanToken() async {
+    _token = null;
     await storage.delete(key: _key);
   }
 

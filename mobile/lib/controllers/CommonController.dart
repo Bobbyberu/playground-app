@@ -7,22 +7,27 @@ import 'package:http/http.dart' as http;
 
 class CommonController {
 
-  static const String baseUrl = "http://localhost:8080/";
+  static const String baseUrl = "http://localhost:8080/api/";
 
   Future<Map<String, String>> _getHeaders() async{
     String token = await TokenManager.getInstance().getToken();
 
     var headers =  {
       "Content-Type" : "application/json",
-      "Accept" : "application/json",
-      "Authorization" : (token == null) ? "" : token
+      "Accept" : "application/json"
     };
 
+    if (token != null) {
+      headers["Authorization"] = token;
+    }
+
+    print(headers);
     return headers;
   }
 
 
   Future<http.Response> get(String url) async {
+    print("GET " + url);
     var client = new http.Client();
     return client.get(
       url,
@@ -31,6 +36,7 @@ class CommonController {
   }
 
   Future post(String url, Map jsonData) async {
+    print("POST " + url);
     var client = new http.Client();
     return client.post(
       url,
@@ -40,6 +46,7 @@ class CommonController {
   }
 
   Future put(String url, Map jsonData) async {
+    print("PUT " + url);
     var client = new http.Client();
     return client.put(
       url,
@@ -49,6 +56,7 @@ class CommonController {
   }
 
   Future delete(String url) async {
+    print("DELETE " + url);
     var client = new http.Client();
     return client.delete(
       url,
