@@ -1,4 +1,4 @@
-package com.playground.service;
+package com.playground.service.interfaces;
 
 import com.playground.model.Comment;
 

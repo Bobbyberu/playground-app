@@ -6,9 +6,9 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "hours")
+@Table(name = "schedule")
 @EntityListeners(AuditingEntityListener.class)
-public class Hours {
+public class Schedule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,7 +19,7 @@ public class Hours {
     private Date close;
     private String day;
 
-    public Hours() {
+    public Schedule() {
     }
 
     public int getId() {

@@ -2,7 +2,7 @@ package com.playground.service;
 
 import com.playground.model.Comment;
 import com.playground.repository.CommentRepository;
-import com.playground.utils.ResourceNotFoundException;
+import com.playground.service.interfaces.ICommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
