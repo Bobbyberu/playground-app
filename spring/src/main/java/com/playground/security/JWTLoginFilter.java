@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
@@ -27,15 +28,22 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException {
-
+        String username;
+        String password;
+        response.setHeader("Access-Control-Allow-Origin","*");
         String jsonString = IOUtils.toString(request.getInputStream(), Charset.defaultCharset());
-        JSONObject json = new JSONObject(jsonString);
+        if(!StringUtils.isEmpty(jsonString)) {
+            JSONObject json = new JSONObject(jsonString);
 
-        String username = json.getString("username");
-        String password = json.getString("password");
+            username = json.getString("username");
+            password = json.getString("password");
 
-        System.out.printf("JWTLoginFilter.attemptAuthentication: username/password= %s,%s", username, password);
-        System.out.println();
+            System.out.printf("JWTLoginFilter.attemptAuthentication: username/password= %s,%s", username, password);
+            System.out.println();
+        }
+        else {
+            return null;
+        }
 
         return getAuthenticationManager()
                 .authenticate(new UsernamePasswordAuthenticationToken(username, password, Collections.emptyList()));
