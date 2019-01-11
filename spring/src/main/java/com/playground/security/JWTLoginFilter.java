@@ -39,8 +39,8 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
         if (!StringUtils.isEmpty(jsonString)) {
             JSONObject json = new JSONObject(jsonString);
 
-        String username = json.getString("mail");
-        String password = json.getString("password");
+        username = json.getString("mail");
+        password = json.getString("password");
 
         } else {
             return null;
