@@ -1,69 +1,79 @@
 package com.playground.service;
 
 import com.playground.model.User;
+import com.playground.model.VerificationToken;
+import com.playground.repository.RoleRepository;
 import com.playground.repository.UserRepository;
-import com.playground.service.interfaces.IUserService;
+import com.playground.repository.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.servlet.ServletContext;
+import java.util.Properties;
 
-/**
- * Class UserService
- */
 @Service
-public class UserService implements IUserService {
+public class UserService {
 
-    /** BCryptPasswordEncoder bCryptPasswordEncoder */
+    @Autowired
+    private Environment env;
+
+    @Autowired
+    private ServletContext servletContext;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private VerificationTokenRepository verificationTokenRepository;
+
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-    /** UserRepository userRepository */
-    private final UserRepository userRepository;
-
-    /**
-     * UserService Constructor
-     *
-     * @param userRepository UserRepository
-     */
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    @Override
-    public List<User> getUsers() {
-        List<User> users = new ArrayList<>();
-        userRepository.findAll().forEach(users::add);
-
-        return users;
-    }
-
-    @Override
-    public User getUser(int id) {
-        return userRepository.findById(id).orElse(null);
-    }
-
-    @Override
-    public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username).orElse(null);
-    }
-
-    @Override
-    public User createUser(User user) {
+    public User signup(User user) {
+        if (StringUtils.isEmpty(user.getMail())) {
+            throw new RuntimeException("Mail is not valid");
+        }
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        user.setRole(roleRepository.findByName("UNVERIFIED").get());
+        user = userRepository.save(user);
+        VerificationToken verificationToken = new VerificationToken(user);
+        verificationTokenRepository.save(verificationToken);
+
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setTo(user.getMail());
+        mail.setFrom("g3.playground.app@gmail.com");
+        mail.setSubject("Playground - Account verification");
+        mail.setText("Hello,\n" +
+                "\n" +
+                "Thanks for signing up to Playground. Here's your verification link :\n" +
+                "\n" +
+                servletContext.getContextPath() + "/verification_token/" + verificationToken.getToken() + "\n" +
+                "\n" +
+                "Have fun!\n" +
+                "\n" +
+                "The Playground Team");
+
+        JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
+        javaMailSender.setUsername(env.getProperty("spring.mail.username"));
+        javaMailSender.setHost(env.getProperty("spring.mail.host"));
+        javaMailSender.setPort(Integer.parseInt(env.getProperty("spring.mail.port")));
+        javaMailSender.setPassword(env.getProperty("spring.mail.password"));
+        Properties mailProperties = new Properties();
+        mailProperties.put("mail.smtp.auth", env.getProperty("spring.mail.properties.mail.smtp.auth"));
+        mailProperties.put("mail.smtp.starttls.enable", env.getProperty("spring.mail.properties.mail.smtp.starttls.enable"));
+        javaMailSender.setJavaMailProperties(mailProperties);
+
+        javaMailSender.send(mail);
+
+        return user;
     }
 
-    @Override
-    public User updateUser(int id, User user) {
-        user.setId(id);
-        return userRepository.save(user);
-    }
-
-    @Override
-    public void deleteUser(User user) {
-        userRepository.delete(user);
-    }
 }
