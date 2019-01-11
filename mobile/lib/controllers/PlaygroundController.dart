@@ -13,7 +13,7 @@ class PlaygroundController extends CommonController{
   }
 
   Future getPlaygroundsBySearch(String keywords) {
-    return get(route + "search/?keywords=" + Uri.encodeFull(keywords));
+    return get(route + "search/" + Uri.encodeFull(keywords));
   }
 
   Future postPlayground(Playground playground) async {
