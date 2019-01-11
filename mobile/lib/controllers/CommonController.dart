@@ -68,4 +68,10 @@ class CommonController {
     print("==== Error " + this.runtimeType.toString());
     print(error);
   }
+
+  void printResponse(http.Response response) {
+    print("==== Response " + this.runtimeType.toString());
+    print(response.statusCode.toString() + " " + response.reasonPhrase);
+    print(response.body);
+  }
 }
