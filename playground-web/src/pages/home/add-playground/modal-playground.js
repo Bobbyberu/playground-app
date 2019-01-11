@@ -1,23 +1,17 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import { Dialog } from '@material-ui/core';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import Stepper from './Stepper';
-
-const styles = {
-
-};
+import { connect } from 'react-redux';
 
 class ModalPlayground extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            open: this.props.show,
             value: '',
         }
 
@@ -25,14 +19,12 @@ class ModalPlayground extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    // Mise à jour du state lorsque l'on reçoit des props du composant parent
-    // Méthode dépréciée, à retravailler
-    UNSAFE_componentWillReceiveProps(props) {
-        this.setState({ open: props.show })
+    componentDidMount() {
+        //console.log(this.props.open)
     }
 
     handleClose = () => {
-        this.setState({ open: false });
+        
     };  
 
     handleChange(event) {
@@ -45,9 +37,8 @@ class ModalPlayground extends React.Component {
     }
 
     render() {
-        const { classes } = this.props;
-
-        const { open } = this.state;
+       const { open } = this.props.open;
+       console.log("open : " + this.props.open)
         return (
             <div>
                 <Dialog open={open} onClose={this.handleClose} maxWidth={"md"} fullWidth >
@@ -72,9 +63,12 @@ class ModalPlayground extends React.Component {
     }
 }
 
-ModalPlayground.propTypes = {
-    onClose: PropTypes.func.isRequired,
-    show: PropTypes.bool
-};
+// mapping du state global dans les props du composant Home
+const mapStateToProps = (state) => {
+    return {
+        open: state.open
+    }
+}
 
-export default withStyles(styles)(ModalPlayground)
+// mapStateToProps pour abonner le composant aux changements du store Redux
+export default connect(mapStateToProps)(ModalPlayground)

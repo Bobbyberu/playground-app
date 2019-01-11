@@ -17,7 +17,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 
 
 // Override de certains éléments de la card 
@@ -93,16 +93,6 @@ const styles = theme => ({
  Contenu de la popup avec un element material ui Card
  */
 class PlaygroundDetails extends React.Component {
-    constructor(props) {
-        super(props)
-    }
-
-    componentDidUpdate() {
-        console.log("componentDidUpdate : ")
-        console.log(this.props.favoritePlaygrounds)
-
-    }
-
     toggleFavorite() {
         // Action à envoyer au store
         const action = { type: "TOGGLE_FAVORITE", value: this.props.playground }
@@ -180,11 +170,6 @@ class PlaygroundDetails extends React.Component {
         )
     }
 }
-
-PlaygroundDetails.propTypes = {
-    playground: PropTypes.object.isRequired,
-    classes: PropTypes.object.isRequired,
-};
 
 // mapping du state global dans les props du composant PlaygroundDetails
 const mapStateToProps = (state) => {

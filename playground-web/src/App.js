@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import AppRouter from './AppRouter';
+import { createStore } from 'redux';
 import './App.css';
 import { Provider } from 'react-redux'
 import Store from './store/configureStore'
+
+//const store = createStore(globalReducer);
 
 class App extends Component {
 	render() {

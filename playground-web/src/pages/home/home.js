@@ -7,6 +7,7 @@ import ButtonAdd from "./add-playground/button-add";
 import ModalPlayground from "./add-playground/modal-playground"
 import PlaygroundAPI from '../../services/playground-api';
 import L from 'leaflet';
+import { connect } from 'react-redux';
 
 var Tools = require('../../services/tools');
 
@@ -20,14 +21,12 @@ const playgroundMarkerIcon = new L.icon({
     shadowAnchor: [20, 92],
 });
 
-export default class Home extends Component {
+class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
             location: undefined,
             zoom: 15,
-            // modal
-            isOpen: false,
             playgrounds: []
         }
         this.api = new PlaygroundAPI();
@@ -52,12 +51,6 @@ export default class Home extends Component {
             });
     }
 
-    displayModal = () => {
-        this.setState({
-            isOpen: !this.state.isOpen
-        })
-    }
-
     renderPlaygrounds() {
         let playgrounds = this.state.playgrounds;
 
@@ -77,6 +70,7 @@ export default class Home extends Component {
     }
 
     render() {
+        console.log("HomeState : " + this.props.open)
         return (
             <div>
                 <NavBar />
@@ -86,10 +80,20 @@ export default class Home extends Component {
                     />
                     {this.renderPlaygrounds()}
                 </Map>
-                <ButtonAdd onClick={this.displayModal} />
-                <ModalPlayground show={this.state.isOpen}
-                    onClose={this.displayModal} />
+                <ButtonAdd />
+                <div id = "bijour"><ModalPlayground /></div>
+                
             </div>
         );
     }
 }
+
+// mapping du state global dans les props du composant Home
+const mapStateToProps = (state) => {
+    return {
+        open: state.open
+    }
+}
+
+// mapStateToProps pour abonner le composant aux changements du store Redux
+export default connect(mapStateToProps)(Home)
