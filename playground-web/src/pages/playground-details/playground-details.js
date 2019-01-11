@@ -9,13 +9,16 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import FavoriteIcon from '@material-ui/icons/StarBorder';
+import FavoriteIconEmpty from '@material-ui/icons/StarBorder';
+import FavoriteIconFull from '@material-ui/icons/StarRate';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
+import { connect } from 'react-redux'
+
 
 // Override de certains éléments de la card 
 const theme = createMuiTheme({
@@ -89,67 +92,106 @@ const styles = theme => ({
 /*
  Contenu de la popup avec un element material ui Card
  */
-const PlaygroundDetails = ({ playground, classes }) => (
-    <MuiThemeProvider theme={theme}>
-        <div className="global">
-            <Card className={classes.card}>
-                {/* Image associée au playground */}
-                <CardMedia
-                    className={classes.media}
-                    image={playground.image}
-                    title="Photo du playground"
-                />
-                {/* Informations sur le playground*/}
-                <CardContent>
-                    <div className={classes.section1}>
-                        <Typography className={classes.title} gutterBottom variant="h5">
-                            {playground.name}
-                        </Typography>
-                        <Typography className={classes.subtitle} component="h3">
-                            {playground.address}
-                        </Typography>
-                    </div>
-                    <div>
-                        <Typography className={classes.private} component="h3">
-                            {playground.private ? "Privé" : "Public"}
-                        </Typography>
-                        <Divider variant="fullWidth" />
-                    </div>
-                    <div className={classes.section2}>
-                        <Typography className={classes.p} component="p">
-                            {/* Récupération des sports d'un playground associés à leur emoji */}
-                            <List>
-                                {
-                                    playground.sports.map((sport) => (
-                                        <ListItem>
-                                            <Avatar className={classes.avatar}>
-                                                <Emoji symbol={sport.emoji} label={sport.name} />
-                                            </Avatar>
-                                            <ListItemText primary={sport.name} />
-                                        </ListItem>
-                                    ))
-                                }
-                            </List>
-                        </Typography>
-                    </div>
-                </CardContent>
-                {/* Actions associés à l acard (favoris et détails) */}
-                <CardActions className={classes.button}>
-                    <IconButton aria-label="Ajouter aux favoris">
-                        <FavoriteIcon />
-                    </IconButton>
-                    <Button size="small" color="primary">
-                        Détails
-                    </Button>
-                </CardActions>
-            </Card>
-        </div>
-    </MuiThemeProvider>
-)
+class PlaygroundDetails extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+
+    componentDidUpdate() {
+        console.log("componentDidUpdate : ")
+        console.log(this.props.favoritePlaygrounds)
+
+    }
+
+    toggleFavorite() {
+        // Action à envoyer au store
+        const action = { type: "TOGGLE_FAVORITE", value: this.props.playground }
+        this.props.dispatch(action)
+    }
+
+    displayFavoriteIcon() {
+        // On modifie l'icône 'favori' en fonction de l'état du playground sélectionné
+        let favorite = (this.props.favoritePlaygrounds.findIndex(item => item.id === this.props.playground.id) !== -1)
+        return (
+            favorite ? <FavoriteIconFull /> : <FavoriteIconEmpty />
+        )
+    }
+
+    render() {
+        console.log(this.props)
+        const { classes } = this.props
+
+        return (
+            <MuiThemeProvider theme={theme}>
+                <div className="global">
+                    <Card className={classes.card}>
+                        {/* Image associée au playground */}
+                        <CardMedia
+                            className={classes.media}
+                            image={this.props.playground.image}
+                            title="Photo du playground"
+                        />
+                        {/* Informations sur le playground*/}
+                        <CardContent>
+                            <div className={classes.section1}>
+                                <Typography className={classes.title} gutterBottom variant="h5">
+                                    {this.props.playground.name}
+                                </Typography>
+                                <Typography className={classes.subtitle} component="h3">
+                                    {this.props.playground.address}
+                                </Typography>
+                            </div>
+                            <div>
+                                <Typography className={classes.private} component="h3">
+                                    {this.props.playground.private ? "Privé" : "Public"}
+                                </Typography>
+                                <Divider variant="fullWidth" />
+                            </div>
+                            <div className={classes.section2}>
+                                <Typography className={classes.p} component="p">
+                                    {/* Récupération des sports d'un playground associés à leur emoji */}
+                                    <List>
+                                        {
+                                            this.props.playground.sports.map((sport) => (
+                                                <ListItem>
+                                                    <Avatar className={classes.avatar}>
+                                                        <Emoji symbol={sport.emoji} label={sport.name} />
+                                                    </Avatar>
+                                                    <ListItemText primary={sport.name} />
+                                                </ListItem>
+                                            ))
+                                        }
+                                    </List>
+                                </Typography>
+                            </div>
+                        </CardContent>
+                        {/* Actions associés à l acard (favoris et détails) */}
+                        <CardActions className={classes.button}>
+                            <IconButton aria-label="Ajouter aux favoris" onClick={() => this.toggleFavorite()}>
+                                {this.displayFavoriteIcon()}
+                            </IconButton>
+                            <Button size="small" color="primary">
+                                Détails
+                            </Button>
+                        </CardActions>
+                    </Card>
+                </div>
+            </MuiThemeProvider>
+        )
+    }
+}
 
 PlaygroundDetails.propTypes = {
     playground: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(PlaygroundDetails)
+// mapping du state global dans les props du composant PlaygroundDetails
+const mapStateToProps = (state) => {
+    return {
+        favoritePlaygrounds: state.favoritePlaygrounds
+    }
+}
+
+// La fonction mapStateToProps permet d'abonner le composant aux changements du store Redux
+export default connect(mapStateToProps)(withStyles(styles)(PlaygroundDetails))
