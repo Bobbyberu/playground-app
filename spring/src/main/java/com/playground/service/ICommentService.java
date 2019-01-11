@@ -4,6 +4,9 @@ import com.playground.model.Comment;
 
 import java.util.List;
 
+/**
+ * Interface ICommentService
+ */
 public interface ICommentService {
 
     /**
@@ -17,6 +20,7 @@ public interface ICommentService {
      * Return one comment
      *
      * @param id int
+     *
      * @return Comment
      */
     Comment getComment(int id);
@@ -25,6 +29,7 @@ public interface ICommentService {
      * Create a comment and return it
      *
      * @param comment Comment
+     *
      * @return Comment
      */
     Comment createComment(Comment comment);
@@ -34,6 +39,7 @@ public interface ICommentService {
      *
      * @param id int
      * @param comment Comment
+     *
      * @return Comment
      */
     Comment updateComment(int id, Comment comment);
@@ -41,15 +47,16 @@ public interface ICommentService {
     /**
      * Delete a comment
      *
-     * @param id int
+     * @param comment Comment
      */
-    void deleteComment(int id);
+    void deleteComment(Comment comment);
 
     /**
      * Archived a comment
      *
-     * @param id int
+     * @param comment Comment
+     *
      * @return Comment
      */
-    Comment archivedComment(int id);
+    Comment archivedComment(Comment comment);
 }

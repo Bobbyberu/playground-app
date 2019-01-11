@@ -93,6 +93,8 @@ public class SportController {
      * [DELETE] Delete a sport
      *
      * @param id int
+     *
+     * @return ResponseEntity
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteSport(@PathVariable("id") int id) throws ResourceNotFoundException {
@@ -104,6 +106,6 @@ public class SportController {
 
         sportService.deleteSport(currentSport);
 
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
