@@ -11,6 +11,7 @@ Playground _$PlaygroundFromJson(Map<String, dynamic> json) {
       id: json['id'] as int,
       name: json['name'] as String,
       isPrivate: json['isPrivate'] as bool,
+      city: json['city'] as String,
       address: json['address'] as String,
       latitude: (json['latitude'] as num).toDouble(),
       longitude: (json['longitude'] as num).toDouble(),
@@ -21,7 +22,7 @@ Playground _$PlaygroundFromJson(Map<String, dynamic> json) {
       sports: (json['sports'] as List)
           .map((e) => Sport.fromJson(e as Map<String, dynamic>))
           .toSet(),
-      listPlayers: (json['listPlayers'] as List)
+      players: (json['players'] as List)
           .map((e) => User.fromJson(e as Map<String, dynamic>))
           .toSet());
 }
@@ -32,6 +33,7 @@ Map<String, dynamic> _$PlaygroundToJson(Playground instance) =>
       'name': instance.name,
       'isPrivate': instance.isPrivate,
       'address': instance.address,
+      'city': instance.city,
       'latitude': instance.latitude,
       'longitude': instance.longitude,
       'averageMark': instance.averageMark,
@@ -39,5 +41,5 @@ Map<String, dynamic> _$PlaygroundToJson(Playground instance) =>
       'imgPath': instance.imgPath,
       'description': instance.description,
       'sports': instance.sports.toList(),
-      'listPlayers': instance.listPlayers.toList()
+      'players': instance.players.toList()
     };

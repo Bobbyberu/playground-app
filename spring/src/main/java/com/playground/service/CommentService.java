@@ -2,7 +2,7 @@ package com.playground.service;
 
 import com.playground.model.Comment;
 import com.playground.repository.CommentRepository;
-import com.playground.utils.ResourceNotFoundException;
+import com.playground.service.interfaces.ICommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,11 +38,7 @@ public class CommentService implements ICommentService {
 
     @Override
     public Comment getComment(int id) {
-        Comment comment = commentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + " not found"));
-
-        System.out.println(comment);
-
-        return commentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + " not found"));
+        return commentRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -52,25 +48,17 @@ public class CommentService implements ICommentService {
 
     @Override
     public Comment updateComment(int id, Comment comment) {
-        Comment editComment = getComment(id);
-
-        editComment.setArchived(comment.isArchived());
-        editComment.setComment(comment.getComment());
-        editComment.setMark(comment.getMark());
-
-        return commentRepository.save(editComment);
+        comment.setId(id);
+        return commentRepository.save(comment);
     }
 
     @Override
-    public void deleteComment(int id) {
-        Comment comment = getComment(id);
+    public void deleteComment(Comment comment) {
         commentRepository.delete(comment);
     }
 
     @Override
-    public Comment archivedComment(int id) {
-        Comment comment = getComment(id);
-
+    public Comment archivedComment(Comment comment) {
         comment.setArchived(true);
 
         return commentRepository.save(comment);

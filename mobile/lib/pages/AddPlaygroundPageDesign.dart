@@ -40,7 +40,7 @@ class AddPlaygroundPageContainer extends StatefulWidget {
 class AddPlaygroundPageContainerState extends State<AddPlaygroundPageContainer> {
 
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  Playground newPlayground = new Playground();
+  Playground newPlayground = Playground.getDefault();
   File playgroundImg = null;
 
 

@@ -38,7 +38,7 @@ class PlaygroundDetails extends StatelessWidget {
                     fit: StackFit.passthrough,
                     children: <Widget>[
                       FadeInImage(
-                        image: NetworkImage(this.playground.imgPath),
+                        image: (this.playground.imgPath != null) ? NetworkImage(this.playground.imgPath) : AssetImage("images/default_playground.png"),
                         fit: BoxFit.cover,
                         placeholder: AssetImage("images/playground_placeholder.png"),
                         height: 200.0,
@@ -109,6 +109,13 @@ class PlaygroundDetails extends StatelessWidget {
 
                             new Text(
                               this.playground.address,
+                              style: new TextStyle(
+                                color: Colors.grey[700],
+                              ),
+                              overflow: TextOverflow.clip,
+                            ),
+                            new Text(
+                              this.playground.city,
                               style: new TextStyle(
                                 color: Colors.grey[700],
                               ),
