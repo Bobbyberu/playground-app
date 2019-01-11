@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import AppRouter from './AppRouter';
 import './App.css';
 import { Provider } from 'react-redux'
-import Store from './Store/configureStore'
+import Store from './store/configureStore'
 
 class App extends Component {
 	render() {
