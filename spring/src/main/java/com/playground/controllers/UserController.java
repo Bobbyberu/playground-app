@@ -2,12 +2,12 @@ package com.playground.controllers;
 
 import com.playground.model.User;
 import com.playground.repository.UserRepository;
+import com.playground.service.UserService;
 import com.playground.utils.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -19,10 +19,11 @@ import java.util.Map;
 @RequestMapping("/users")
 public class UserController {
 
-    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping(value = "/", produces = "application/json")
     public ResponseEntity<List<User>> getAllUsers() {
@@ -49,8 +50,7 @@ public class UserController {
 
     @PostMapping("/signup")
     public User createUser(@Valid @RequestBody User user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        return userService.signup(user);
     }
 
     @PutMapping("/{id}")
