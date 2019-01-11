@@ -1,0 +1,59 @@
+{
+    "result": [
+        {
+            "id": 1,
+            "name": "Basketball",
+            "emoji": "🏀"
+        },
+        {
+            "id": 2,
+            "name": "Football",
+            "emoji": "⚽"
+        },
+        {
+            "id": 3,
+            "name": "Handball",
+            "emoji": "🤾"
+        },
+        {
+            "id": 4,
+            "name": "Voleyball",
+            "emoji": "🏐"
+        },
+        {
+            "id": 6,
+            "name": "Tennis",
+            "emoji": "🎾"
+        },
+        {
+            "id": 8,
+            "name": "Escalade",
+            "emoji": "🧗‍♂️"
+        },
+        {
+            "id": 9,
+            "name": "Badminton",
+            "emoji": "🏸"
+        },
+        {
+            "id": 11,
+            "name": "Course à pied",
+            "emoji": "🏃"
+        },
+        {
+            "id": 16,
+            "name": "Musculation",
+            "emoji": "🏋️‍♂️"
+        },
+        {
+            "id": 34,
+            "name": "Ultimate",
+            "emoji": "🥏"
+        },
+        {
+            "id": 56,
+            "name": "Futsal",
+            "emoji": "⚽"
+        }
+    ]
+}

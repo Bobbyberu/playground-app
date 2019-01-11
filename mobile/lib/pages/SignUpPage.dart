@@ -1,3 +1,4 @@
+import 'package:Playground/entities/User.dart';
 import 'package:Playground/services/AuthService.dart';
 import 'package:Playground/validators/EmailValidator.dart';
 import 'package:Playground/widgets/inputs/PlaygroundCheckbox.dart';
@@ -6,9 +7,9 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-/**
- * Widget page to display sign up form
- */
+///
+///Widget page to display sign up form
+///
 class SignUpPage extends StatefulWidget {
 
   //TODO check if user already connected ==> redirect to home
@@ -22,10 +23,11 @@ class SignUpPageState extends State<SignUpPage> {
 
   String _email;
   String _pseudo;
+  DateTime _birthDate;
   String _mdp;
-  String _mdp_confirmation;
-  bool _cgu_accepted;
-  String _cgu_accept_message;
+  String _mdpConfirmation;
+  bool _cguAccepted;
+  String _cguAcceptMessage;
 
   AuthService _authService;
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
@@ -34,20 +36,36 @@ class SignUpPageState extends State<SignUpPage> {
   void initState() {
     _email = "";
     _pseudo = "";
+    _birthDate = DateTime.now();
     _mdp = "";
-    _mdp_confirmation = "";
-    _cgu_accepted = false;
-    _cgu_accept_message = "";
+    _mdpConfirmation = "";
+    _cguAccepted = false;
+    _cguAcceptMessage = "";
 
     _authService = new AuthService();
     super.initState();
   }
 
+  ///
+  /// Validate and save form
+  /// call ws to save new user in database
+  /// Display dialog to show success / failure
+  ///
   void validateForm() async {
-    (!_cgu_accepted) ? setState(() { _cgu_accept_message = "Vous devez accepter les CGU"; }) : setState(() { _cgu_accept_message = ""; }) ;
+    (!_cguAccepted) ? setState(() { _cguAcceptMessage = "Vous devez accepter les CGU"; }) : setState(() { _cguAcceptMessage = ""; }) ;
     if (_formKey.currentState.validate()) {
-      if (_cgu_accepted) {
-        bool result = await _authService.signup();
+      _formKey.currentState.save();
+      if (_cguAccepted) {
+        User newUser = new User(
+          mail: _email,
+          username: _pseudo,
+          password: _mdp,
+          birthDate: _birthDate
+        );
+
+        print(newUser.toJson());
+
+        bool result = await _authService.signUp(newUser);
         Widget dialogTitle;
         var dialogContent;
         VoidCallback dialogOnPressed;
@@ -63,7 +81,7 @@ class SignUpPageState extends State<SignUpPage> {
             ]
           );
           dialogOnPressed = () {
-            Navigator.pushReplacementNamed(context, '/home');
+            Navigator.pushReplacementNamed(context, '/');
           };
         } else {
           dialogTitle = new Text("Oh Oh...");
@@ -169,7 +187,10 @@ class SignUpPageState extends State<SignUpPage> {
                           validator: (value)
                           {
                             if (value == null) return "Le champ date de naissance est obligatoire";
-                          }
+                          },
+                          onSaved: (value) {
+                            _birthDate = value;
+                          },
                       ),
                     ),
 
@@ -192,7 +213,7 @@ class SignUpPageState extends State<SignUpPage> {
                     new Padding(
                       padding: EdgeInsets.only(top:14, bottom: 14, left:28, right: 28),
                       child: new TextFormField(
-                        initialValue: _mdp_confirmation,
+                        initialValue: _mdpConfirmation,
                         obscureText: true,
                         style: PlaygroundLoginTextFieldStyle.getStyle(context),
                         decoration: PlaygroundLoginTextFieldStyle.getDecoration(context, "Confirmation mot de passe", Icons.vpn_key),
@@ -201,7 +222,7 @@ class SignUpPageState extends State<SignUpPage> {
                           if (value != _mdp && _mdp.isNotEmpty) return "Les mots de passe ne correspondent pas";
                         },
                         onSaved: (value) {
-                          _mdp_confirmation = value;
+                          _mdpConfirmation = value;
                         },
                       ),
                     ),
@@ -218,12 +239,12 @@ class SignUpPageState extends State<SignUpPage> {
                               children: <Widget>[
 
                                 new PlaygroundCheckbox(
-                                  value: _cgu_accepted,
+                                  value: _cguAccepted,
                                   dark: true,
                                   onChanged: (value) {
                                     if (value == null) value = false;
                                     setState(() {
-                                      _cgu_accepted = value;
+                                      _cguAccepted = value;
                                     });
                                   },
                                 ),
@@ -258,7 +279,7 @@ class SignUpPageState extends State<SignUpPage> {
                               ],
                             ),
 
-                            (_cgu_accept_message.isNotEmpty) ?
+                            (_cguAcceptMessage.isNotEmpty) ?
                             new Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
@@ -267,7 +288,7 @@ class SignUpPageState extends State<SignUpPage> {
                                     child: new Icon(Icons.error_outline, color: Theme.of(context).primaryColorDark),
                                   ),
                                   new Text(
-                                    _cgu_accept_message,
+                                    _cguAcceptMessage,
                                     style: new TextStyle(
                                         color: Theme.of(context).primaryColorDark
                                     ),
