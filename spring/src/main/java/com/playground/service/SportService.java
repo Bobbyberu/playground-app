@@ -2,13 +2,12 @@ package com.playground.service;
 
 import com.playground.model.Sport;
 import com.playground.repository.SportRepository;
-import com.playground.utils.ResourceNotFoundException;
+import com.playground.service.interfaces.ISportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Class SportService
