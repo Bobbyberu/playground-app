@@ -101,8 +101,6 @@ class PlaygroundDetails extends React.Component {
     displayFavoriteIcon = () => {
         // On modifie l'icône 'favori' en fonction de l'état du playground sélectionné
         const favoritePlaygrounds = (this.props.favoritePlaygrounds.findIndex(item => item.id === this.props.playground.id) !== -1)
-        //console.log("props : "+this.props)
-        //console.log("favorite : "+favoritePlaygrounds)
         return (
             favoritePlaygrounds ? <FavoriteIconFull /> : <FavoriteIconEmpty />
         )
