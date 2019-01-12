@@ -1,6 +1,7 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'package:Playground/controllers/ImageController.dart';
 import 'package:Playground/controllers/PlaygroundController.dart';
 import 'package:Playground/entities/Playground.dart';
 import 'package:Playground/entities/Sport.dart';
@@ -10,18 +11,37 @@ import 'package:http/http.dart' as http;
 class PlaygroundService {
 
   PlaygroundController _controller = new PlaygroundController();
+  ImageController _imageController = new ImageController();
 
   ///
-  ///Save a playground to the database
+  ///Save a playground to the database and save attached image
   ///return bool success
   ///
   Future<bool> save(Playground playground, File img) async {
     bool res = false;
 
-    await _controller.postPlayground(playground).then((response) {
-      http.Response resp = response as http.Response;
+    await _controller.postPlayground(playground).then((response) async {
       res = response.statusCode == 201 || response.statusCode == 200;
+
+      print("playground");
+      _controller.printResponse(response);
+
+      if (res && img != null) {
+        int createdPlaygroundId = json.decode(response.body)["id"];
+        await _imageController.postPlaygroundImage(createdPlaygroundId, img).then((responseImg) {
+
+          print("Image");
+          _imageController.printResponse(responseImg);
+          res = responseImg.statusCode == 201;
+
+        }).catchError((error) {
+          res = false;
+          _imageController.printError(error);
+        });
+      }
+
     }).catchError((error) {
+      res = false;
       _controller.printError(error);
     });
 
@@ -91,6 +111,20 @@ class PlaygroundService {
     });
 
     return playgrounds;
+  }
+
+  Future<File> getPlaygroundImage(int playgroundId) async {
+    File img ;
+
+    await _imageController.getPlaygroundImage(playgroundId).then((response) {
+      if (response.statusCode == 200) {
+        img = response.body as File;
+      }
+    }).catchError((error) {
+      _imageController.printError(error);
+    });
+
+    return img;
   }
 
 }

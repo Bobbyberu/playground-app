@@ -12,10 +12,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 
-/**
- * Page for submitting a new playground to the database
- * User enter informations about a playground (locations, available sports, picture, ...) and submit it to the server
- */
+///
+/// Page for submitting a new playground to the database
+/// User enter information about a playground (locations, available sports, picture, ...) and submit it to the server
+///
 class AddPlaygroundPageDesign extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => new AddPlaygroundPageDesignState();
@@ -41,7 +41,7 @@ class AddPlaygroundPageContainerState extends State<AddPlaygroundPageContainer> 
 
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   Playground newPlayground = Playground.getDefault();
-  File playgroundImg = null;
+  File playgroundImg;
 
 
   ///
@@ -255,6 +255,24 @@ class AddPlaygroundPageContainerState extends State<AddPlaygroundPageContainer> 
 
                                   new Padding(
                                       padding: EdgeInsets.only(left: 12),
+                                      child: new Text("Ville", style: PlaygroundLabelStyle.getStyle(context))
+                                  ),
+                                  new Padding(
+                                      padding: EdgeInsets.all(12),
+                                      child: new TextFormField(
+                                          style: PlaygroundTextFieldStyle.getStyle(context),
+                                          decoration: PlaygroundTextFieldStyle.getDecoration(context, "Saint-hilaire-Cusson-la-Valmite"),
+                                          validator : (value) {
+                                            if(value.isEmpty) return "Le champ Ville est obligatoire";
+                                          },
+                                          onSaved: (value) {
+                                            newPlayground.city = value;
+                                          }
+                                      )
+                                  ),
+
+                                  new Padding(
+                                      padding: EdgeInsets.only(left: 12),
                                       child: new Text("Adresse", style: PlaygroundLabelStyle.getStyle(context))
                                   ),
                                   new Padding(
@@ -266,7 +284,7 @@ class AddPlaygroundPageContainerState extends State<AddPlaygroundPageContainer> 
                                           if(value.isEmpty) return "Le champ Adresse est obligatoire";
                                         },
                                         onSaved: (value) {
-                                          // TODO
+                                          newPlayground.address = value;
                                         }
                                     )
                                   ),
