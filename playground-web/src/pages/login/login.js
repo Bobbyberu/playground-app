@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
+
 import MailOutline from '@material-ui/icons/MailOutline';
 import VpnKey from '@material-ui/icons/VpnKey';
-import Button from '@material-ui/core/Button';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import { withStyles } from '@material-ui/core/styles';
-import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+
+import AuthService from '../../services/auth';
 import './login.css';
 
 const styles = ({
@@ -60,17 +64,25 @@ class Login extends Component {
     this.state = {
       login: '',
       password: '',
-      redirect: false,
-    };
+      redirect: false
+    }
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.authService = new AuthService();
   }
 
   handleSubmit(event) {
     event.preventDefault();
-    this.setState({
-      redirect: true,
-    });
+
+    this.authService.login(this.state.login, this.state.password)
+      .then(() => {
+        this.setState({
+          redirect: true
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
   }
 
   handleInputChange(event) {
@@ -84,11 +96,16 @@ class Login extends Component {
   }
 
   render() {
-    const content = this.state.redirect ? this.redirect() : this.renderForm(this.props);
-
+    const content = () => {
+      if (this.authService.loggedIn()) {
+        return this.redirect()
+      } else {
+        return this.state.redirect ? this.redirect() : this.renderForm(this.props);
+      }
+    };
     return (
       <React.Fragment>
-        {content}
+        {content()}
       </React.Fragment>
     );
   }
@@ -121,7 +138,7 @@ class Login extends Component {
                       <MailOutline color="primary" />
                     </InputAdornment>
                   ),
-                  classes: { input: classes.input },
+                  classes: { input: classes.input }
                 }}
                 placeholder="Email"
                 value={this.state.login}
@@ -158,7 +175,7 @@ class Login extends Component {
             </div>
 
             <div className={`${classes.text} col-12`}>
-                            Pas encore inscrit ?
+              Pas encore inscrit ?
               {' '}
               <Link to="/signup">Inscrivez-vous !</Link>
             </div>

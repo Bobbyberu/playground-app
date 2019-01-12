@@ -1,15 +1,36 @@
 import React, { Component } from 'react';
-import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
-import PlaygroundDetails from '../playground-details/playground-details';
-import './home.css';
-import NavBar from "../../common-components/nav-bar/nav-bar";
-import ButtonAdd from "./add-playground/button-add";
-import ModalPlayground from "./add-playground/modal-playground"
-import PlaygroundAPI from '../../services/playground-api';
 import L from 'leaflet';
+import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
+
+import ButtonAdd from "./add-playground/button-add";
+import ModalPlayground from "./add-playground/modal-playground";
+import NavBar from "../../common-components/nav-bar/nav-bar";
+import PlaygroundAPI from '../../services/playground-api';
+import PlaygroundDetails from '../playground-details/playground-details';
+import AuthService from '../../services/auth';
+
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import green from '@material-ui/core/colors/green';
+
+import './home.css';
 
 var Tools = require('../../services/tools');
 
+// MUI theme
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            main: green[500],
+            contrastText: '#fff'
+        },
+        secondary: {
+            main: green[500],
+            contrastText: '#fff'
+        }
+    }
+});
+
+// create Playground Marker for map 
 const playgroundMarkerIcon = new L.icon({
     iconUrl: require('../../assets/img/playgroundMarker.png'),
     iconRetinaUrl: require('../../assets/img/playgroundMarker.png'),
@@ -28,7 +49,7 @@ export default class Home extends Component {
             zoom: 15,
             // modal
             isOpen: false,
-            playgrounds: []
+            playgrounds: [],
         }
         this.api = new PlaygroundAPI();
         this.renderPlaygrounds = this.renderPlaygrounds.bind(this);
@@ -78,18 +99,20 @@ export default class Home extends Component {
 
     render() {
         return (
-            <div>
-                <NavBar />
-                <Map center={this.state.location} zoom={this.state.zoom} className="fullscreen">
-                    <TileLayer
-                        url="https://api.mapbox.com/styles/v1/playground-app/cjqgjco2v0en02squr5fkrcb9/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoicGxheWdyb3VuZC1hcHAiLCJhIjoiY2pxZ2piYXdhMDBkOTQzcG5zcG9idWNrMCJ9.H64SLGKZlHfQeDTBGidTqQ"
-                    />
-                    {this.renderPlaygrounds()}
-                </Map>
-                <ButtonAdd onClick={this.displayModal} />
-                <ModalPlayground show={this.state.isOpen}
-                    onClose={this.displayModal} />
-            </div>
+            <MuiThemeProvider theme={theme}>
+                <div>
+                    <NavBar />
+                    <Map center={this.state.location} zoom={this.state.zoom} className="fullscreen">
+                        <TileLayer
+                            url="https://api.mapbox.com/styles/v1/playground-app/cjqgjco2v0en02squr5fkrcb9/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoicGxheWdyb3VuZC1hcHAiLCJhIjoiY2pxZ2piYXdhMDBkOTQzcG5zcG9idWNrMCJ9.H64SLGKZlHfQeDTBGidTqQ"
+                        />
+                        {this.renderPlaygrounds()}
+                    </Map>
+                    <ButtonAdd onClick={this.displayModal} />
+                    <ModalPlayground show={this.state.isOpen}
+                        onClose={this.displayModal} />
+                </div>
+            </MuiThemeProvider>
         );
     }
 }
