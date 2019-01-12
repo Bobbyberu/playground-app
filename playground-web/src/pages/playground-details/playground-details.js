@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Emoji from '../../common-components/emoji/emoji';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
@@ -93,24 +92,24 @@ const styles = theme => ({
  Contenu de la popup avec un element material ui Card
  */
 class PlaygroundDetails extends React.Component {
-    toggleFavorite() {
+    toggleFavorite = () => {
         // Action à envoyer au store
         const action = { type: "TOGGLE_FAVORITE", value: this.props.playground }
         this.props.dispatch(action)
     }
 
-    displayFavoriteIcon() {
+    displayFavoriteIcon = () => {
         // On modifie l'icône 'favori' en fonction de l'état du playground sélectionné
-        let favorite = (this.props.favoritePlaygrounds.findIndex(item => item.id === this.props.playground.id) !== -1)
+        const favoritePlaygrounds = (this.props.favoritePlaygrounds.findIndex(item => item.id === this.props.playground.id) !== -1)
+        //console.log("props : "+this.props)
+        //console.log("favorite : "+favoritePlaygrounds)
         return (
-            favorite ? <FavoriteIconFull /> : <FavoriteIconEmpty />
+            favoritePlaygrounds ? <FavoriteIconFull /> : <FavoriteIconEmpty />
         )
     }
 
     render() {
-        console.log(this.props)
         const { classes } = this.props
-
         return (
             <MuiThemeProvider theme={theme}>
                 <div className="global">
@@ -174,7 +173,7 @@ class PlaygroundDetails extends React.Component {
 // mapping du state global dans les props du composant PlaygroundDetails
 const mapStateToProps = (state) => {
     return {
-        favoritePlaygrounds: state.favoritePlaygrounds
+        favoritePlaygrounds: state.toggleFavorite.favoritePlaygrounds
     }
 }
 

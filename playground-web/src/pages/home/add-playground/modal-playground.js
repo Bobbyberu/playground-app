@@ -19,13 +19,11 @@ class ModalPlayground extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    componentDidMount() {
-        //console.log(this.props.open)
-    }
-
     handleClose = () => {
-        
-    };  
+        // Action à envoyer au store
+        const action = { type: "TOGGLE_STATE_MODAL", value: false }
+        this.props.dispatch(action)
+    };
 
     handleChange(event) {
         this.setState({ value: event.target.value });
@@ -37,12 +35,12 @@ class ModalPlayground extends React.Component {
     }
 
     render() {
-       const { open } = this.props.open;
-       console.log("open : " + this.props.open)
+        //destructuration
+        const { open } = this.props
         return (
             <div>
                 <Dialog open={open} onClose={this.handleClose} maxWidth={"md"} fullWidth >
-                    <DialogTitle id="form-dialog-title">Ajouter un nouveau terrain</DialogTitle>
+                    <DialogTitle >Ajouter un nouveau terrain</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
                             Veillez à compléter chaque étape du formulaire avant de passer à la suivante.
@@ -66,7 +64,7 @@ class ModalPlayground extends React.Component {
 // mapping du state global dans les props du composant Home
 const mapStateToProps = (state) => {
     return {
-        open: state.open
+        open: state.toggleModal.open
     }
 }
 

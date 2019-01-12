@@ -1,6 +1,4 @@
-const initialState = { favoritePlaygrounds: [] }
-
-function toggleFavorite(state = initialState , action) {
+function toggleFavorite(state = { favoritePlaygrounds: [] } , action) {
     let nextState
     switch(action.type) {
         case 'TOGGLE_FAVORITE':
@@ -25,7 +23,7 @@ function toggleFavorite(state = initialState , action) {
                     favoritePlaygrounds: [...state.favoritePlaygrounds, action.value]
                 }
             }
-            // Return nextState si sa valeur n'est pas à undefined sinon return state
+            // Return nextState si sa valeur n'est pas à undefined sinon return state (principe d'immuable)
             return nextState || state
         default:
             return state

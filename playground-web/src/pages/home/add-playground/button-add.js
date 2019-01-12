@@ -42,7 +42,7 @@ class ButtonAdd extends React.Component {
 // mapping du state global dans les props du composant Home
 const mapStateToProps = (state) => {
     return {
-        open: state.open
+        open: state.toggleModal.open
     }
 }
 

@@ -70,7 +70,6 @@ class Home extends Component {
     }
 
     render() {
-        console.log("HomeState : " + this.props.open)
         return (
             <div>
                 <NavBar />
