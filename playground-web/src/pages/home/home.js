@@ -7,7 +7,6 @@ import ButtonAdd from "./add-playground/button-add";
 import ModalPlayground from "./add-playground/modal-playground"
 import PlaygroundAPI from '../../services/playground-api';
 import L from 'leaflet';
-import { connect } from 'react-redux';
 
 var Tools = require('../../services/tools');
 
@@ -80,19 +79,10 @@ class Home extends Component {
                     {this.renderPlaygrounds()}
                 </Map>
                 <ButtonAdd />
-                <div id = "bijour"><ModalPlayground /></div>
-                
+                <ModalPlayground />
             </div>
         );
     }
 }
 
-// mapping du state global dans les props du composant Home
-const mapStateToProps = (state) => {
-    return {
-        open: state.open
-    }
-}
-
-// mapStateToProps pour abonner le composant aux changements du store Redux
-export default connect(mapStateToProps)(Home)
+export default Home
