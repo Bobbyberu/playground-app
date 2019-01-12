@@ -62,13 +62,15 @@ public class PlaygroundController {
         Playground playground = playgroundRepository.findById(playgroundId)
                 .orElseThrow(() -> new ResourceNotFoundException("Playground with id " + playgroundId + " not found"));
         playground.setName(playgroundDetails.getName());
+        playground.setAddress(playground.getAddress());
+        playground.setCity(playground.getCity());
         playground.setSurface(playgroundDetails.getSurface());
         playground.setSports(playgroundDetails.getSports());
         playground.setPrivate(playgroundDetails.isPrivate());
         playground.setPlayers(playgroundDetails.getPlayers());
         playground.setLongitude(playgroundDetails.getLongitude());
         playground.setLatitude(playgroundDetails.getLatitude());
-        playgroundDetails.setImage(playgroundDetails.getImage());
+        playground.setImageName(playgroundDetails.getImageName());
         playground.setDescription(playgroundDetails.getDescription());
         playground.setCovered(playgroundDetails.isCovered());
         playground.setAverageMark(playgroundDetails.getAverageMark());

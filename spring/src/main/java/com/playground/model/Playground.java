@@ -1,5 +1,6 @@
 package com.playground.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -21,8 +22,7 @@ public class Playground {
     private String surface;
     private String description;
     private double averageMark;
-    @OneToOne
-    private Image image;
+    private String imageName;
     @OneToMany
     private Set<User> players;
     @ManyToMany
@@ -97,20 +97,21 @@ public class Playground {
         this.description = description;
     }
 
+    @JsonIgnore
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
     public double getAverageMark() {
         return averageMark;
     }
 
     public void setAverageMark(double averageMark) {
         this.averageMark = averageMark;
-    }
-
-    public Image getImage() {
-        return image;
-    }
-
-    public void setImage(Image image) {
-        this.image = image;
     }
 
     public Set<User> getPlayers() {
