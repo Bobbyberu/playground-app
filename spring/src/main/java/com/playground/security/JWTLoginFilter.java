@@ -31,22 +31,14 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
         String username;
         String password;
 
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Headers", "*");
-        response.setHeader("Access-Control-Expose-Headers", "*");
-        
         String jsonString = IOUtils.toString(request.getInputStream(), Charset.defaultCharset());
-        if (!StringUtils.isEmpty(jsonString)) {
-            JSONObject json = new JSONObject(jsonString);
+        JSONObject json = new JSONObject(jsonString);
 
-            username = json.getString("username");
-            password = json.getString("password");
+        username = json.getString("username");
+        password = json.getString("password");
 
-            System.out.printf("JWTLoginFilter.attemptAuthentication: username/password= %s,%s", username, password);
-            System.out.println();
-        } else {
-            return null;
-        }
+        System.out.printf("JWTLoginFilter.attemptAuthentication: username/password= %s,%s", username, password);
+        System.out.println();
 
         return getAuthenticationManager()
                 .authenticate(new UsernamePasswordAuthenticationToken(username, password, Collections.emptyList()));
