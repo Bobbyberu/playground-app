@@ -76,7 +76,8 @@ class SignalPlaygroundPageState extends State<SignalPlaygroundPage> {
               actions: <Widget>[
                 new FlatButton(
                     onPressed: () {
-                      Navigator.of(context).pushReplacementNamed('/home');
+                      Navigator.pop(context);
+                      Navigator.pop(context);
                     },
                     child: new Text("Ok")
                 )
