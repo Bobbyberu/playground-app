@@ -1,6 +1,7 @@
 package com.playground.service;
 
 import com.playground.model.Comment;
+import com.playground.model.Playground;
 import com.playground.repository.CommentRepository;
 import com.playground.service.interfaces.ICommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,10 @@ public class CommentService implements ICommentService {
     @Override
     public Comment getComment(int id) {
         return commentRepository.findById(id).orElse(null);
+    }
+
+    public List<Comment> getCommentByPlaygroundId(Playground playground) {
+        return commentRepository.getByPlaygroundId(playground);
     }
 
     @Override

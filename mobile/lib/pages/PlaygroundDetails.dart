@@ -29,6 +29,7 @@ class PlaygroundDetailsState extends State<PlaygroundDetails> {
 
   @override
   void initState() {
+    comments = new List<Comment>();
     loadComments();
     super.initState();
   }
@@ -169,7 +170,25 @@ class PlaygroundDetailsState extends State<PlaygroundDetails> {
                     new Padding(
                       padding: EdgeInsets.only(top: 18, left: 4),
                       child: new InkWell(
-                        child: new Row ( //AVIS
+                        child:
+                        (comments.isEmpty) ?
+                        new Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            new Icon(Icons.star_border, color: Colors.grey[700]),
+                            new Padding(
+                                padding: EdgeInsets.only(left: 8, top: 2),
+                                child: new Text(
+                                 "Ce playground n'a reçu aucun avis",
+                                  style: new TextStyle(
+                                    color: Colors.grey[700],
+                                  ),
+                                )
+                            )
+                          ],
+                        )
+                        :
+                        new Row ( //AVIS
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             new CommentsStars(mark:_commentService.getAverageOfComment(comments), markMax:5, color: Colors.grey[700]),

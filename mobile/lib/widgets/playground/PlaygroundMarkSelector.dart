@@ -1,19 +1,37 @@
 
 import 'package:flutter/material.dart';
 
-class PlaygroundMarkSelector extends StatefulWidget {
+class PlaygroundMarkSelector extends FormField<int> {
 
-  @override
-  State<StatefulWidget> createState() => new PlaygroundMarkSelectorState();
+  PlaygroundMarkSelector({
+    FormFieldSetter<int> onSaved,
+    FormFieldValidator<int> validator,
+    int initialValue = 3,
+    bool autovalidate = false
+  }) : super(
+    onSaved: onSaved,
+    validator: validator,
+    initialValue: initialValue,
+    autovalidate: autovalidate,
+    builder: (FormFieldState<int> state) {
 
-}
+      List<Widget> stars = new List();
+      for(int i = 1 ; i <= 5 ; i++) {
+        stars.add(
+            new IconButton(
+                icon: (i <= state.value) ? new Icon(Icons.star, size: 30) : new Icon(Icons.star_border, size: 30),
+                color: Colors.green,
+                onPressed: () {
+                  state.didChange(i);
+                })
+        );
+      }
 
-class PlaygroundMarkSelectorState extends State<PlaygroundMarkSelector> {
-
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return null;
-  }
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: stars,
+      );
+    }
+  );
 
 }

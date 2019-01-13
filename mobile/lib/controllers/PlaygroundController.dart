@@ -12,6 +12,10 @@ class PlaygroundController extends CommonController{
      return get(Uri.encodeFull(route + id.toString()));
   }
 
+  Future getCommentsOfPlayrgound(int playgroundId) {
+    return get(route + playgroundId.toString() + "/comments");
+  }
+
   Future getPlaygroundsBySearch(String keywords) {
     return get(route + "search/" + Uri.encodeFull(keywords));
   }

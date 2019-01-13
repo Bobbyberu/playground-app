@@ -1,9 +1,11 @@
 package com.playground.controllers;
 
+import com.playground.model.Comment;
 import com.playground.model.Playground;
 import com.playground.model.Sport;
 import com.playground.repository.PlaygroundRepository;
 import com.playground.repository.SportRepository;
+import com.playground.service.CommentService;
 import com.playground.utils.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,9 @@ public class PlaygroundController {
 
     @Autowired SportRepository sportRepository;
 
+    @Autowired
+    CommentService commentService;
+
     @GetMapping(value = "/", produces = "application/json")
     public ResponseEntity<List<Playground>> getAllPlaygrounds() {
         ArrayList<Playground> listPlaygrounds = new ArrayList<>();
@@ -42,6 +47,13 @@ public class PlaygroundController {
             listPlaygrounds.add(playground);
         }
         return new ResponseEntity<>(listPlaygrounds, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{id}/comments", produces = "application/json")
+    public ResponseEntity<List<Comment>> search(@PathVariable(value = "id") int id) {
+        Playground playground = playgroundRepository.findById(id).get();
+        List<Comment> listComments = commentService.getCommentByPlaygroundId(playground);
+        return new ResponseEntity<>(listComments, HttpStatus.OK);
     }
 
     @GetMapping(value = "/id/{id}", produces = "application/json")

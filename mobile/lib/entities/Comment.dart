@@ -27,10 +27,10 @@ class Comment {
     return <String, dynamic> {
       'id' : this.id,
       'mark': this.mark,
-      'comment': this.comment,
+      'comment': (this.comment == null) ? null : this.comment,
       'archived' : this.archived,
-      'author': this.author.toJson(),
-      'playground': this.playground.toJson()
+      'author': (this.author == null) ? null : this.author.toJson(),
+      'playground': (this.playground == null) ? null : this.playground.toJson()
     };
   }
 

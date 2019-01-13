@@ -41,6 +41,7 @@ class PlaygroundCommentPageState extends State<PlaygroundCommentPage> {
   @override
   Widget build(BuildContext context) {
     List<Widget> commentItems = List.generate(comments.length, (index) => new CommentCard(comment: comments.elementAt(index)));
+    commentItems.add(new Container(height: 200,width: MediaQuery.of(context).size.width));
 
     return new Scaffold(
       appBar: new AppBar(
@@ -75,13 +76,24 @@ class PlaygroundCommentPageState extends State<PlaygroundCommentPage> {
 
               new SingleChildScrollView(
                 child: new ConstrainedBox(
-                  constraints: new BoxConstraints(minHeight: MediaQuery.of(context).size.height, maxHeight: MediaQuery.of(context).size.height,  minWidth: MediaQuery.of(context).size.width),
-                  child: (comments.isEmpty ) ?
-                    new Text("Aucun commentaire disponible") :
+                  constraints: new BoxConstraints(minHeight: MediaQuery.of(context).size.height-30, maxHeight: MediaQuery.of(context).size.height-30,  minWidth: MediaQuery.of(context).size.width),
+
+                  child: new Padding(
+                    padding: EdgeInsets.all(12),
+                    child: (comments.isEmpty ) ?
+                    new Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        new Padding(padding: EdgeInsets.all(12), child: new Text("Aucun commentaire disponible"))
+                      ],
+                    ) :
                     new ListView(
                       scrollDirection: Axis.vertical,
                       children: commentItems,
                     ),
+                  )
+
                 ),
               ),
 

@@ -1,5 +1,6 @@
 
 import 'package:Playground/entities/Comment.dart';
+import 'package:Playground/pages/SignalCommentPage.dart';
 import 'package:Playground/widgets/playground/CommentStars.dart';
 import 'package:Playground/widgets/user/UserAvatarCircle.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,7 @@ class CommentCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
                 new IconButton(icon: new Icon(Icons.flag, color: Colors.grey[700]), onPressed: () {
-                  // TODO OPEN SIGNAL COMMENT
+                  Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new SignalCommentPage(comment: comment)));
                 })
               ],
             )

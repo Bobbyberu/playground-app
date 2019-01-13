@@ -1,11 +1,15 @@
 
+import 'dart:convert';
+
 import 'package:Playground/controllers/CommentController.dart';
+import 'package:Playground/controllers/PlaygroundController.dart';
 import 'package:Playground/entities/Comment.dart';
 import 'package:Playground/entities/User.dart';
 
 class CommentService {
 
   CommentController _controller = new CommentController();
+  PlaygroundController _playgroundController = new PlaygroundController();
 
   ///
   /// save a comment to the database
@@ -31,6 +35,19 @@ class CommentService {
   Future<List<Comment>> getCommentsOfPlayground(int idPlayground) async{
     List<Comment> comments = new List();
 
+    await _playgroundController.getCommentsOfPlayrgound(idPlayground).then((response) {
+      _playgroundController.printResponse(response);
+      if(response.statusCode != null && response.statusCode == 200) {
+        List<dynamic> commentJson = json.decode(response.body);
+
+        commentJson.forEach((c) {
+          Comment comment = Comment.fromJson(c);
+          comments.add(comment);
+        });
+      }
+    });
+
+    /*
     Comment comment1 = new Comment();
     comment1.comment = "C'est génial !";
     comment1.mark = 4;
@@ -53,7 +70,7 @@ class CommentService {
     comment4.comment = "YEEEEEEEEEEEEES";
     comment4.mark = 4.2;
     comment4.author = User.getDefault();
-    comments.add(comment4);
+    comments.add(comment4);*/
 
     return comments;
   }
@@ -63,6 +80,7 @@ class CommentService {
   /// return double average
   ///
   double getAverageOfComment(List<Comment> comments) {
+    if (comments.isEmpty) return 0;
     double sum = 0;
     comments.forEach((c) { sum += c.mark; });
     return (sum / comments.length);
