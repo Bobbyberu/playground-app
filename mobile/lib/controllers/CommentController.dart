@@ -6,6 +6,10 @@ class CommentController extends CommonController {
 
   static const String route = CommonController.baseUrl + "comments/";
 
+  Future postComment(Comment comment) {
+    return post(route, comment.toJson());
+  }
+
   Future getCommentById(int id){
     return get( Uri.encodeFull(route + id.toString()) );
   }

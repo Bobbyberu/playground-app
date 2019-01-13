@@ -1,5 +1,6 @@
 import 'package:Playground/entities/Comment.dart';
 import 'package:Playground/entities/Playground.dart';
+import 'package:Playground/pages/PlaygroundCommentPage.dart';
 import 'package:Playground/pages/SignalPlaygroundPage.dart';
 import 'package:Playground/services/CommentService.dart';
 import 'package:Playground/widgets/map/PlaygroundShowOnMap.dart';
@@ -7,20 +8,42 @@ import 'package:Playground/widgets/playground/CommentStars.dart';
 import 'package:flutter/material.dart';
 
 
-/**
- * Widget to display a playground details
- */
-class PlaygroundDetails extends StatelessWidget {
-  
+class PlaygroundDetails extends StatefulWidget {
+
   final Playground playground;
 
   const PlaygroundDetails({Key key, this.playground}) : super(key: key) ;
 
   @override
-  Widget build(BuildContext context) {
+  State<StatefulWidget> createState() => new PlaygroundDetailsState();
 
-    CommentService _commentService = new CommentService();
-    List<Comment> comments = _commentService.getCommentsOfPlayground(this.playground.id);
+}
+
+///
+///Widget to display a playground details
+///
+class PlaygroundDetailsState extends State<PlaygroundDetails> {
+
+  CommentService _commentService = new CommentService();
+  List<Comment> comments;
+
+  @override
+  void initState() {
+    loadComments();
+    super.initState();
+  }
+
+  void loadComments() async {
+    await _commentService.getCommentsOfPlayground(widget.playground.id).then((response) {
+      setState(() {
+        comments = response;
+      });
+    });
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
 
     return new Material(
       child: new SingleChildScrollView(
@@ -39,7 +62,7 @@ class PlaygroundDetails extends StatelessWidget {
                     fit: StackFit.passthrough,
                     children: <Widget>[
                       FadeInImage(
-                        image: (this.playground.imgPath != null) ? NetworkImage(this.playground.imgPath) : AssetImage("images/default_playground.png"),
+                        image: (widget.playground.imgPath != null) ? NetworkImage(widget.playground.imgPath) : AssetImage("images/default_playground.png"),
                         fit: BoxFit.cover,
                         placeholder: AssetImage("images/playground_placeholder.png"),
                         height: 200.0,
@@ -75,7 +98,7 @@ class PlaygroundDetails extends StatelessWidget {
                                 color: Colors.transparent,
                                 tooltip: "Signaler",
                                 onPressed: () {
-                                  Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new SignalPlaygroundPage(this.playground)));
+                                  Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new SignalPlaygroundPage(widget.playground)));
                                 },
                               )
                           )
@@ -102,7 +125,7 @@ class PlaygroundDetails extends StatelessWidget {
                             new Padding(
                               padding: EdgeInsets.only(bottom: 4),
                               child: new Text(
-                                this.playground.name,
+                                widget.playground.name,
                                 style: new TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold
@@ -111,14 +134,14 @@ class PlaygroundDetails extends StatelessWidget {
                             ),
 
                             new Text(
-                              this.playground.address,
+                              widget.playground.address,
                               style: new TextStyle(
                                 color: Colors.grey[700],
                               ),
                               overflow: TextOverflow.clip,
                             ),
                             new Text(
-                              this.playground.city,
+                              widget.playground.city,
                               style: new TextStyle(
                                 color: Colors.grey[700],
                               ),
@@ -136,7 +159,7 @@ class PlaygroundDetails extends StatelessWidget {
                             color: Theme.of(context).primaryColor,
                             tooltip: "Voir sur la carte",
                             onPressed: () {
-                              Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new PlaygroundShowOnMap(playground: this.playground)));
+                              Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new PlaygroundShowOnMap(playground: widget.playground)));
                             }
                         )
 
@@ -145,21 +168,26 @@ class PlaygroundDetails extends StatelessWidget {
 
                     new Padding(
                       padding: EdgeInsets.only(top: 18, left: 4),
-                      child: new Row ( //AVIS
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          new CommentsStars(mark:_commentService.getAverageOfComment(comments), markMax:5, color: Colors.grey[700]),
-                          new Padding(
-                            padding: EdgeInsets.only(left: 8, top: 2),
-                            child: new Text(
-                              _commentService.getAverageOfComment(comments).toStringAsFixed(1) + " / 5 (" + comments.length.toString() + " avis)",
-                              style: new TextStyle(
-                                color: Colors.grey[700],
-                              ),
+                      child: new InkWell(
+                        child: new Row ( //AVIS
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            new CommentsStars(mark:_commentService.getAverageOfComment(comments), markMax:5, color: Colors.grey[700]),
+                            new Padding(
+                                padding: EdgeInsets.only(left: 8, top: 2),
+                                child: new Text(
+                                  _commentService.getAverageOfComment(comments).toStringAsFixed(1) + " / 5 (" + comments.length.toString() + " avis)",
+                                  style: new TextStyle(
+                                    color: Colors.grey[700],
+                                  ),
+                                )
                             )
-                          )
-                        ],
-                      ),
+                          ],
+                        ),
+                        onTap: () {
+                          Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new PlaygroundCommentPage(playground: widget.playground)));
+                        }
+                      )
                     ),
                     
                     new Padding(
@@ -179,7 +207,7 @@ class PlaygroundDetails extends StatelessWidget {
                                 padding: EdgeInsets.only(left: 8,top: 8),
                                 child: new Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: this.playground.sports.map(
+                                  children: widget.playground.sports.map(
                                     (s) => new Padding(
                                       padding: EdgeInsets.only(bottom: 4),
                                       child: new Text(s.name),
@@ -207,7 +235,7 @@ class PlaygroundDetails extends StatelessWidget {
                           new Padding(
                             padding: EdgeInsets.all(8),
                             child: new Text(
-                              (this.playground.description != null && this.playground.description.length > 0) ? this.playground.description : "Aucune description n'est disponible",
+                              (widget.playground.description != null && widget.playground.description.length > 0) ? widget.playground.description : "Aucune description n'est disponible",
                               textAlign: TextAlign.justify,
                             ),
                           )

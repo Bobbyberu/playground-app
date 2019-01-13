@@ -21,7 +21,6 @@ class CommentsStars extends StatelessWidget {
     var half = mark - mark.floor();
     var empty = (markMax - mark).floor();
 
-
     for (int i = 0 ; i < full ; i++) {
       stars.add(starFull);
     }
@@ -30,7 +29,7 @@ class CommentsStars extends StatelessWidget {
       (half > 0.75) ?
         stars.add(starFull)
         : stars.add(starHalf)
-      : stars.add(starEmpty);
+      : (half > 0) ? stars.add(starEmpty) : () {};
 
     for (int i = 0 ; i < empty ; i++) {
       stars.add(starEmpty);
