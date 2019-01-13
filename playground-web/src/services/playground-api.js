@@ -1,9 +1,34 @@
+import AuthService from './auth';
+
 const axios = require('axios');
+const api = 'http://localhost:8080/api/';
+const authService = new AuthService();
 
 export default class PlaygroundAPI {
+  getAllPlayground() {
+    let token = authService.getToken();
+    return axios({
+      method: 'get',
+      url: api + 'playgrounds/',
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => response.data);
+  }
+
   getSearchResult(searchTerm) {
-    return axios.get('/playgrounds.json')
-      .then(response => response.data.result);
+    let token = authService.getToken();
+    return axios({
+      method: 'get',
+      url: api + 'playgrounds/search/' + searchTerm,
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => response.data);
   }
 
   getRandomPlaygrounds() {
