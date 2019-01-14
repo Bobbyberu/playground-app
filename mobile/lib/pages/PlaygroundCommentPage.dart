@@ -69,7 +69,7 @@ class PlaygroundCommentPageState extends State<PlaygroundCommentPage> {
                   ],
                 ),
                 onTap: () {
-                  Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new AddPlaygroundCommentPage(playground: widget.playground)));
+                  Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new AddPlaygroundCommentPage(playground: widget.playground))).then((_) => loadComments());
                 }
               ),
 

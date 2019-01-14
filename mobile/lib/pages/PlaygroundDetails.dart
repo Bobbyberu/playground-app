@@ -99,7 +99,7 @@ class PlaygroundDetailsState extends State<PlaygroundDetails> {
                                 color: Colors.transparent,
                                 tooltip: "Signaler",
                                 onPressed: () {
-                                  Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new SignalPlaygroundPage(widget.playground)));
+                                  Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new SignalPlaygroundPage(widget.playground))).then((_) => loadComments());
                                 },
                               )
                           )
@@ -160,7 +160,7 @@ class PlaygroundDetailsState extends State<PlaygroundDetails> {
                             color: Theme.of(context).primaryColor,
                             tooltip: "Voir sur la carte",
                             onPressed: () {
-                              Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new PlaygroundShowOnMap(playground: widget.playground)));
+                              Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new PlaygroundShowOnMap(playground: widget.playground))).then((_) => loadComments());
                             }
                         )
 
@@ -204,7 +204,7 @@ class PlaygroundDetailsState extends State<PlaygroundDetails> {
                           ],
                         ),
                         onTap: () {
-                          Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new PlaygroundCommentPage(playground: widget.playground)));
+                          Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new PlaygroundCommentPage(playground: widget.playground))).then((_) => loadComments());
                         }
                       )
                     ),
