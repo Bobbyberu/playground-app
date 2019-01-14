@@ -41,15 +41,13 @@ const playgroundMarkerIcon = new L.icon({
     shadowAnchor: [20, 92],
 });
 
-export default class Home extends Component {
+class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
             location: undefined,
             zoom: 15,
-            // modal
-            isOpen: false,
-            playgrounds: [],
+            playgrounds: []
         }
         this.api = new PlaygroundAPI();
         this.renderPlaygrounds = this.renderPlaygrounds.bind(this);
@@ -71,12 +69,6 @@ export default class Home extends Component {
                     playgrounds: response
                 });
             });
-    }
-
-    displayModal = () => {
-        this.setState({
-            isOpen: !this.state.isOpen
-        })
     }
 
     renderPlaygrounds() {
@@ -108,11 +100,12 @@ export default class Home extends Component {
                         />
                         {this.renderPlaygrounds()}
                     </Map>
-                    <ButtonAdd onClick={this.displayModal} />
-                    <ModalPlayground show={this.state.isOpen}
-                        onClose={this.displayModal} />
+                    <ButtonAdd />
+                    <ModalPlayground />
                 </div>
             </MuiThemeProvider>
         );
     }
 }
+
+export default Home

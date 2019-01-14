@@ -1,23 +1,17 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import { Dialog } from '@material-ui/core';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import Stepper from './Stepper';
-
-const styles = {
-
-};
+import { connect } from 'react-redux';
 
 class ModalPlayground extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            open: this.props.show,
             value: '',
         }
 
@@ -25,15 +19,11 @@ class ModalPlayground extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    // Mise à jour du state lorsque l'on reçoit des props du composant parent
-    // Méthode dépréciée, à retravailler
-    UNSAFE_componentWillReceiveProps(props) {
-        this.setState({ open: props.show })
-    }
-
     handleClose = () => {
-        this.setState({ open: false });
-    };  
+        // Action à envoyer au store
+        const action = { type: "TOGGLE_STATE_MODAL", value: false }
+        this.props.dispatch(action)
+    };
 
     handleChange(event) {
         this.setState({ value: event.target.value });
@@ -45,13 +35,12 @@ class ModalPlayground extends React.Component {
     }
 
     render() {
-        const { classes } = this.props;
-
-        const { open } = this.state;
+        //destructuration
+        const { open } = this.props
         return (
             <div>
                 <Dialog open={open} onClose={this.handleClose} maxWidth={"md"} fullWidth >
-                    <DialogTitle id="form-dialog-title">Ajouter un nouveau terrain</DialogTitle>
+                    <DialogTitle >Ajouter un nouveau terrain</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
                             Veillez à compléter chaque étape du formulaire avant de passer à la suivante.
@@ -72,9 +61,12 @@ class ModalPlayground extends React.Component {
     }
 }
 
-ModalPlayground.propTypes = {
-    onClose: PropTypes.func.isRequired,
-    show: PropTypes.bool
-};
+// mapping du state global dans les props du composant Home
+const mapStateToProps = (state) => {
+    return {
+        open: state.toggleModal.open
+    }
+}
 
-export default withStyles(styles)(ModalPlayground)
+// mapStateToProps pour abonner le composant aux changements du store Redux
+export default connect(mapStateToProps)(ModalPlayground)

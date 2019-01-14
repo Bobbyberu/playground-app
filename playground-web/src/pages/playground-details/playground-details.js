@@ -19,7 +19,6 @@ import Divider from '@material-ui/core/Divider';
 import { connect } from 'react-redux';
 import Emoji from '../../common-components/emoji/emoji';
 
-
 // Override de certains éléments de la card
 const theme = createMuiTheme({
   overrides: {
@@ -97,11 +96,6 @@ class PlaygroundDetails extends React.Component {
     super(props);
   }
 
-  componentDidUpdate() {
-    console.log('componentDidUpdate : ');
-    console.log(this.props.favoritePlaygrounds);
-  }
-
   toggleFavorite() {
     // Action à envoyer au store
     const action = { type: 'TOGGLE_FAVORITE', value: this.props.playground };
@@ -117,7 +111,6 @@ class PlaygroundDetails extends React.Component {
   }
 
   render() {
-    console.log(this.props);
     const { classes } = this.props;
 
     return (
@@ -187,7 +180,7 @@ PlaygroundDetails.propTypes = {
 
 // mapping du state global dans les props du composant PlaygroundDetails
 const mapStateToProps = state => ({
-  favoritePlaygrounds: state.favoritePlaygrounds,
+  favoritePlaygrounds: state.toggleFavorite.favoritePlaygrounds,
 });
 
 // La fonction mapStateToProps permet d'abonner le composant aux changements du store Redux

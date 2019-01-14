@@ -1,4 +1,10 @@
-import { createStore } from 'redux';
-import toggleFavorite from './reducers/favoriteReducer';
+import { createStore, combineReducers } from 'redux';
+import toggleFavorite from './reducers/favoriteReducer'
+import toggleModal from './reducers/modalReducer'
 
-export default createStore(toggleFavorite);
+const rootReducer = combineReducers({
+    toggleFavorite: toggleFavorite,
+    toggleModal: toggleModal,
+})
+
+export default createStore(rootReducer)

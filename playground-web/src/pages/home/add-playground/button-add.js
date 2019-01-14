@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
+import { connect } from 'react-redux'
 
 const styles = theme => ({
   margin: {
@@ -14,17 +15,36 @@ const styles = theme => ({
   },
 });
 
-const ButtonAdd = ({ classes, onClick }) => (
-  <div onClick={onClick}>
-    <Fab size="medium" color="secondary" aria-label="Add" className={classes.margin}>
-      <AddIcon />
-    </Fab>
-  </div>
-);
+class ButtonAdd extends React.Component {
 
-ButtonAdd.propTypes = {
-  classes: PropTypes.object.isRequired,
-  onClick: PropTypes.func.isRequired,
-};
+    displayModal = () => {
+        // Action à envoyer au store
+        const action = { type: "TOGGLE_STATE_MODAL", value: true }
+        this.props.dispatch(action)
+    }
 
-export default withStyles(styles)(ButtonAdd);
+    render() {
+        const { classes } = this.props
+
+        return (
+            <Fab size="medium"
+                color="secondary"
+                aria-label="Add"
+                className={classes.margin}
+                onClick={this.displayModal}
+            >
+                <AddIcon /> 
+            </Fab>
+        )
+    }
+}
+
+// mapping du state global dans les props du composant Home
+const mapStateToProps = (state) => {
+    return {
+        open: state.open
+    }
+}
+
+// mapStateToProps pour abonner le composant aux changements du store Redux
+export default connect(mapStateToProps)(withStyles(styles)(ButtonAdd));
