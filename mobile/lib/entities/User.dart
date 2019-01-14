@@ -29,7 +29,7 @@ class User {
   factory User.getDefault() {
     return new User(
       id: 0,
-      username: "",
+      username: "Jean-Louis",
       mail: "",
       birthDate: DateTime.now(),
       password: "",

@@ -2,6 +2,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:Playground/controllers/PlaygroundController.dart';
+import 'package:Playground/entities/Comment.dart';
 import 'package:Playground/entities/Playground.dart';
 import 'package:Playground/entities/Sport.dart';
 
