@@ -110,7 +110,6 @@ class AddPlaygroundCommentState extends State<AddPlaygroundCommentPage> {
                       child: new PlaygroundMarkSelector(
                         initialValue: 3,
                         onSaved: (value) {
-                          print(value.toString());
                           newComment.mark = value.ceilToDouble();
                         },
                       ),
