@@ -30,7 +30,7 @@ class PlaygroundCard extends StatelessWidget {
                         fontWeight: FontWeight.bold
                     ),
                   ),
-                  new Text(playground.address,
+                  new Text(playground.address + " " + playground.city,
                     style: new TextStyle(
                         color: Colors.grey[500]
                     ),

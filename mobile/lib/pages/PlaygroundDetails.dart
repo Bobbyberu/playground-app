@@ -1,5 +1,6 @@
 import 'package:Playground/entities/Comment.dart';
 import 'package:Playground/entities/Playground.dart';
+import 'package:Playground/pages/SignalPlaygroundPage.dart';
 import 'package:Playground/services/CommentService.dart';
 import 'package:Playground/widgets/map/PlaygroundShowOnMap.dart';
 import 'package:Playground/widgets/playground/CommentStars.dart';
@@ -38,7 +39,7 @@ class PlaygroundDetails extends StatelessWidget {
                     fit: StackFit.passthrough,
                     children: <Widget>[
                       FadeInImage(
-                        image: NetworkImage(this.playground.imgPath),
+                        image: (this.playground.imgPath != null) ? NetworkImage(this.playground.imgPath) : AssetImage("images/default_playground.png"),
                         fit: BoxFit.cover,
                         placeholder: AssetImage("images/playground_placeholder.png"),
                         height: 200.0,
@@ -55,7 +56,7 @@ class PlaygroundDetails extends StatelessWidget {
                               color: Colors.white,
                             ),
                             color: Colors.transparent,
-                            tooltip: "Back",
+                            tooltip: "Retour",
                             onPressed: () { Navigator.of(context).pop(); },
                           )
                         )
@@ -72,8 +73,10 @@ class PlaygroundDetails extends StatelessWidget {
                                   color: Colors.white,
                                 ),
                                 color: Colors.transparent,
-                                tooltip: "Back",
-                                onPressed: () {},
+                                tooltip: "Signaler",
+                                onPressed: () {
+                                  Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new SignalPlaygroundPage(this.playground)));
+                                },
                               )
                           )
                       )
@@ -109,6 +112,13 @@ class PlaygroundDetails extends StatelessWidget {
 
                             new Text(
                               this.playground.address,
+                              style: new TextStyle(
+                                color: Colors.grey[700],
+                              ),
+                              overflow: TextOverflow.clip,
+                            ),
+                            new Text(
+                              this.playground.city,
                               style: new TextStyle(
                                 color: Colors.grey[700],
                               ),
@@ -197,7 +207,7 @@ class PlaygroundDetails extends StatelessWidget {
                           new Padding(
                             padding: EdgeInsets.all(8),
                             child: new Text(
-                              (this.playground.description.length > 0) ? this.playground.description : "Aucune description n'est disponible",
+                              (this.playground.description != null && this.playground.description.length > 0) ? this.playground.description : "Aucune description n'est disponible",
                               textAlign: TextAlign.justify,
                             ),
                           )

@@ -30,4 +30,4 @@ function toggleFavorite(state = { favoritePlaygrounds: [] } , action) {
     }
 }
 
-export default toggleFavorite
+export default toggleFavorite;

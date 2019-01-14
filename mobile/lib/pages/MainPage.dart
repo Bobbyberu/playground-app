@@ -9,13 +9,13 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 
 
-/**
- * Home page widget of the application
- * Page that display
- *  - Map
- *  - Searchbar
- *  - Links to "Add playground" page and "Profile" page
- */
+///
+/// Home page widget of the application
+/// Page that display
+/// - Map
+/// - Searchbar
+/// - Links to "Add playground" page and "Profile" page
+///
 class MainPage extends StatefulWidget {
 
   @override
@@ -36,6 +36,15 @@ class MainPageState extends State<MainPage> {
     super.initState();
   }
 
+  void search(String value) async {
+    await _playgroundService.search(value).then((response) {
+      setState(() {
+        results = response;
+        searching = (value.length > 0);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -52,11 +61,16 @@ class MainPageState extends State<MainPage> {
       width: MediaQuery.of(context).size.width,
       decoration: new BoxDecoration(
         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
-        color: (searching) ? Colors.white : Colors.transparent
+        color: (searching) ? Colors.white : Colors.transparent,
+        boxShadow:(searching) ? [new BoxShadow(
+            color: Theme.of(context).primaryColorDark,
+            blurRadius: 6.0,
+            spreadRadius: 1
+        )] : []
       ),
       child: new SafeArea(
         child: new Padding(
-          padding: EdgeInsets.only(top:12, bottom: 12, left: 12, right: 12),
+          padding: EdgeInsets.only(top:12, bottom: 0, left: 12, right: 12),
           child:  new Column(
             mainAxisAlignment: MainAxisAlignment.end,
             mainAxisSize: MainAxisSize.max,
@@ -75,11 +89,8 @@ class MainPageState extends State<MainPage> {
                   fillColor: Colors.white
                 ),
                 onSubmitted: (value) {
-                  setState(() {
-                    results = _playgroundService.search(value);
-                    searching = (value.length > 0);
-                  });
-                },
+                  search(value);
+                }
               ),
 
               (searching) ?
@@ -92,8 +103,15 @@ class MainPageState extends State<MainPage> {
                       padding: EdgeInsets.only(left: 12, bottom: 8),
                       child: new Text(results.length.toString() + " résultat(s) trouvés")
                     ),
-                    new Column(
-                      children: List.generate(results.length, (index) => new Padding(padding: EdgeInsets.only(bottom: 4), child: new PlaygroundCard(results.elementAt(index)))),
+                    new SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: new ConstrainedBox(
+                        constraints: new BoxConstraints(minHeight: 100, maxHeight: 200),
+                        child: new ListView(
+                          scrollDirection: Axis.vertical,
+                          children: List.generate(results.length, (index) => new Padding(padding: EdgeInsets.only(bottom: 4), child: new PlaygroundCard(results.elementAt(index)))),
+                        ),
+                      ),
                     )
                   ],
                 )
@@ -130,13 +148,6 @@ class MainPageState extends State<MainPage> {
                       )
                     ]
                 ),
-              ),
-
-
-
-              new Positioned(
-                  top: 0,
-                  child: searchBar
               ),
 
               new Align(
@@ -191,6 +202,11 @@ class MainPageState extends State<MainPage> {
                       ),
                     )
                 )
+              ),
+
+              new Positioned(
+                  top: 0,
+                  child: searchBar
               ),
 
             ],
