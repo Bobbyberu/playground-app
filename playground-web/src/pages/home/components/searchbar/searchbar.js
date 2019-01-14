@@ -9,6 +9,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 
 const api = new PlaygroundAPI();
+var timeout = null;
 
 // styles
 const styles = theme => ({
@@ -56,7 +57,7 @@ const styles = theme => ({
 });
 
 function getSuggestions(searchTerm) {
-    return api.getRandomPlaygrounds('test');
+    return api.getSearchResult(searchTerm);
 }
 
 function getSuggestionValue(suggestion) {
@@ -98,12 +99,17 @@ class Searchbar extends React.Component {
     }
 
     handleSuggestionsFetchRequested = ({ value }) => {
-        getSuggestions(value)
-            .then((response) => {
-                this.setState({
-                    playgrounds_suggested: response.slice(0, 5)
+        clearTimeout(timeout);
+
+        // timeout to wait for user to stop typing so that we won't make too much http calls
+        timeout = setTimeout(function () {
+            getSuggestions(value)
+                .then((response) => {
+                    this.setState({
+                        playgrounds_suggested: response.slice(0, 5)
+                    });
                 });
-            });
+        }.bind(this), 500);
     };
 
     handleSuggestionsClearRequested = () => {

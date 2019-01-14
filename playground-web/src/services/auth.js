@@ -3,15 +3,25 @@ import axios from 'axios';
 
 export default class AuthService {
     constructor(domain) {
-        this.domain = domain || 'http://localhost:8080/';
+        this.domain = domain || 'http://localhost:8080/api/users/';
         this.login = this.login.bind(this);
+    }
+
+    signUp(user) {
+        return axios({
+            method: 'post',
+            url: this.domain + 'signup',
+            data: user,
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .catch(err => console.log(err));
     }
 
     login(username, password) {
         // get a token from api server
         return axios({
             method: 'post',
-            url: this.domain + 'api/users/login',
+            url: this.domain + 'login',
             data: { 'username': username, 'password': password },
             headers: { 'Content-Type': 'application/json' }
         })

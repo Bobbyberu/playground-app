@@ -19,6 +19,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 
 import Searchbar from '../../pages/home/components/searchbar/searchbar';
 import AuthService from '../../services/auth';
+import SnackbarContentWrapper from '../../common-components/snackbar/SnackbarContentWrapper';
 
 import AddIcon from '@material-ui/icons/AddBox';
 import ProfileIcon from '@material-ui/icons/People';
@@ -28,8 +29,6 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Account from '@material-ui/icons/AccountCircle';
 import ExitToApp from '@material-ui/icons/ExitToApp';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import Close from '@material-ui/icons/Close';
 
 // Styles
 const styles = theme => ({
@@ -247,31 +246,21 @@ class NavBar extends React.Component {
                     </Toolbar>
                 </AppBar>
 
-                <div>
-                    <Snackbar anchorOrigin={{
+                <Snackbar
+                    anchorOrigin={{
                         vertical: 'bottom',
                         horizontal: 'left',
                     }}
-                        open={this.state.snackbarOpen}
-                        autoHideDuration={6000}
+                    open={this.state.snackbarOpen}
+                    autoHideDuration={6000}
+                    onClose={this.handleSnackbarClose.bind(this)}
+                >
+                    <SnackbarContentWrapper
                         onClose={this.handleSnackbarClose.bind(this)}
-                        ContentProps={{
-                            'aria-describedby': 'message-id',
-                        }}
-                        message={<span id="message-id"><CheckCircleIcon /> Vous êtes déconnecté</span>}
-                        action={[
-                            <IconButton
-                                key="close"
-                                aria-label="Close"
-                                color="inherit"
-                                className={classes.closeSnackbar}
-                                onClick={this.handleSnackbarClose.bind(this)}
-                            >
-                                <Close />
-                            </IconButton>,
-                        ]}
+                        variant="success"
+                        message={'Vous êtes déconnecté'}
                     />
-                </div>
+                </Snackbar>
             </div>
         )
     }

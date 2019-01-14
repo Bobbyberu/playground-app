@@ -16,6 +16,7 @@ import DateRange from '@material-ui/icons/DateRange';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { withStyles } from '@material-ui/core/styles';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import AuthService from '../../services/auth';
 import './sign-up.css';
 
 const styles = ({
@@ -102,9 +103,9 @@ class SignUp extends Component {
 
     this.state = {
       email: '',
-      nickname: '',
+      username: '',
       birthYear: '',
-      birthMonth: 1,
+      birthMonth: 0,
       birthDay: '',
       password: '',
       confirmation: '',
@@ -113,6 +114,7 @@ class SignUp extends Component {
       finalized: false,
     };
 
+    this.authService = new AuthService();
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleErrors = this.handleErrors.bind(this);
@@ -133,18 +135,28 @@ class SignUp extends Component {
     const termsOfUse = this.state.termsOfUse;
 
     if (!termsOfUse) {
-      console.log('not validated!');
       if (termsOfUse === null) {
-        console.log('not validated terms of use!');
         this.setState({
           termsOfUse: false,
         });
       }
     } else {
-      console.log('validated!');
-      this.setState({
-        finalized: true,
-      });
+      // to avoid UTC time converion by server
+      let birthDate = new Date(Date.UTC(this.state.birthYear, this.state.birthMonth, this.state.birthDay));
+      let user = {
+        username: this.state.username,
+        mail: this.state.email,
+        password: this.state.password,
+        birthDate: birthDate
+      }
+
+      this.authService.signUp(user)
+        .then(() => {
+          this.setState({
+            finalized: true,
+          });
+        })
+        .catch(err => console.log(err));
     }
   }
 
@@ -181,7 +193,7 @@ class SignUp extends Component {
       <div className={classes.checkboxError}>
         <ErrorOutline />
         {' '}
-Veuillez accepter les CGU
+        Veuillez accepter les CGU
       </div>
     );
   }
@@ -201,7 +213,7 @@ Veuillez accepter les CGU
       <div className={`${classes.text} container`}>
         <div className="col-12">Votre Inscription est terminée !</div>
         <div className="col-12">Un email de confirmation va vous être envoyé.</div>
-        <div className="col-12"><Link to="/signin">Retourner à la page de connexion</Link></div>
+        <div className="col-12"><Link to="/login">Retourner à la page de connexion</Link></div>
       </div>
     );
   }
@@ -243,7 +255,7 @@ Veuillez accepter les CGU
               <TextValidator
                 className={classes.textvalidator}
                 onChange={this.handleInputChange}
-                name="nickname"
+                name="username"
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -253,7 +265,7 @@ Veuillez accepter les CGU
                   classes: { input: classes.input },
                 }}
                 placeholder="Pseudo"
-                value={this.state.nickname}
+                value={this.state.username}
                 variant="outlined"
                 validators={['required', 'minStringLength: 5']}
                 errorMessages={['Champ obligatoire', 'Votre pseudo doit être long d\'au moins 5 caractères']}
@@ -289,21 +301,21 @@ Veuillez accepter les CGU
                       onChange={this.handleInputChange}
                       input={
                         <OutlinedInput labelWidth={0} name="birthMonth" id="outlined-age-simple" />
-                                            }
+                      }
                       displayEmpty
                     >
-                      <MenuItem value={1}>janvier</MenuItem>
-                      <MenuItem value={2}>février</MenuItem>
-                      <MenuItem value={3}>mars</MenuItem>
-                      <MenuItem value={4}>avril</MenuItem>
-                      <MenuItem value={5}>mai</MenuItem>
-                      <MenuItem value={6}>juin</MenuItem>
-                      <MenuItem value={7}>juillet</MenuItem>
-                      <MenuItem value={8}>août</MenuItem>
-                      <MenuItem value={9}>septembre</MenuItem>
-                      <MenuItem value={10}>octobre</MenuItem>
-                      <MenuItem value={11}>novembre</MenuItem>
-                      <MenuItem value={12}>décembre</MenuItem>
+                      <MenuItem value={0}>janvier</MenuItem>
+                      <MenuItem value={1}>février</MenuItem>
+                      <MenuItem value={2}>mars</MenuItem>
+                      <MenuItem value={3}>avril</MenuItem>
+                      <MenuItem value={4}>mai</MenuItem>
+                      <MenuItem value={5}>juin</MenuItem>
+                      <MenuItem value={6}>juillet</MenuItem>
+                      <MenuItem value={7}>août</MenuItem>
+                      <MenuItem value={8}>septembre</MenuItem>
+                      <MenuItem value={9}>octobre</MenuItem>
+                      <MenuItem value={10}>novembre</MenuItem>
+                      <MenuItem value={11}>décembre</MenuItem>
                     </Select>
                   </FormControl>
                 </div>

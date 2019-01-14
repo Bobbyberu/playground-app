@@ -2,15 +2,18 @@ import React, { Component } from 'react';
 import L from 'leaflet';
 import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
 
+import Snackbar from '@material-ui/core/Snackbar';
+
 import ButtonAdd from "./add-playground/button-add";
 import ModalPlayground from "./add-playground/modal-playground";
 import NavBar from "../../common-components/nav-bar/nav-bar";
 import PlaygroundAPI from '../../services/playground-api';
 import PlaygroundDetails from '../playground-details/playground-details';
-import AuthService from '../../services/auth';
+import SnackbarContentWrapper from '../../common-components/snackbar/SnackbarContentWrapper';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
+import Error from '@material-ui/icons/Error';
 
 import './home.css';
 
@@ -47,7 +50,8 @@ class Home extends Component {
         this.state = {
             location: undefined,
             zoom: 15,
-            playgrounds: []
+            playgrounds: [],
+            snackbarOpen: false
         }
         this.api = new PlaygroundAPI();
         this.renderPlaygrounds = this.renderPlaygrounds.bind(this);
@@ -63,11 +67,17 @@ class Home extends Component {
         }.bind(this));
 
         // Récupérer les propriétés lieés aux terrains
-        this.api.getSearchResult('test')
+        this.api.getAllPlayground()
             .then((response) => {
                 this.setState({
                     playgrounds: response
                 });
+            })
+            .catch(err => {
+                console.log(err);
+                this.setState({
+                    snackbarOpen: true
+                })
             });
     }
 
@@ -89,6 +99,20 @@ class Home extends Component {
         );
     }
 
+    getSnackbarErrorMessage() {
+        return 'Les playgrounds n\'ont pas pu être récupérés';
+    }
+
+    handleSnackbarClose(event, reason) {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        this.setState({
+            snackbarOpen: false
+        })
+    }
+
     render() {
         return (
             <MuiThemeProvider theme={theme}>
@@ -102,6 +126,21 @@ class Home extends Component {
                     </Map>
                     <ButtonAdd />
                     <ModalPlayground />
+                    <Snackbar
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }}
+                        open={this.state.snackbarOpen}
+                        autoHideDuration={6000}
+                        onClose={this.handleSnackbarClose.bind(this)}
+                    >
+                        <SnackbarContentWrapper
+                            onClose={this.handleSnackbarClose.bind(this)}
+                            variant="error"
+                            message={this.getSnackbarErrorMessage()}
+                        />
+                    </Snackbar>
                 </div>
             </MuiThemeProvider>
         );
