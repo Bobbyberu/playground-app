@@ -2,6 +2,7 @@
 import 'package:Playground/entities/Comment.dart';
 import 'package:Playground/entities/SignalComment.dart';
 import 'package:Playground/entities/User.dart';
+import 'package:Playground/services/SessionManager.dart';
 import 'package:Playground/services/SignalCommentService.dart';
 import 'package:Playground/widgets/inputs/PlaygroundButton.dart';
 import 'package:Playground/widgets/style/PlaygorundTextFieldStyle.dart';
@@ -28,9 +29,7 @@ class SignalCommentPageState extends State<SignalCommentPage> {
   @override
   void initState() {
     signal = SignalComment.getDefault();
-    User me = User.getDefault(); //TODO
-    me.id = 10; // TODO
-    me.username ="juju"; //TODO
+    User me = SessionManager.getInstance().getUser();
     signal.author = me;
     signal.comment = widget.comment;
     super.initState();

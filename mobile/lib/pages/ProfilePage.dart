@@ -1,13 +1,16 @@
+import 'package:Playground/entities/User.dart';
 import 'package:Playground/services/AuthService.dart';
+import 'package:Playground/services/SessionManager.dart';
 import 'package:Playground/widgets/menu/SettingsMenuLink.dart';
 import 'package:flutter/material.dart';
 
-/**
- * Widget page of the profile menu
- */
+///
+/// Widget page of the profile menu
+///
 class ProfilePage extends StatelessWidget {
 
   AuthService _authService = new AuthService();
+  User user = SessionManager.getInstance().getUser();
 
   TextStyle menuStyle =  new TextStyle(
       fontSize: 20,
@@ -52,7 +55,7 @@ class ProfilePage extends StatelessWidget {
                         ),
 
                         new Text(
-                          "@username",
+                          "@ " + user.username,
                           style: new TextStyle(
                               color: Colors.grey[700],
                               fontStyle: FontStyle.italic,

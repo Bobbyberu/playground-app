@@ -1,7 +1,9 @@
 
+import 'dart:convert';
+
 import 'package:Playground/entities/User.dart';
+import 'package:Playground/services/SessionManager.dart';
 import 'package:Playground/services/TokenManager.dart';
-import 'package:http/http.dart' as http;
 
 import 'package:Playground/controllers/AuthController.dart';
 
@@ -17,18 +19,17 @@ class AuthService {
     bool res = false;
 
     await _controller.postCredentials(email, password).then((response) async {
-      print(response.statusCode);
       res = response.statusCode == 200;
-      print(res);
       var headers = response.headers as Map<String,String>;
-      print("headers parsed");
 
       if(headers.containsKey("authorization")) {
-        print("setting token " + headers["authorization"]);
-        TokenManager.getInstance().setToken(headers["authorization"]);
+        var token =  headers["authorization"];
+        TokenManager.getInstance().setToken(token);
+        SessionManager.getInstance().loadUser(token);
       }
     }).catchError((error) {
       _controller.printError(error);
+      res = false;
     });
 
     return res;

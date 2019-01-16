@@ -88,6 +88,26 @@ class PlaygroundDetailsState extends State<PlaygroundDetails> {
 
                       new Positioned(
                           right: 4,
+                          bottom: 4,
+                          child:
+                          new SafeArea(
+                              top: true,
+                              child: new IconButton(
+                                icon:new Icon(
+                                  Icons.star_border,
+                                  color: Colors.white,
+                                ),
+                                color: Colors.transparent,
+                                tooltip: "Retour",
+                                onPressed: () {
+                                  // TODO fav
+                                },
+                              )
+                          )
+                      ),
+
+                      new Positioned(
+                          right: 4,
                           child:
                           new SafeArea(
                               top: true,
