@@ -18,6 +18,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import AuthService from '../../services/auth';
 import './sign-up.css';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 
 const styles = ({
   title: {
@@ -201,9 +202,9 @@ class SignUp extends Component {
   render() {
     const content = this.state.finalized ? this.renderFinalized(this.props) : this.renderForm(this.props);
     return (
-      <React.Fragment>
+      <MuiThemeProvider theme={this.props.theme}>
         {content}
-      </React.Fragment>
+      </MuiThemeProvider>
     );
   }
 

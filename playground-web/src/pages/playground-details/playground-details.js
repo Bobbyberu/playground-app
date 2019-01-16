@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -14,13 +16,23 @@ import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
 import { connect } from 'react-redux';
 import Emoji from '../../common-components/emoji/emoji';
+import green from '@material-ui/core/colors/green';
+import grey from '@material-ui/core/colors/grey';
+import defaultPlayground from '../../assets/img/default_playground.png';
 
 // Override de certains éléments de la card
 const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: green[700],
+    },
+    secondary: {
+      main: grey[50],
+    },
+  },
   overrides: {
     MuiListItem: {
       gutters: {
@@ -86,6 +98,13 @@ const styles = theme => ({
   section2: {
     marginBottom: theme.spacing.unit,
   },
+  link: {
+    color: green[500],
+    '&:hover': {
+      textDecoration: 'none',
+      color: fade(green[500], 0.8),
+    },
+  },
 });
 
 /*
@@ -112,6 +131,7 @@ class PlaygroundDetails extends React.Component {
 
   render() {
     const { classes } = this.props;
+    let playgroundImg = this.props.playground.image ? this.props.playground.image : defaultPlayground;
 
     return (
       <MuiThemeProvider theme={theme}>
@@ -120,7 +140,7 @@ class PlaygroundDetails extends React.Component {
             {/* Image associée au playground */}
             <CardMedia
               className={classes.media}
-              image={this.props.playground.image}
+              image={playgroundImg}
               title="Photo du playground"
             />
             {/* Informations sur le playground */}
@@ -144,27 +164,27 @@ class PlaygroundDetails extends React.Component {
                   {/* Récupération des sports d'un playground associés à leur emoji */}
                   <List>
                     {
-                                            this.props.playground.sports.map(sport => (
-                                              <ListItem>
-                                                <Avatar className={classes.avatar}>
-                                                  <Emoji symbol={sport.emoji} label={sport.name} />
-                                                </Avatar>
-                                                <ListItemText primary={sport.name} />
-                                              </ListItem>
-                                            ))
-                                        }
+                      this.props.playground.sports.map(sport => (
+                        <ListItem>
+                          <Emoji symbol={sport.symbol} label={sport.name} />
+                          <ListItemText primary={sport.name} />
+                        </ListItem>
+                      ))
+                    }
                   </List>
                 </Typography>
               </div>
             </CardContent>
             {/* Actions associés à l acard (favoris et détails) */}
             <CardActions className={classes.button}>
-              <IconButton aria-label="Ajouter aux favoris" onClick={() => this.toggleFavorite()}>
+              <IconButton aria-label="Ajouter aux favoris" color="primary" onClick={() => this.toggleFavorite()}>
                 {this.displayFavoriteIcon()}
               </IconButton>
-              <Button size="small" color="primary">
-                                Détails
-              </Button>
+              <Link to={'/details/' + this.props.playground.id} className={classes.link}>
+                <Button size="small" color="primary">
+                  Détails
+                </Button>
+              </Link>
             </CardActions>
           </Card>
         </div>

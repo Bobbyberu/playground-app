@@ -4,6 +4,7 @@ import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Button from '@material-ui/core/Button';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 
@@ -104,9 +105,10 @@ class Login extends Component {
       }
     };
     return (
-      <React.Fragment>
+
+      <MuiThemeProvider theme={this.props.theme}>
         {content()}
-      </React.Fragment>
+      </MuiThemeProvider>
     );
   }
 
@@ -143,8 +145,8 @@ class Login extends Component {
                 placeholder="Email"
                 value={this.state.login}
                 variant="outlined"
-                validators={['required', 'isEmail']}
-                errorMessages={['Champ obligatoire', 'L\' adresse mail n\'est pas valide']}
+                validators={['required']}
+                errorMessages={['Champ obligatoire']}
               />
             </div>
 
