@@ -2,7 +2,18 @@
 
 Back to [README.md](../README.md)
 
-## [GET] /api/playgrounds
+- [[GET] /api/playgrounds](#1)
+- [[GET] /api/playgrounds/\{id\}](#2)
+- [[POST] /api/playgrounds](#3)
+- [[PUT] /api/playgrounds/\{id\}](#4) (ADMIN)
+- [[DELETE] /api/playgrounds/\{id\}](#5) (ADMIN)
+- [[GET] /api/playgrounds/search/\{keyword\}](#6)
+- [GET] /api/users/{userId}/playgrounds ou /api/favorite/playgrounds (suivant l'utilisation de l'utilisateur connecté)
+- [PATCH] /api/playgrounds/{id}/playing
+- [GET] /api/signalement/playgrounds
+- [POST] /api/playground/{id}/favorite
+
+## [GET] /api/playgrounds {#1}
 
 Get all playgrounds
 
@@ -16,7 +27,7 @@ Get all playgrounds
 
 ___
 
-## [GET] /api/playgrounds/\{id\}
+## [GET] /api/playgrounds/\{id\} {#2}
 
 Get a playground
 
@@ -31,7 +42,7 @@ Get a playground
 
 ___
 
-## [POST] /api/playgrounds
+## [POST] /api/playgrounds {#3}
 
 Create a playground
 
@@ -45,7 +56,7 @@ Create a playground
 
 ___
 
-## [PUT] /api/playgrounds/\{id\}
+## [PUT] /api/playgrounds/\{id\} {#4}
 
 Update a playground
 
@@ -61,7 +72,7 @@ Update a playground
 
 ___
 
-## [DELETE] /api/playgrounds/\{id\}
+## [DELETE] /api/playgrounds/\{id\} {#5}
 
 Delete a playground
 
@@ -76,7 +87,7 @@ Delete a playground
   
 ___
 
-## [GET] /api/playgrounds/search/\{keyword\}
+## [GET] /api/playgrounds/search/\{keyword\} {#6}
 
 Get all playgrounds which are a linked with the keyword (sport, name, location ...)
 
