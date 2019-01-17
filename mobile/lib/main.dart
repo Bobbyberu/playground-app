@@ -1,6 +1,7 @@
 import 'package:Playground/controllers/SportController.dart';
 import 'package:Playground/pages/AddPlaygroundPageDesign.dart';
 import 'package:Playground/pages/CGUPage.dart';
+import 'package:Playground/pages/FavouritePlaygroundsPage.dart';
 import 'package:Playground/pages/LoginPage.dart';
 import 'package:Playground/pages/MainPage.dart';
 import 'package:Playground/pages/ProfilePage.dart';
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
         '/cgu'            : (context) => new CGUPage(),
         '/newplayground'  : (context) => new AddPlaygroundPageDesign(),
         '/profile'        : (context) => new ProfilePage(),
+        '/favourites'     : (context) => new FavouritePlaygroundsPage()
       }
     );
   }

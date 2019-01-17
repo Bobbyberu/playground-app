@@ -75,7 +75,9 @@ class ProfilePage extends StatelessWidget {
               new SettingsMenuLink(label: "Paramètres", icon: Icons.settings, onTap: () { /* TODO */ }),
               new Divider(),
 
-              new SettingsMenuLink(label: "Mes Playgrounds favoris", icon: Icons.favorite, onTap: () { /* TODO */ }),
+              new SettingsMenuLink(label: "Mes Playgrounds favoris", icon: Icons.favorite, onTap: () {
+                Navigator.pushNamed(context, '/favourites');
+              }),
               new Divider(),
 
               new SettingsMenuLink(label: "CGU", icon: Icons.format_align_justify, onTap: () { Navigator.pushNamed(context, '/cgu'); }),

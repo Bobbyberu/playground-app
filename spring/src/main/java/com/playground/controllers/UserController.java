@@ -1,6 +1,8 @@
 package com.playground.controllers;
 
+import com.playground.model.Playground;
 import com.playground.model.User;
+import com.playground.repository.PlaygroundRepository;
 import com.playground.repository.UserRepository;
 import com.playground.utils.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/users")
@@ -24,6 +23,9 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PlaygroundRepository playgroundRepository;
+
     @GetMapping(value = "/", produces = "application/json")
     public ResponseEntity<List<User>> getAllUsers() {
         ArrayList<User> listUsers = new ArrayList<>();
@@ -31,6 +33,26 @@ public class UserController {
             listUsers.add(user);
         }
         return new ResponseEntity<>(listUsers,HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/favouritePlayground/")
+    public ResponseEntity<Set<Playground>> getFavouritePlaygrounds(@PathVariable(value = "id") int userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
+
+        return ResponseEntity.ok(user.getFavouritePlaygrounds());
+    }
+
+    @GetMapping("/{id}/favouritePlayground/{playgroundId}")
+    public ResponseEntity<Boolean> getIfPlaygroundIsFavourite(@PathVariable(value = "id") int userId, @PathVariable(value = "playgroundId") int playgroundId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
+
+        Playground playground = playgroundRepository.findById(playgroundId)
+                .orElseThrow(() -> new ResourceNotFoundException("Playground with id " + playgroundId + " not found"));
+
+        Boolean favourite = user.getFavouritePlaygrounds().contains(playground);
+        return ResponseEntity.ok(favourite);
     }
 
     @GetMapping(value = "/id/{id}", produces = "application/json")
@@ -51,6 +73,27 @@ public class UserController {
     public User createUser(@Valid @RequestBody User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
+    }
+
+    @PutMapping("/{id}/favouritePlayground/{playgroundId}")
+    public ResponseEntity<Boolean> togglePlaygroundFavorite(@PathVariable(value = "id") int userId, @PathVariable(value = "playgroundId") int playgroundId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
+
+        Playground playground = playgroundRepository.findById(playgroundId)
+                .orElseThrow(() -> new ResourceNotFoundException("Playground with id " + playgroundId + " not found"));
+
+        boolean favourite;
+        if(!user.getFavouritePlaygrounds().contains(playground)) {
+            user.getFavouritePlaygrounds().add(playground);
+            favourite = true;
+        } else {
+            user.getFavouritePlaygrounds().remove(playground);
+            favourite = false;
+        }
+        userRepository.save(user);
+
+        return ResponseEntity.ok(favourite);
     }
 
     @PutMapping("/{id}")
