@@ -12,7 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/users")
@@ -35,7 +39,7 @@ public class UserController {
         return new ResponseEntity<>(listUsers,HttpStatus.OK);
     }
 
-    @GetMapping("/{id}/favouritePlayground/")
+    @GetMapping("/{id}/favouritePlaygrounds/")
     public ResponseEntity<Set<Playground>> getFavouritePlaygrounds(@PathVariable(value = "id") int userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
@@ -43,7 +47,7 @@ public class UserController {
         return ResponseEntity.ok(user.getFavouritePlaygrounds());
     }
 
-    @GetMapping("/{id}/favouritePlayground/{playgroundId}")
+    @GetMapping("/{id}/favouritePlaygrounds/{playgroundId}")
     public ResponseEntity<Boolean> getIfPlaygroundIsFavourite(@PathVariable(value = "id") int userId, @PathVariable(value = "playgroundId") int playgroundId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
@@ -75,7 +79,7 @@ public class UserController {
         return userRepository.save(user);
     }
 
-    @PutMapping("/{id}/favouritePlayground/{playgroundId}")
+    @PutMapping("/{id}/favouritePlaygrounds/{playgroundId}")
     public ResponseEntity<Boolean> togglePlaygroundFavorite(@PathVariable(value = "id") int userId, @PathVariable(value = "playgroundId") int playgroundId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
@@ -84,12 +88,13 @@ public class UserController {
                 .orElseThrow(() -> new ResourceNotFoundException("Playground with id " + playgroundId + " not found"));
 
         boolean favourite;
-        if(!user.getFavouritePlaygrounds().contains(playground)) {
-            user.getFavouritePlaygrounds().add(playground);
-            favourite = true;
-        } else {
+
+        if(user.getFavouritePlaygrounds().contains(playground)) {
             user.getFavouritePlaygrounds().remove(playground);
             favourite = false;
+        } else {
+            user.getFavouritePlaygrounds().add(playground);
+            favourite = true;
         }
         userRepository.save(user);
 

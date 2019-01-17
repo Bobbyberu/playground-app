@@ -8,15 +8,15 @@ class UserController extends CommonController {
   static const String route = CommonController.baseUrl + "users/";
 
   Future putPlaygroundFavorite(int playgroundId) {
-    return put(route + SessionManager.getInstance().getUser().id.toString() + "/favouritePlayground/" + playgroundId.toString(), {});
+    return put(route + SessionManager.getInstance().getUser().id.toString() + "/favouritePlaygrounds/" + playgroundId.toString(), {});
   }
 
   Future getFavouritePlaygrounds() {
-    return get(route + SessionManager.getInstance().getUser().id.toString() + "/favouritePlayground/");
+    return get(route + SessionManager.getInstance().getUser().id.toString() + "/favouritePlaygrounds/");
   }
 
   Future getPlaygroundFavorite(int playgroundId) {
-    return get(route + SessionManager.getInstance().getUser().id.toString() + "/favouritePlayground/" + playgroundId.toString());
+    return get(route + SessionManager.getInstance().getUser().id.toString() + "/favouritePlaygrounds/" + playgroundId.toString());
   }
 
 }
