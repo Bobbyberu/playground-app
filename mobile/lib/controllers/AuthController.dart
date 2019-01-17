@@ -17,6 +17,10 @@ class AuthController extends CommonController {
     return post(route + "login", credentials);
   }
 
+  Future getUserByUsername(String username) {
+    return get(route + "name/" + username);
+  }
+
   ///
   /// send user object to the signup api to create user account
   ///

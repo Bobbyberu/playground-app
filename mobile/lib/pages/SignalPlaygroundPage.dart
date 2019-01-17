@@ -4,6 +4,7 @@ import 'package:Playground/entities/SignalPlayground.dart';
 import 'package:Playground/entities/User.dart';
 import 'package:Playground/enums/SignalPlaygroundMotives.dart';
 import 'package:Playground/pages/PlaygroundDetails.dart';
+import 'package:Playground/services/SessionManager.dart';
 import 'package:Playground/services/SignalPlaygroundService.dart';
 import 'package:Playground/widgets/inputs/PlaygroundButton.dart';
 import 'package:Playground/widgets/style/PlaygorundTextFieldStyle.dart';
@@ -45,10 +46,8 @@ class SignalPlaygroundPageState extends State<SignalPlaygroundPage> {
   void initState() {
     newSignal = SignalPlayground.getDefault();
     newSignal.playground = widget.signaledPlayground;
-    User u  = User.getDefault();
-    u.id = 10;
-    u.username = "juju";
-    newSignal.author = u; //TODO
+    User me = SessionManager.getInstance().getUser();
+    newSignal.author = me;
 
     motiveItems = new List();
     motives.forEach((key,value) {

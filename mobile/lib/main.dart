@@ -1,11 +1,13 @@
 import 'package:Playground/controllers/SportController.dart';
 import 'package:Playground/pages/AddPlaygroundPageDesign.dart';
 import 'package:Playground/pages/CGUPage.dart';
+import 'package:Playground/pages/FavouritePlaygroundsPage.dart';
 import 'package:Playground/pages/LoginPage.dart';
 import 'package:Playground/pages/MainPage.dart';
 import 'package:Playground/pages/ProfilePage.dart';
 import 'package:Playground/pages/SignUpPage.dart';
 import 'package:Playground/pages/StartPage.dart';
+import 'package:Playground/services/SessionManager.dart';
 import 'package:Playground/services/SportService.dart';
 import 'package:Playground/services/TokenManager.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +38,7 @@ class MyApp extends StatelessWidget {
         '/cgu'            : (context) => new CGUPage(),
         '/newplayground'  : (context) => new AddPlaygroundPageDesign(),
         '/profile'        : (context) => new ProfilePage(),
+        '/favourites'     : (context) => new FavouritePlaygroundsPage()
       }
     );
   }
@@ -54,11 +57,12 @@ class PlaygroundSplashScreenState extends State<PlaygroundSplashScreen> {
 
   void checkConnection() async {
     // TODO replace by a true check ws
-    await TokenManager.getInstance().getToken();
+    String token = await TokenManager.getInstance().getToken();
     SportController controller = new SportController();
     await controller.getAllSports().then((response) {
       setState(() {
         connected = (response.statusCode != null && response.statusCode == 200);
+        SessionManager.getInstance().loadUser(token);
       });
     }).catchError((error){
       setState(() {

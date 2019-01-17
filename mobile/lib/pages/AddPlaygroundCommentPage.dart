@@ -3,6 +3,7 @@ import 'package:Playground/entities/Comment.dart';
 import 'package:Playground/entities/Playground.dart';
 import 'package:Playground/entities/User.dart';
 import 'package:Playground/services/CommentService.dart';
+import 'package:Playground/services/SessionManager.dart';
 import 'package:Playground/widgets/inputs/PlaygroundButton.dart';
 import 'package:Playground/widgets/playground/PlaygroundMarkSelector.dart';
 import 'package:Playground/widgets/style/PlaygorundTextFieldStyle.dart';
@@ -30,10 +31,8 @@ class AddPlaygroundCommentState extends State<AddPlaygroundCommentPage> {
   void initState() {
     newComment = Comment.getDefault();
     newComment.playground = widget.playground;
-    User me = User.getDefault();
-    me.id = 10;
-    me.username = "juju";
-    newComment.author = me; //TODO
+    User me = SessionManager.getInstance().getUser();
+    newComment.author = me;
     super.initState();
   }
 

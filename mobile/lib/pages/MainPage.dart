@@ -109,7 +109,7 @@ class MainPageState extends State<MainPage> {
                         constraints: new BoxConstraints(minHeight: 100, maxHeight: 200),
                         child: new ListView(
                           scrollDirection: Axis.vertical,
-                          children: List.generate(results.length, (index) => new Padding(padding: EdgeInsets.only(bottom: 4), child: new PlaygroundCard(results.elementAt(index)))),
+                          children: List.generate(results.length, (index) => new Padding(padding: EdgeInsets.only(bottom: 4), child: new PlaygroundCard(playground: results.elementAt(index)))),
                         ),
                       ),
                     )

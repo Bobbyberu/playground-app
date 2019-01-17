@@ -14,8 +14,4 @@ class CommentController extends CommonController {
     return get( Uri.encodeFull(route + id.toString()) );
   }
 
-  Future getCommentByPlaygroundId(int playgroundId){
-    return get( Uri.encodeFull(route + playgroundId.toString()) );
-  }
-
 }
