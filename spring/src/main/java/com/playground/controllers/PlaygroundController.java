@@ -2,7 +2,6 @@ package com.playground.controllers;
 
 import com.playground.model.Comment;
 import com.playground.model.Playground;
-import com.playground.service.CommentService;
 import com.playground.service.PlaygroundService;
 import com.playground.utils.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +30,6 @@ public class PlaygroundController {
     public PlaygroundController(PlaygroundService playgroundService) {
         this.playgroundService = playgroundService;
     }
-
-    @Autowired
-    CommentService commentService;
 
     /**
      * [GET] Return all playgrounds
@@ -130,23 +126,5 @@ public class PlaygroundController {
     @GetMapping(value = "/search/{keyword}", produces = "application/json")
     public ResponseEntity<List<Playground>> search(@PathVariable("keyword") String keyword) {
         return new ResponseEntity<>(playgroundService.searchPlaygroundByKeyword(keyword), HttpStatus.OK);
-    }
-
-    /**
-     * TODO:: Move this function in Comments Controller (@Dylan)
-     * [GET] Return all comments of a playground
-     *
-     *
-     * @param id int
-     *
-     * @return ResponseEntity
-     */
-    @GetMapping(value = "/{id}/comments", produces = "application/json")
-    public ResponseEntity<List<Comment>> search(@PathVariable(value = "id") int id) {
-        Playground playground = playgroundService.getPlayground(id);
-
-        List<Comment> listComments = commentService.getCommentByPlaygroundId(playground);
-
-        return new ResponseEntity<>(listComments, HttpStatus.OK);
     }
 }
