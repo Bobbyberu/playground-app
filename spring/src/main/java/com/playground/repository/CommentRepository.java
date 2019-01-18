@@ -12,5 +12,8 @@ import java.util.List;
 public interface CommentRepository extends CrudRepository<Comment, Integer> {
 
     @Query("SELECT c FROM Comment c WHERE c.playground = ?1")
-    List<Comment> getByPlaygroundId(Playground playground);
+    List<Comment> getByPlayground(Playground playground);
+
+    @Query("SELECT c FROM Comment c WHERE c.playground = ?1 AND c.id = ?2")
+    Comment getOneByPlayground(Playground playground, int commentId);
 }

@@ -38,16 +38,24 @@ public class CommentService implements ICommentService {
     }
 
     @Override
+    public List<Comment> getCommentsByPlayground(Playground playground) {
+        return commentRepository.getByPlayground(playground);
+    }
+
+    @Override
     public Comment getComment(int id) {
         return commentRepository.findById(id).orElse(null);
     }
 
-    public List<Comment> getCommentByPlaygroundId(Playground playground) {
-        return commentRepository.getByPlaygroundId(playground);
+    @Override
+    public Comment getCommentByPlayground(Playground playground, int id) {
+        return commentRepository.getOneByPlayground(playground, id);
     }
 
     @Override
-    public Comment createComment(Comment comment) {
+    public Comment createComment(Playground playground, Comment comment) {
+        comment.setPlayground(playground);
+
         return commentRepository.save(comment);
     }
 

@@ -1,6 +1,7 @@
 package com.playground.service.interfaces;
 
 import com.playground.model.Comment;
+import com.playground.model.Playground;
 
 import java.util.List;
 
@@ -17,6 +18,15 @@ public interface ICommentService {
     List<Comment> getComments();
 
     /**
+     * Return all comments of a playground
+     *
+     * @param playground Playground
+     *
+     * @return List<Comment>
+     */
+    List<Comment> getCommentsByPlayground(Playground playground);
+
+    /**
      * Return one comment
      *
      * @param id int
@@ -26,13 +36,24 @@ public interface ICommentService {
     Comment getComment(int id);
 
     /**
+     * Return a comment of a playground
+     *
+     * @param playground Playground
+     * @param id int
+     *
+     * @return Comment
+     */
+    Comment getCommentByPlayground(Playground playground, int id);
+
+    /**
      * Create a comment and return it
      *
+     * @param playground Playground
      * @param comment Comment
      *
      * @return Comment
      */
-    Comment createComment(Comment comment);
+    Comment createComment(Playground playground, Comment comment);
 
     /**
      * Update a comment and return it
