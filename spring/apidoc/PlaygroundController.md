@@ -8,10 +8,8 @@ Back to [README.md](../README.md)
 - [[PUT] /api/playgrounds/\{id\}](#4) (ADMIN)
 - [[DELETE] /api/playgrounds/\{id\}](#5) (ADMIN)
 - [[GET] /api/playgrounds/search/\{keyword\}](#6)
-- [GET] /api/users/{userId}/playgrounds ou /api/favorite/playgrounds (suivant l'utilisation de l'utilisateur connecté)
 - [PATCH] /api/playgrounds/{id}/playing
 - [GET] /api/signalement/playgrounds
-- [POST] /api/playground/{id}/favorite
 
 ## [GET] /api/playgrounds {#1}
 
@@ -48,7 +46,7 @@ Create a playground
 
 ### Parameters
 
-- *body* : Json
+- *json* : Playground object
 
 ### Response (HTTP)
 
@@ -63,7 +61,7 @@ Update a playground
 ### Parameters
 
 - *\{id\} :* integer
-- *body :* Json
+- *json :* Playground object
 
 ### Response (HTTP)
 

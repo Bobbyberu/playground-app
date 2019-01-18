@@ -2,7 +2,6 @@ package com.playground.controllers;
 
 import com.playground.model.Comment;
 import com.playground.model.Playground;
-import com.playground.service.CommentService;
 import com.playground.service.PlaygroundService;
 import com.playground.utils.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +31,10 @@ public class PlaygroundController {
         this.playgroundService = playgroundService;
     }
 
-    @Autowired
-    CommentService commentService;
-
     /**
      * [GET] Return all playgrounds
      *
-     * @return ResponseEntity<List<Playground>>
+     * @return ResponseEntity
      */
     @GetMapping(produces = "application/json")
     public ResponseEntity<List<Playground>> getPlaygrounds() {
@@ -51,13 +47,15 @@ public class PlaygroundController {
      * @param id int
      *
      * @return ResponseEntity
+     *
+     * @throws ResourceNotFoundException Playground not found
      */
     @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<?> getPlaygroundsById(@PathVariable("id") int id) {
+    public ResponseEntity<Playground> getPlaygroundsById(@PathVariable("id") int id) throws ResourceNotFoundException {
         Playground playground = playgroundService.getPlayground(id);
 
         if (playground == null) {
-            return new ResponseEntity<>(new ResourceNotFoundException("Playground with id " + id + " not found"), HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Playground with id " + id + " not found");
         }
 
         return new ResponseEntity<>(playground, HttpStatus.OK);
@@ -82,13 +80,15 @@ public class PlaygroundController {
      * @param playground Playground
      *
      * @return ResponseEntity
+     *
+     * @throws ResourceNotFoundException Playground not found
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> updatePlayground(@PathVariable(value = "id") int id, @RequestBody Playground playground) {
+    public ResponseEntity<Playground> updatePlayground(@PathVariable(value = "id") int id, @RequestBody Playground playground) throws ResourceNotFoundException {
         Playground currentPlayground = playgroundService.getPlayground(id);
 
         if (currentPlayground == null) {
-            return new ResponseEntity<>(new ResourceNotFoundException("Playground with id " + id + " not found"), HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Playground with id " + id + " not found");
         }
 
         return new ResponseEntity<>(playgroundService.updatePlayground(id, playground), HttpStatus.OK);
@@ -100,13 +100,15 @@ public class PlaygroundController {
      * @param id int
      *
      * @return ResponseEntity
+     *
+     * @throws ResourceNotFoundException Playground not found
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePlayground(@PathVariable("id") int id) {
+    public ResponseEntity<?> deletePlayground(@PathVariable("id") int id) throws ResourceNotFoundException {
         Playground currentPlayground = playgroundService.getPlayground(id);
 
         if (currentPlayground == null) {
-            return new ResponseEntity<>(new ResourceNotFoundException("Playground with id " + id + " not found"), HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Playground with id " + id + " not found");
         }
 
         playgroundService.deletePlayground(currentPlayground);
@@ -119,28 +121,10 @@ public class PlaygroundController {
      *
      * @param keyword String
      *
-     * @return ResponseEntity<List<Playground>>
+     * @return ResponseEntity
      */
     @GetMapping(value = "/search/{keyword}", produces = "application/json")
     public ResponseEntity<List<Playground>> search(@PathVariable("keyword") String keyword) {
         return new ResponseEntity<>(playgroundService.searchPlaygroundByKeyword(keyword), HttpStatus.OK);
-    }
-
-    /**
-     * TODO:: Move this function in Comments Controller (@Dylan)
-     * [GET] Return all comments of a playground
-     *
-     *
-     * @param id int
-     *
-     * @return ResponseEntity<List<Comment>>
-     */
-    @GetMapping(value = "/{id}/comments", produces = "application/json")
-    public ResponseEntity<List<Comment>> search(@PathVariable(value = "id") int id) {
-        Playground playground = playgroundService.getPlayground(id);
-
-        List<Comment> listComments = commentService.getCommentByPlaygroundId(playground);
-
-        return new ResponseEntity<>(listComments, HttpStatus.OK);
     }
 }

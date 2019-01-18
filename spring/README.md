@@ -15,5 +15,6 @@ API which allow access to playground app datas
 - [PlaygroundController](./apidoc/PlaygroundController.md)
 - [SportController](./apidoc/SportController.md)
 - [RoleController](./apidoc/RoleController.md)
+- [UserController](./apidoc/UserController.md)
 
 ___
