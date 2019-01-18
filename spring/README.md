@@ -12,9 +12,12 @@ ___
 
 API which allow access to playground app datas
 
+- [CommentController](./apidoc/CommentController.md)
 - [PlaygroundController](./apidoc/PlaygroundController.md)
-- [SportController](./apidoc/SportController.md)
 - [RoleController](./apidoc/RoleController.md)
+- [ScheduleController](./apidoc/ScheduleController.md)
+- [SessionController](./apidoc/SessionController.md)
+- [SportController](./apidoc/SportController.md)
 - [UserController](./apidoc/UserController.md)
 
 ___
