@@ -33,7 +33,7 @@ public class SportController {
     /**
      * [GET] Return all sports
      *
-     * @return ResponseEntity<List<Sport>>
+     * @return ResponseEntity
      */
     @GetMapping(produces = "application/json")
     public ResponseEntity<List<Sport>> getSports() {
@@ -46,13 +46,15 @@ public class SportController {
      * @param id int
      *
      * @return ResponseEntity
+     *
+     * @throws ResourceNotFoundException Sport not found
      */
     @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<?> getSport(@PathVariable("id") int id) {
+    public ResponseEntity<Sport> getSport(@PathVariable("id") int id) throws ResourceNotFoundException {
         Sport sport = sportService.getSport(id);
 
         if (sport == null) {
-            return new ResponseEntity<>(new ResourceNotFoundException("Sport with id " + id + " not found"), HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Sport with id " + id + " not found");
         }
 
         return new ResponseEntity<>(sport, HttpStatus.OK);
@@ -63,7 +65,7 @@ public class SportController {
      *
      * @param sport Sport
      *
-     * @return ResponseEntity<Sport>
+     * @return ResponseEntity
      */
     @PostMapping(consumes = "application/json")
     public ResponseEntity<Sport> createSport(@RequestBody Sport sport) {
@@ -77,13 +79,15 @@ public class SportController {
      * @param sport Sport
      *
      * @return ResponseEntity
+     *
+     * @throws ResourceNotFoundException Sport not found
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateSport(@PathVariable("id") int id, @RequestBody Sport sport) {
+    public ResponseEntity<Sport> updateSport(@PathVariable("id") int id, @RequestBody Sport sport) throws ResourceNotFoundException {
         Sport currentSport = sportService.getSport(id);
 
         if (currentSport == null) {
-            return new ResponseEntity<>(new ResourceNotFoundException("Sport with id " + id + " not found"), HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Sport with id " + id + " not found");
         }
 
         return new ResponseEntity<>(sportService.updateSport(id, sport), HttpStatus.OK);
@@ -95,13 +99,15 @@ public class SportController {
      * @param id int
      *
      * @return ResponseEntity
+     *
+     * @throws ResourceNotFoundException Sport not found
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteSport(@PathVariable("id") int id) throws ResourceNotFoundException {
         Sport currentSport = sportService.getSport(id);
 
         if (currentSport == null) {
-            return new ResponseEntity<>(new ResourceNotFoundException("Sport with id " + id + " not found"), HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Sport with id " + id + " not found");
         }
 
         sportService.deleteSport(currentSport);

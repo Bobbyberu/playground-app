@@ -46,7 +46,7 @@ public class UserController {
     /**
      * [GET] Return all users
      *
-     * @return ResponseEntity<List<User>>
+     * @return ResponseEntity
      */
     @GetMapping(produces = "application/json")
     public ResponseEntity<List<User>> getUsers() {
@@ -58,7 +58,7 @@ public class UserController {
      *
      * @param id int
      *
-     * @return ResponseEntity<Set<Playground>>
+     * @return ResponseEntity
      *
      * @throws ResourceNotFoundException User not found
      */
@@ -79,7 +79,7 @@ public class UserController {
      * @param userId int
      * @param playgroundId int
      *
-     * @return ResponseEntity<Boolean>
+     * @return ResponseEntity
      *
      * @throws ResourceNotFoundException User not found
      * @throws ResourceNotFoundException Playground not found
@@ -108,7 +108,7 @@ public class UserController {
      *
      * @param id int
      *
-     * @return ResponseEntity<User>
+     * @return ResponseEntity
      *
      * @throws ResourceNotFoundException User not found
      */
@@ -128,7 +128,7 @@ public class UserController {
      *
      * @param username String
      *
-     * @return ResponseEntity<User>
+     * @return ResponseEntity
      *
      * @throws ResourceNotFoundException User not found
      */
@@ -148,7 +148,7 @@ public class UserController {
      *
      * @param user User
      *
-     * @return ResponseEntity<User>
+     * @return ResponseEntity
      */
     @PostMapping("/signup")
     public ResponseEntity<User> createUser(@RequestBody User user) {
@@ -161,7 +161,7 @@ public class UserController {
      * @param userId int
      * @param playgroundId int
      *
-     * @return ResponseEntity<Boolean>
+     * @return ResponseEntity
      *
      * @throws ResourceNotFoundException User not found
      * @throws ResourceNotFoundException Playground not found
@@ -201,7 +201,7 @@ public class UserController {
      * @param id int
      * @param user User
      *
-     * @return ResponseEntity<User>
+     * @return ResponseEntity
      *
      * @throws ResourceNotFoundException User not found
      */

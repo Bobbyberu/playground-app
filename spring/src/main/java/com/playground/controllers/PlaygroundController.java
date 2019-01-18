@@ -38,7 +38,7 @@ public class PlaygroundController {
     /**
      * [GET] Return all playgrounds
      *
-     * @return ResponseEntity<List<Playground>>
+     * @return ResponseEntity
      */
     @GetMapping(produces = "application/json")
     public ResponseEntity<List<Playground>> getPlaygrounds() {
@@ -51,13 +51,15 @@ public class PlaygroundController {
      * @param id int
      *
      * @return ResponseEntity
+     *
+     * @throws ResourceNotFoundException Playground not found
      */
     @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<?> getPlaygroundsById(@PathVariable("id") int id) {
+    public ResponseEntity<Playground> getPlaygroundsById(@PathVariable("id") int id) throws ResourceNotFoundException {
         Playground playground = playgroundService.getPlayground(id);
 
         if (playground == null) {
-            return new ResponseEntity<>(new ResourceNotFoundException("Playground with id " + id + " not found"), HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Playground with id " + id + " not found");
         }
 
         return new ResponseEntity<>(playground, HttpStatus.OK);
@@ -82,13 +84,15 @@ public class PlaygroundController {
      * @param playground Playground
      *
      * @return ResponseEntity
+     *
+     * @throws ResourceNotFoundException Playground not found
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> updatePlayground(@PathVariable(value = "id") int id, @RequestBody Playground playground) {
+    public ResponseEntity<Playground> updatePlayground(@PathVariable(value = "id") int id, @RequestBody Playground playground) throws ResourceNotFoundException {
         Playground currentPlayground = playgroundService.getPlayground(id);
 
         if (currentPlayground == null) {
-            return new ResponseEntity<>(new ResourceNotFoundException("Playground with id " + id + " not found"), HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Playground with id " + id + " not found");
         }
 
         return new ResponseEntity<>(playgroundService.updatePlayground(id, playground), HttpStatus.OK);
@@ -100,13 +104,15 @@ public class PlaygroundController {
      * @param id int
      *
      * @return ResponseEntity
+     *
+     * @throws ResourceNotFoundException Playground not found
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePlayground(@PathVariable("id") int id) {
+    public ResponseEntity<?> deletePlayground(@PathVariable("id") int id) throws ResourceNotFoundException {
         Playground currentPlayground = playgroundService.getPlayground(id);
 
         if (currentPlayground == null) {
-            return new ResponseEntity<>(new ResourceNotFoundException("Playground with id " + id + " not found"), HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Playground with id " + id + " not found");
         }
 
         playgroundService.deletePlayground(currentPlayground);
@@ -119,7 +125,7 @@ public class PlaygroundController {
      *
      * @param keyword String
      *
-     * @return ResponseEntity<List<Playground>>
+     * @return ResponseEntity
      */
     @GetMapping(value = "/search/{keyword}", produces = "application/json")
     public ResponseEntity<List<Playground>> search(@PathVariable("keyword") String keyword) {
@@ -133,7 +139,7 @@ public class PlaygroundController {
      *
      * @param id int
      *
-     * @return ResponseEntity<List<Comment>>
+     * @return ResponseEntity
      */
     @GetMapping(value = "/{id}/comments", produces = "application/json")
     public ResponseEntity<List<Comment>> search(@PathVariable(value = "id") int id) {
