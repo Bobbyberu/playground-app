@@ -103,7 +103,7 @@ ___
 
 ## [PUT] /api/users/\{userId\}/favouritePlaygrounds/\{playgroundId\} {#7}
 
-Add a user's favourite playground
+Add/Remove a user's favourite playground 
 
 ### Parameters
 

@@ -156,7 +156,7 @@ public class UserController {
     }
 
     /**
-     * [PUT] Add a user's favourite playground
+     * [PUT] add/remove a user's favourite playground
      *
      * @param userId int
      * @param playgroundId int
