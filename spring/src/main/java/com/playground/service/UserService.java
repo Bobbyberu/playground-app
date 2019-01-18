@@ -4,6 +4,7 @@ import com.playground.model.User;
 import com.playground.repository.UserRepository;
 import com.playground.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,6 +15,9 @@ import java.util.List;
  */
 @Service
 public class UserService implements IUserService {
+
+    /** BCryptPasswordEncoder bCryptPasswordEncoder */
+    private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     /** UserRepository userRepository */
     private final UserRepository userRepository;
@@ -48,6 +52,7 @@ public class UserService implements IUserService {
 
     @Override
     public User createUser(User user) {
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 

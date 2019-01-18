@@ -48,7 +48,7 @@ Create a playground
 
 ### Parameters
 
-- *body* : Json
+- *json* : Playground object
 
 ### Response (HTTP)
 
@@ -63,7 +63,7 @@ Update a playground
 ### Parameters
 
 - *\{id\} :* integer
-- *body :* Json
+- *json :* Playground object
 
 ### Response (HTTP)
 
