@@ -41,7 +41,7 @@ public interface IUserService {
      *
      * @return User
      */
-    User createUser(User user);
+    User signup(User user);
 
     /**
      * Update a user and return it

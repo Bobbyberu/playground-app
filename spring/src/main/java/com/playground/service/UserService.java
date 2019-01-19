@@ -32,12 +32,16 @@ public class UserService implements IUserService {
     /** UserRepository userRepository */
     private final UserRepository userRepository;
 
+    /** RoleRepository roleRepository*/
     private final RoleRepository roleRepository;
 
+    /** VerificationTokenRepository verificationTokenRepository */
     private final VerificationTokenRepository verificationTokenRepository;
 
+    /** Environment env */
     private Environment env;
 
+    /** ServletContext servletContext */
     private ServletContext servletContext;
 
     /**
@@ -56,6 +60,7 @@ public class UserService implements IUserService {
         this.servletContext = servletContext;
     }
 
+    @Override
     public User signup(User user) {
         if (StringUtils.isEmpty(user.getMail())) {
             throw new RuntimeException("Mail is not valid");
@@ -111,12 +116,6 @@ public class UserService implements IUserService {
     @Override
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username).orElse(null);
-    }
-
-    @Override
-    public User createUser(User user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
     }
 
     @Override
