@@ -1,6 +1,7 @@
 import 'package:Playground/entities/User.dart';
 import 'package:Playground/services/AuthService.dart';
 import 'package:Playground/validators/EmailValidator.dart';
+import 'package:Playground/widgets/dialog/PlaygroundDialog.dart';
 import 'package:Playground/widgets/inputs/PlaygroundCheckbox.dart';
 import 'package:Playground/widgets/style/PlaygroundLoginTextFieldStyle.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
@@ -63,61 +64,23 @@ class SignUpPageState extends State<SignUpPage> {
           birthDate: _birthDate
         );
 
-        print(newUser.toJson());
-
         bool result = await _authService.signUp(newUser);
-        Widget dialogTitle;
-        var dialogContent;
-        VoidCallback dialogOnPressed;
 
         if (result) {
-          dialogTitle = new Text("Yeah !");
-          dialogContent = new Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              new Text("Votre inscription est terminée !"),
-              new Text("Un email de confirmation va vous être envoyé")
-            ]
+          PlaygroundDialog.showValidDialog(
+              context,
+              "Votre inscription est terminée !",
+              "Un email de confirmation va vous être envoyé",
+              () {Navigator.pushReplacementNamed(context, '/');}
           );
-          dialogOnPressed = () {
-            Navigator.pushReplacementNamed(context, '/');
-          };
         } else {
-          dialogTitle = new Text("Oh Oh...");
-          dialogContent = new Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children:[
-              new Text("Un problème est survenu"),
-              new Text("Veuillez réessayer plus tard")
-            ]
+          PlaygroundDialog.showErrorDialog(
+              context,
+              "Erreur à la validation",
+              "Un problème est survenu lors de la validation. Veuillez réessayer plus tard.",
+                  () {Navigator.pop(context);}
           );
-          dialogOnPressed = () {
-            Navigator.of(context, rootNavigator: true).pop();
-          };
         }
-
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return new AlertDialog(
-                title: dialogTitle,
-                content: dialogContent,
-                actions: <Widget>[
-                  new FlatButton(
-                      onPressed: dialogOnPressed,
-                      child: new Text(
-                        "Ok",
-                        style: new TextStyle(
-                            color: Theme.of(context).primaryColor
-                        ),
-                      )
-                  )
-                ],
-              );
-            }
-        );
       }
     }
   }

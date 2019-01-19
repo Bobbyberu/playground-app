@@ -2,6 +2,7 @@ import 'package:Playground/entities/Playground.dart';
 import 'package:Playground/entities/Sport.dart';
 import 'package:Playground/services/SportService.dart';
 import 'package:Playground/widgets/inputs/PlaygroundButton.dart';
+import 'package:Playground/widgets/sport/SportDisplay.dart';
 import 'package:Playground/widgets/text/PlaygroundFormLabel.dart';
 import 'package:flutter/material.dart';
 
@@ -47,7 +48,7 @@ class PlaygroundSportSelectionState extends State<PlaygroundSportSelection> {
     for(Sport sport in availableSports) {
       listSports.add(new ListTile(
         selected: selectedSports.contains(sport),
-        title: new Text(sport.name),
+        title: new SportDisplay(sport: sport),
         onTap: () {
           setState(() {
             (selectedSports.contains(sport)) ? selectedSports.remove(sport) : selectedSports.add(sport);

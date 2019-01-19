@@ -1,6 +1,7 @@
 
 import 'package:Playground/entities/Playground.dart';
 import 'package:Playground/pages/PlaygroundDetails.dart';
+import 'package:Playground/widgets/dialog/PlaygroundDialog.dart';
 import 'package:Playground/widgets/map/PlaygroundMarker.dart';
 import 'package:Playground/widgets/playground/PlaygroundCard.dart';
 import 'package:Playground/services/PlaygroundService.dart';
@@ -32,8 +33,17 @@ class MainPageState extends State<MainPage> {
   @override
   void initState() {
     searching = false;
-    results = _playgroundService.getPlaygroundsNearMe();
+    results = new List<Playground>();
+    loadPlaygroundsNearMe();
     super.initState();
+  }
+
+  void loadPlaygroundsNearMe() async {
+    _playgroundService.getPlaygroundsNearMe().then((response){
+      setState(() {
+        results = response;
+      });
+    });
   }
 
   void search(String value) async {

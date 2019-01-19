@@ -31,7 +31,7 @@ class SessionManager {
     return user;
   }
 
-  void loadUser(String token) async {
+  Future loadUser(String token) async {
     AuthController controller = new AuthController();
     JWT jwt = JWT.parse(token.split(" ").last);
     SessionManager.getInstance().setUsername(jwt.subject);
@@ -44,6 +44,11 @@ class SessionManager {
     }).catchError((error) {
       controller.printError(error);
     });
+  }
+
+  void clearSession() {
+    user = null;
+    username = null;
   }
 
 }
