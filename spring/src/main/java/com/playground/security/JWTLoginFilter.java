@@ -28,7 +28,6 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException {
-
         String username;
         String password;
 
@@ -42,7 +41,6 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 
         username = json.getString("mail");
         password = json.getString("password");
-
         } else {
             return null;
         }
