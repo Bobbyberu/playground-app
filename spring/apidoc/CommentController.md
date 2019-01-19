@@ -54,6 +54,7 @@ Create a comment
 ### Response (HTTP)
 
 - *201 Created :* Comment
+- *404 Not found :* ResourceNotFoundException
 
 ___
 
