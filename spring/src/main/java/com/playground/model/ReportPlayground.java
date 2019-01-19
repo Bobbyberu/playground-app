@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 
 @Entity
-@Table(name = "signal_playground")
+@Table(name = "report_playground")
 @EntityListeners(AuditingEntityListener.class)
 public class ReportPlayground {
 

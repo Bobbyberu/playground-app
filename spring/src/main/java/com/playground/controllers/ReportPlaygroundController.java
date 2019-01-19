@@ -28,7 +28,7 @@ public class ReportPlaygroundController {
     private final PlaygroundService playgroundService;
 
     /**
-     * ReportPlaygroundController
+     * ReportPlaygroundController constructor
      *
      * @param reportPlaygroundService ReportPlaygroundService
      * @param playgroundService playgroundService

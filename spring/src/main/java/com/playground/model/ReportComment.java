@@ -5,9 +5,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "signal_comment")
+@Table(name = "report_comment")
 @EntityListeners(AuditingEntityListener.class)
-public class SignalComment {
+public class ReportComment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,7 +18,7 @@ public class SignalComment {
     private User author;
     private String description;
 
-    public SignalComment() {
+    public ReportComment() {
     }
 
     public int getId() {
