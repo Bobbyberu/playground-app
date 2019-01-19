@@ -13,7 +13,6 @@ import SnackbarContentWrapper from '../../common-components/snackbar/SnackbarCon
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
-import Error from '@material-ui/icons/Error';
 
 import './home.css';
 
@@ -117,7 +116,7 @@ class Home extends Component {
         return (
             <MuiThemeProvider theme={theme}>
                 <div>
-                    <NavBar />
+                    <NavBar searchbar={true} />
                     <Map center={this.state.location} zoom={this.state.zoom} className="fullscreen">
                         <TileLayer
                             url="https://api.mapbox.com/styles/v1/playground-app/cjqgjco2v0en02squr5fkrcb9/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoicGxheWdyb3VuZC1hcHAiLCJhIjoiY2pxZ2piYXdhMDBkOTQzcG5zcG9idWNrMCJ9.H64SLGKZlHfQeDTBGidTqQ"

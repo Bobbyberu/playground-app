@@ -35,7 +35,16 @@ html, body {
   background-image: url(./assets/img/playground.jpg);
   background-size: cover;
   background-repeat: no-repeat;
+  background-attachment: fixed;
   margin: 0;
+}
+
+.not-found {
+  background-color: rgba(255, 255, 255, 1);
+  height: 100%;
+}
+
+.playground-page {
   height: 100%;
 }
 

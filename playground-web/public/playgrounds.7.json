@@ -1,0 +1,31 @@
+{
+    "id": 7,
+    "name": "Gymnase Colette Besson",
+    "address": "52 Boulevard Niels Bohr, 69100 Villeurbanne",
+    "private": true,
+    "latitude": 45.784994,
+    "longitude": 4.873195,
+    "list_players": null,
+    "average_mark": 4.9,
+    "sports": [
+        {
+            "id": 1,
+            "name": "Basketball",
+            "emoji": "🏀"
+        },
+        {
+            "id": 3,
+            "name": "Handball",
+            "emoji": "🤾"
+        },
+        {
+            "id": 16,
+            "name": "Musculation",
+            "emoji": "🏋️‍♂️"
+        }
+    ],
+    "couvert": true,
+    "description": "Gymnase multi-sport appartenant à l'INSA",
+    "image": "https://i.pinimg.com/originals/73/9e/c9/739ec92f4c5e0fc4cef04bbc3ac6d4d7.jpg",
+    "surface": "Dur"
+}

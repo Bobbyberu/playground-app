@@ -1,0 +1,98 @@
+{
+    "id": 1,
+    "name": "playground IUT",
+    "address": "104 Boulevard Niels Bohr, 69100 Villeurbanne",
+    "private": false,
+    "latitude": 45.785501,
+    "longitude": 4.882760,
+    "list_players": null,
+    "average_mark": 3.5,
+    "sports": [
+        {
+            "id": 1,
+            "name": "Basketball",
+            "emoji": "🏀"
+        },
+        {
+            "id": 4,
+            "name": "Voleyball",
+            "emoji": "🏐"
+        },
+        {
+            "id": 11,
+            "name": "Course à pied",
+            "emoji": "🏃"
+        },
+        {
+            "id": 2,
+            "name": "Football",
+            "emoji": "⚽"
+        },
+        {
+            "id": 5,
+            "name": "Rugby",
+            "emoji": "🏉"
+        },
+        {
+            "id": 12,
+            "name": "Ultimate",
+            "emoji": "🥏"
+        },
+        {
+            "id": 3,
+            "name": "Billard",
+            "emoji": "🎱"
+        },
+        {
+            "id": 6,
+            "name": "Boxe",
+            "emoji": "🥊"
+        },
+        {
+            "id": 13,
+            "name": "E-sport",
+            "emoji": "🎮"
+        }
+    ],
+    "couvert": false,
+    "description": "Playground cool pour les iut",
+    "image": "https://i.pinimg.com/originals/73/9e/c9/739ec92f4c5e0fc4cef04bbc3ac6d4d7.jpg",
+    "surface": "Dur",
+    "timetable": [
+        {
+            "day": "lundi",
+            "opening": "08:00",
+            "closing": "18:00"
+        },
+        {
+            "day": "mardi",
+            "opening": "08:00",
+            "closing": "18:00"
+        },
+        {
+            "day": "mercredi",
+            "opening": "08:00",
+            "closing": "18:00"
+        },
+        {
+            "day": "jeudi",
+            "opening": "08:00",
+            "closing": "18:00"
+        },
+        {
+            "day": "vendredi",
+            "opening": "08:00",
+            "closing": "18:00"
+        },
+        {
+            "day": "samedi",
+            "opening": "08:00",
+            "closing": "12:00"
+        },
+        {
+            "day": "dimanche",
+            "opening": null,
+            "closing": null
+        }
+    ]
+}

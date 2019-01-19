@@ -6,12 +6,10 @@ const authService = new AuthService();
 
 export default class PlaygroundAPI {
   getAllPlayground() {
-    let token = authService.getToken();
     return axios({
       method: 'get',
       url: api + 'playgrounds/',
       headers: {
-        'Authorization': token,
         'Content-Type': 'application/json'
       }
     })
@@ -19,31 +17,74 @@ export default class PlaygroundAPI {
   }
 
   getSearchResult(searchTerm) {
-    let token = authService.getToken();
     return axios({
       method: 'get',
       url: api + 'playgrounds/search/' + searchTerm,
       headers: {
-        'Authorization': token,
         'Content-Type': 'application/json'
       }
     })
       .then(response => response.data);
   }
 
-  getRandomPlaygrounds() {
-    return axios.get('/playgrounds.json')
-      .then((response) => {
-        const max = response.data.result.length;
-
-        const start = Math.floor(Math.random() * (max / 2));
-        const end = Math.floor((Math.random() * max) + max / 2);
-        return response.data.result.slice(start, end);
-      });
-  }
-
   getAllSports() {
     return axios.get('/sports.json')
       .then(response => response.data.result);
+  }
+
+  getPlaygroundById(id) {
+    return axios({
+      method: 'get',
+      //url: '/playgrounds.' + id + '.json',
+      url: api + 'playgrounds/' + id,
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+      .then(response => response.data)
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  getUser(username) {
+    return axios({
+      method: 'get',
+      url: api + 'users/name/' + username,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': authService.getToken()
+      }
+    })
+      .then(response => response.data)
+      .catch(err => console.log(err));
+  }
+
+  getAllComments(playgroundId) {
+    return axios({
+      method: 'get',
+      //url: '/comments.json',
+      url: api + 'playgrounds/' + playgroundId + '/comments',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => response.data)
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  postComment(comment) {
+    return axios({
+      method: 'post',
+      url: api + 'comments',
+      data: comment,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': authService.getToken()
+      }
+    })
+      .catch(err => console.log(err));
   }
 }

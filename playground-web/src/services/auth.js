@@ -56,6 +56,10 @@ export default class AuthService {
         }
     }
 
+    decodeToken() {
+        return decode(this.getToken());
+    }
+
     getToken() {
         // retrieves the user token from localStorage
         return localStorage.getItem('token')

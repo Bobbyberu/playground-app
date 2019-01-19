@@ -45,10 +45,10 @@ const styles = theme => ({
         marginRight: 20,
     },
     root: {
-        position: 'absolute',
         left: 0,
         right: 0,
         zIndex: 1000,
+        height: 64
     },
     list: {
         width: 250,
@@ -211,7 +211,7 @@ class NavBar extends React.Component {
         return (
             <div className={classes.root}>
                 {/* Création de la barre de menu */}
-                <AppBar position="static">
+                <AppBar position="fixed">
                     <Toolbar>
                         {/* Icone du menu avec ouverture du menu coulissant au clic*/}
                         <IconButton className={classes.menuButton}
@@ -233,12 +233,16 @@ class NavBar extends React.Component {
                             </div>
                         </Drawer>
                         <div className={classes.navbarRight}>
-                            <Typography variant="title" color="inherit" className={classes.title} noWrap>
-                                Playground
+                            <Link to="/" className={classes.link}>
+                                <Typography variant="title" color="inherit" className={classes.title} noWrap>
+                                    Playground
                                 </Typography>
-                            <div className={classes.overlay}>
-                                <Searchbar />
-                            </div>
+                            </Link>
+                            {this.props.searchbar &&
+                                <div className={classes.overlay}>
+                                    <Searchbar />
+                                </div>
+                            }
                         </div>
                         <div>
                             {this.renderLoginPart()}
