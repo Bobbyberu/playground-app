@@ -18,6 +18,11 @@ public class RoleService implements IRoleService {
     /** RoleRepository roleRepository */
     private final RoleRepository roleRepository;
 
+    /**
+     * RoleService Constructor
+     *
+     * @param roleRepository RoleRepository
+     */
     @Autowired
     public RoleService(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;

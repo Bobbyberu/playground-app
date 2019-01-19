@@ -1,65 +1,117 @@
 package com.playground.controllers;
 
 import com.playground.model.Role;
-import com.playground.repository.RoleRepository;
+import com.playground.service.RoleService;
 import com.playground.utils.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+/**
+ * Class RoleController
+ */
 @RestController
 @RequestMapping("/roles")
 public class RoleController {
 
-    @Autowired
-    private RoleRepository roleRepository;
+    /** RoleService roleService */
+    private final RoleService roleService;
 
-    @GetMapping(value = "/", produces = "application/json")
-    public ResponseEntity<List<Role>> getAllRoles() {
-        ArrayList<Role> listRoles = new ArrayList<>();
-        for (Role role : roleRepository.findAll()) {
-            listRoles.add(role);
-        }
-        return new ResponseEntity<>(listRoles,HttpStatus.OK);
+    /**
+     * RoleController Constructor
+     *
+     * @param roleService RoleService
+     */
+    @Autowired
+    public RoleController(RoleService roleService) {
+        this.roleService = roleService;
     }
 
+    /**
+     * [GET] Return all roles
+     *
+     * @return ResponseEntity
+     */
+    @GetMapping(produces = "application/json")
+    public ResponseEntity<List<Role>> getRoles() {
+        return new ResponseEntity<>(roleService.getRoles(), HttpStatus.OK);
+    }
+
+    /**
+     * [GET] Return a role
+     *
+     * @param id int
+     *
+     * @return ResponseEntity
+     *
+     * @throws ResourceNotFoundException Role not found
+     */
     @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<Role> getRolesById(@PathVariable(value = "id") int roleId) throws ResourceNotFoundException {
-        Role role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new ResourceNotFoundException("Role with id " + roleId + " not found"));
+    public ResponseEntity<Role> getRolesById(@PathVariable("id") int id) throws ResourceNotFoundException {
+        Role role = roleService.getRole(id);
+
+        if (role == null) {
+            throw new ResourceNotFoundException("Role with id " + id + " not found");
+        }
+
         return new ResponseEntity<>(role, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/", consumes = "application/json")
-    public Role createRole(@Valid @RequestBody Role role) {
-        return roleRepository.save(role);
+    /**
+     * [POST] Creates a role and return it
+     *
+     * @param role Role
+     *
+     * @return ResponseEntity
+     */
+    @PostMapping(consumes = "application/json")
+    public ResponseEntity<Role> createRole(@RequestBody Role role) {
+        return new ResponseEntity<>(roleService.createRole(role), HttpStatus.CREATED);
     }
 
+    /**
+     * [PUT] Updates a sport and return it
+     *
+     * @param id int
+     * @param role Role
+     *
+     * @return ResponseEntity
+     *
+     * @throws ResourceNotFoundException Role not found
+     */
     @PutMapping("/{id}")
-    public ResponseEntity<Role> updateRole(@PathVariable(value = "id") int roleId, @Valid @RequestBody Role roleDetails)
-            throws ResourceNotFoundException {
-        Role role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new ResourceNotFoundException("Role with id " + roleId + " not found"));
-        role.setName(roleDetails.getName());
-        final Role updatedRole = roleRepository.save(role);
-        return ResponseEntity.ok(updatedRole);
+    public ResponseEntity<Role> updateRole(@PathVariable("id") int id, @RequestBody Role role) throws ResourceNotFoundException {
+        Role currentRole = roleService.getRole(id);
+
+        if (currentRole == null) {
+            throw new ResourceNotFoundException("Role with id " + id + " not found");
+        }
+
+        return new ResponseEntity<>(roleService.updateRole(id, role), HttpStatus.OK);
     }
 
+    /**
+     * [DELETE] Remove a role
+     *
+     * @param id int
+     *
+     * @return ResponseEntity
+     *
+     * @throws ResourceNotFoundException Role not found
+     */
     @DeleteMapping("/{id}")
-    public Map<String, Boolean> deleteRole(@PathVariable(value = "id") int roleId) throws ResourceNotFoundException {
-        Role role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new ResourceNotFoundException("Role with id " + roleId + " not found"));
-        roleRepository.delete(role);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("deleted", Boolean.TRUE);
-        return response;
-    }
+    public ResponseEntity deleteRole(@PathVariable(value = "id") int id) throws ResourceNotFoundException {
+        Role currentRole = roleService.getRole(id);
 
+        if (currentRole == null) {
+            throw new ResourceNotFoundException("Role with id " + id + " not found");
+        }
+
+        roleService.deleteRole(currentRole);
+
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
 }
