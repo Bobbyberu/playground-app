@@ -51,15 +51,15 @@ public class UserService {
         mail.setTo(user.getMail());
         mail.setFrom("g3.playground.app@gmail.com");
         mail.setSubject("Playground - Account verification");
-        mail.setText("Hello,\n" +
+        mail.setText("Bonjour,\n" +
                 "\n" +
-                "Thanks for signing up to Playground. Here's your verification link :\n" +
+                "Merci de vous etre enregistré sur Playground. Voici votre lien de vérification :\n" +
                 "\n" +
                 servletContext.getContextPath() + "/verification_token/" + verificationToken.getToken() + "\n" +
                 "\n" +
-                "Have fun!\n" +
+                "Amusez-vous bien!\n" +
                 "\n" +
-                "The Playground Team");
+                "L'équipe Playground");
 
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
         javaMailSender.setUsername(env.getProperty("spring.mail.username"));
