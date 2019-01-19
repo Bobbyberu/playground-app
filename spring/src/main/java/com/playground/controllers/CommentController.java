@@ -58,7 +58,7 @@ public class CommentController {
      * @throws ResourceNotFoundException Comment not found
      */
     @GetMapping(value = "/playgrounds/{playgroundId}/comments/{commentId}", produces = "application/json")
-    public ResponseEntity<?> getComment(@PathVariable("playgroundId") int playgroundId, @PathVariable("commentId") int commentId) throws ResourceNotFoundException {
+    public ResponseEntity<Comment> getComment(@PathVariable("playgroundId") int playgroundId, @PathVariable("commentId") int commentId) throws ResourceNotFoundException {
 
         Playground playground = playgroundService.getPlayground(playgroundId);
 
@@ -79,9 +79,11 @@ public class CommentController {
      * @param comment Comment
      *
      * @return ResponseEntity
+     *
+     * @throws ResourceNotFoundException Playground not found
      */
     @PostMapping(value = "/playgrounds/{playgroundId}/comments", consumes = "application/json")
-    public ResponseEntity<Comment> createComment(@PathVariable("playgroundId") int playgroundId, @RequestBody Comment comment) {
+    public ResponseEntity<Comment> createComment(@PathVariable("playgroundId") int playgroundId, @RequestBody Comment comment) throws ResourceNotFoundException {
         Playground playground = playgroundService.getPlayground(playgroundId);
 
         if (playground == null) {
