@@ -29,6 +29,9 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException {
 
+        String username;
+        String password;
+
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Headers", "*");
         response.setHeader("Access-Control-Expose-Headers", "*");
@@ -40,8 +43,6 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
         username = json.getString("mail");
         password = json.getString("password");
 
-            System.out.printf("JWTLoginFilter.attemptAuthentication: username/password= %s,%s", username, password);
-            System.out.println();
         } else {
             return null;
         }
