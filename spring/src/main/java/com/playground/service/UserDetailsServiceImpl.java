@@ -20,9 +20,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        com.playground.model.User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new ResourceNotFoundException("User with username " + username + " not found"));
-        return User.withUsername(user.getUsername()).password(user.getPassword()).roles(user.getRole().getName()).build();
+    public UserDetails loadUserByUsername(String mail) throws UsernameNotFoundException {
+        com.playground.model.User user = userRepository.findByMail(mail).orElseThrow(
+                () -> new ResourceNotFoundException("User with mail " + mail + " not found"));
+        return User.withUsername(user.getMail()).password(user.getPassword()).roles(user.getRole().getName()).build();
     }
 }
