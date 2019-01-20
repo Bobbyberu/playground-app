@@ -11,6 +11,8 @@ import Sports from './Sports';
 import Upload from './Upload';
 import Description from './Description';
 import Acces from './Acces';
+import TextField from '@material-ui/core/TextField';
+import { connect } from 'react-redux';
 
 const styles = theme => ({
 	root: {
@@ -53,37 +55,52 @@ class StepperModal extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			activeStep: 0,
+			name: this.props.name,
 		}
 	};
 
+	// Dès que le composant n'est plus rendu sur le DOM on envoie l'action avec les infos récoltées
+	componentWillUnmount() {
+		const action = { type: 'RESET' }
+		this.props.dispatch(action)
+	}
+
+	//Gestion des boutons
 	handleNext = () => {
-		this.setState(state => ({
-			activeStep: state.activeStep + 1,
-		}));
+		const action = { type: 'SET_STEP', value: this.props.step + 1 }
+		this.props.dispatch(action)
 	};
 
 	handleBack = () => {
-		this.setState(state => ({
-			activeStep: state.activeStep - 1,
-		}));
+		const action = { type: 'SET_STEP', value: this.props.step - 1 }
+		this.props.dispatch(action)
 	};
 
 	handleReset = () => {
-		this.setState({
-			activeStep: 0,
-		});
+		const action = { type: 'RESET' }
+		this.props.dispatch(action)
 	};
 
-	render() {
-		const { classes } = this.props;
-		const steps = getSteps();
-		const { activeStep } = this.state;
+	// gérer le changement de valeur du champ name
+	handleChange = (event) => {
+		this.setState({
+		  [event.target.name]: event.target.value
+		});
+	  };
+	
 
+	handleName = () => {
+		const action = { type: 'SET_NAME', value: this.props.name }
+		this.props.dispatch(action)
+	}
+
+	render() {
+		const { classes } = this.props
+		const steps = getSteps()
 		return (
 			<div className={classes.root}>
 				{/* Retourne le contenu de la bonne étape */}
-				<Stepper activeStep={activeStep} alternativeLabel>
+				<Stepper activeStep={this.props.step} alternativeLabel>
 					{steps.map(label => {
 						return (
 							<Step key={label}>
@@ -94,17 +111,33 @@ class StepperModal extends React.Component {
 				</Stepper>
 				<div>
 					{/* Affichage du boutton 'Reset' une fois que toutes les étapes sont complétées */}
-					{this.state.activeStep === steps.length ? (
+					{this.props.step === steps.length ? (
 						<div>
-							<Typography className={classes.instructions}>Toutes les étapes ont été complétées.</Typography>
+							<div>
+								{/* Affichage du nom du terrain à l'étape de validation*/}
+								<Typography className={classes.instructions}>Toutes les étapes ont été complétées. A présent, choisissez un nom à votre terrain.</Typography>
+								<TextField
+									id="name"
+									label="Name"
+									type="text"
+									name="name"
+									margin="normal"
+									variant="outlined"
+									value={this.state.name}
+									onChange={this.handleChange}
+									onBlur={this.handleName}
+									required
+									className={classes.instructions}
+								/>
+							</div>
 							<Button className={classes.Button} onClick={this.handleReset}>Réinitialiser</Button>
 						</div>
 					) : (
 							<div>
-								<Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
+								<Typography className={classes.instructions}>{getStepContent(this.props.step)}</Typography>
 								<div>
 									<Button
-										disabled={activeStep === 0}
+										disabled={this.props.step === 0}
 										onClick={this.handleBack}
 										className={classes.Button}
 									>
@@ -112,7 +145,7 @@ class StepperModal extends React.Component {
                    					 </Button>
 									{/* Affichage du boutton 'finish' si on est sur la dernière étape */}
 									<Button variant="contained" color="primary" onClick={this.handleNext} className={classes.Button}>
-										{activeStep === steps.length - 1 ? 'Finir' : 'Suivant'}
+										{this.props.step === steps.length - 1 ? 'Valider' : 'Suivant'}
 									</Button>
 								</div>
 							</div>
@@ -127,4 +160,11 @@ StepperModal.propTypes = {
 	classes: PropTypes.object,
 };
 
-export default withStyles(styles)(StepperModal);
+// mapping du state global dans les props du composant StepperModal
+const mapStateToProps = state => ({
+	step: state.addPlayground.step,
+	name: state.addPlayground.name,
+});
+
+// La fonction mapStateToProps permet d'abonner le composant aux changements du store Redux
+export default connect(mapStateToProps)(withStyles(styles)(StepperModal));

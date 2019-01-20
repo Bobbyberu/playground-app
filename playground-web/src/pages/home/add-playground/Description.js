@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import { connect } from 'react-redux';
 
 const styles = theme => ({
   textField: {
@@ -12,7 +13,28 @@ const styles = theme => ({
 });
 
 
-class Localisation extends React.Component {
+class Description extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      description: this.props.description,
+    }
+  }
+
+  // gérer le changement de valeur des champs
+  handleChange = (event) => {
+    this.setState({
+      description: event.target.value
+    });
+  };
+
+	// Dès que le composant n'est plus rendu sur le DOM on envoie l'action avec les infos récoltées
+  componentWillUnmount(){
+    const action = { type: 'SET_DESCRIPTION', value: this.state.description };
+    this.props.dispatch(action);
+  }
+
+  
   render() {
     const { classes } = this.props;
 
@@ -25,14 +47,24 @@ class Localisation extends React.Component {
         className={classes.textField}
         margin="normal"
         variant="outlined"
+        value={this.state.description}
+        onChange={this.handleChange}
         autoFocus
       />
     );
   }
 }
 
-Localisation.propTypes = {
+Description.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Localisation);
+// mapping du state global dans les props du composant Sports
+const mapStateToProps = (state) => {
+	return {
+		description: state.addPlayground.description
+	}
+}
+
+// mapStateToProps pour abonner le composant aux changements du store Redux
+export default connect(mapStateToProps)(withStyles(styles)(Description));

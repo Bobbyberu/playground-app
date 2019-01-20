@@ -9,6 +9,7 @@ function toggleModal(state = initialState , action) {
                 ...state,
                 open : action.value
             }
+            // Return nextState si sa valeur n'est pas à undefined sinon return state (principe d'immuable)
             return nextState || state
         default:
             return state

@@ -143,8 +143,8 @@ class Login extends Component {
                 placeholder="Email"
                 value={this.state.login}
                 variant="outlined"
-                validators={['required', 'isEmail']}
-                errorMessages={['Champ obligatoire', 'L\' adresse mail n\'est pas valide']}
+                validators={['required']}
+                errorMessages={['Champ obligatoire']}
               />
             </div>
 

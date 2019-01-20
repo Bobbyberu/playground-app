@@ -46,4 +46,18 @@ export default class PlaygroundAPI {
     return axios.get('/sports.json')
       .then(response => response.data.result);
   }
+
+  postPlayground(playground) {
+    let token = authService.getToken();
+    return axios({
+      method: 'post',
+      url: api + 'playgrounds',
+      data: playground,
+      headers: {
+        'Authorization': token,
+        'Content-Type': 'application/json'
+      }
+    })
+      .catch(err => console.log(err));
+  }
 }

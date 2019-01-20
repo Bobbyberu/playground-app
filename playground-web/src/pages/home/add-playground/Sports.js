@@ -7,6 +7,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import PlaygroundAPI from '../../../services/playground-api';
+import { connect } from 'react-redux';
 
 // Override de certains éléments de la card 
 const theme = createMuiTheme({
@@ -30,7 +31,7 @@ class Sports extends React.Component {
         super(props)
         // On garde dans un state les cases cochées
         this.state = {
-            checked: [0],
+            checked: this.props.sports,
             sports: []
         }
         this.api = new PlaygroundAPI();
@@ -45,6 +46,11 @@ class Sports extends React.Component {
                 });
             });
     }
+
+    componentWillUnmount() {
+		const action = { type: 'SET_SPORTS', value: this.state.checked };
+		this.props.dispatch(action);
+	}
 
     // Methode qui gère le changement d'état sur une checkbox
     handleToggle = value => () => {
@@ -106,4 +112,13 @@ Sports.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Sports);
+
+// mapping du state global dans les props du composant Sports
+const mapStateToProps = (state) => {
+	return {
+		sports: state.addPlayground.sports
+	}
+}
+
+// mapStateToProps pour abonner le composant aux changements du store Redux
+export default connect(mapStateToProps)(withStyles(styles)(Sports));

@@ -144,15 +144,15 @@ class PlaygroundDetails extends React.Component {
                   {/* Récupération des sports d'un playground associés à leur emoji */}
                   <List>
                     {
-                                            this.props.playground.sports.map(sport => (
-                                              <ListItem>
-                                                <Avatar className={classes.avatar}>
-                                                  <Emoji symbol={sport.emoji} label={sport.name} />
-                                                </Avatar>
-                                                <ListItemText primary={sport.name} />
-                                              </ListItem>
-                                            ))
-                                        }
+                      this.props.playground.sports.map(sport => (
+                        <ListItem>
+                          <Avatar className={classes.avatar}>
+                            <Emoji symbol={sport.symbol} label={sport.name} />
+                          </Avatar>
+                          <ListItemText primary={sport.name} />
+                        </ListItem>
+                      ))
+                    }
                   </List>
                 </Typography>
               </div>
@@ -163,7 +163,7 @@ class PlaygroundDetails extends React.Component {
                 {this.displayFavoriteIcon()}
               </IconButton>
               <Button size="small" color="primary">
-                                Détails
+                Détails
               </Button>
             </CardActions>
           </Card>

@@ -83,6 +83,8 @@ class Home extends Component {
 
     renderPlaygrounds() {
         let playgrounds = this.state.playgrounds;
+        
+        console.log(playgrounds)
 
         return (
             <div>

@@ -7,6 +7,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import Stepper from './Stepper';
 import { connect } from 'react-redux';
+import AuthService from '../../../services/auth';
+import PlaygroundAPI from '../../../services/playground-api';
 
 class ModalPlayground extends React.Component {
     constructor(props) {
@@ -14,10 +16,16 @@ class ModalPlayground extends React.Component {
         this.state = {
             value: '',
         }
-
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.api = new PlaygroundAPI();
+        this.auth = new AuthService();
     }
+
+    // gérer le changement de valeur des champs
+    handleChange = (event) => {
+        this.setState({
+            [event.target.name]: event.target.value
+        });
+    };
 
     handleClose = () => {
         // Action à envoyer au store
@@ -25,13 +33,28 @@ class ModalPlayground extends React.Component {
         this.props.dispatch(action)
     };
 
-    handleChange(event) {
-        this.setState({ value: event.target.value });
-    }
+    handleAdding = () => {
+        // Récupération des propriétés du playground en cours d'ajout
+        let playground = {
+            name: this.props.properties.name,
+            isPrivate: this.props.properties.isPrivate,
+            covered: this.props.properties.covered,
+            latitude: this.props.properties.latitude,
+            longitude: this.props.properties.longitude,
+            surface: this.props.properties.surface,
+            description: this.props.properties.description,
+            averageMark: this.props.properties.averageMark,
+            image: this.props.properties.image,
+            players: this.props.properties.players,
+            sports: this.props.properties.sports,
+            city: this.props.properties.city,
+            address: this.props.properties.street + " " + this.props.properties.cp + " " + this.props.properties.city
+        };
 
-    handleSubmit(event) {
-        alert('You added the playground ' + this.state.value);
-        event.preventDefault();
+        console.log("terrain : " + playground.name + " " + playground.address + " " + playground.sports)
+
+        this.api.postPlayground(playground);
+        console.log("xxx")
     }
 
     render() {
@@ -51,8 +74,10 @@ class ModalPlayground extends React.Component {
                         <Button onClick={this.handleClose} color="primary">
                             Annuler
                         </Button>
-                        <Button onClick={this.handleClose} color="primary">
-                            Ajouter
+                        {/* Condition un peu sale pour désactiver le bouton tant qu'on est pas à la dernière étape
+                            Il faudrait définir les étapes du stepper (pour accéder à steps.length) dans un reducer si on a le time */}
+                        <Button onClick={this.handleAdding} color="primary" disabled={this.props.step !== 5}>
+                            Ajouter le terrain
                         </Button>
                     </DialogActions>
                 </Dialog>
@@ -64,7 +89,9 @@ class ModalPlayground extends React.Component {
 // mapping du state global dans les props du composant Home
 const mapStateToProps = (state) => {
     return {
-        open: state.toggleModal.open
+        open: state.toggleModal.open,
+        step: state.addPlayground.step,
+        properties: state.addPlayground
     }
 }
 
