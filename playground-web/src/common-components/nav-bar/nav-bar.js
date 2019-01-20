@@ -179,7 +179,7 @@ class NavBar extends React.Component {
             );
         }
     }
-
+    
     render() {
         const { classes } = this.props;
 
@@ -188,12 +188,10 @@ class NavBar extends React.Component {
             <div className={classes.list}>
                 {/* Premiere liste d'icones (taches utilisateur) */}
                 <List>
-                    {['New Playground', 'Profile'].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <AddIcon /> : <ProfileIcon />}</ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItem>
-                    ))}
+                    <ListItem button key={'Profile'} onClick={this.displayProfile}>
+                        <ListItemIcon><ProfileIcon /></ListItemIcon>
+                        <ListItemText primary={'Profile'} />
+                    </ListItem>
                 </List>
                 {/*On divise le menu en 2 parties et on propose la seconde liste d'icones(Taches administrateur)*/}
                 <Divider />
