@@ -7,6 +7,7 @@ import 'package:Playground/widgets/inputs/PlaygroundCheckbox.dart';
 import 'package:Playground/widgets/inputs/PlaygroundSportSelection.dart';
 import 'package:Playground/widgets/style/PlaygorundTextFieldStyle.dart';
 import 'package:Playground/widgets/style/PlaygroundLabelStyle.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter/material.dart';
 
 class AddPlaygroundPage extends StatefulWidget {

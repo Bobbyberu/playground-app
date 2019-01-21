@@ -117,6 +117,7 @@ public class UserService implements IUserService {
         return userRepository.findByUsername(username).orElse(null);
     }
 
+    @Override
     public User getUserByMail(String mail) {
         return userRepository.findByMail(mail).orElse(null);
     }
