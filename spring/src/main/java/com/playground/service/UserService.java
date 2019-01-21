@@ -1,6 +1,5 @@
 package com.playground.service;
 
-import com.playground.model.Role;
 import com.playground.model.User;
 import com.playground.model.VerificationToken;
 import com.playground.repository.RoleRepository;

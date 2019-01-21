@@ -11,6 +11,8 @@ Back to [README.md](../README.md)
 - [[PUT] /api/users/\{userId\}/favouritePlaygrounds/\{playgroundId\}](#7)
 - [[PUT] /api/users/\{id\}](#8)
 - [[DELETE] /api/users/\{id\}](#9)
+- [[GET] /api/users/\{userMail\}/image](#10)
+- [[POST] /api/users/image](#11)
 
 ## [GET] /api/users {#1}
 
@@ -145,6 +147,34 @@ Delete an user
 
 - *204 No Content :* void
 - *404 Not found :* ResourceNotFoundException
+
+___
+
+## [GET] /api/users/\{userMail\}/image {#10}
+
+Get corresponding user image
+
+### Parameters
+
+- *\{userMail\} :* String
+
+### Response (HTTP)
+
+- *200 Ok* 
+
+___
+
+## [POST] /api/users/image {#11}
+
+Upload profile image for given user
+
+### Parameters
+
+- *\{file\} :* MultipartFile (file to be sent)
+
+### Response (HTTP)
+
+- *200 Ok* 
 
 ___
 
