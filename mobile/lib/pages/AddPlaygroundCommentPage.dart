@@ -4,6 +4,7 @@ import 'package:Playground/entities/Playground.dart';
 import 'package:Playground/entities/User.dart';
 import 'package:Playground/services/CommentService.dart';
 import 'package:Playground/services/SessionManager.dart';
+import 'package:Playground/widgets/dialog/PlaygroundDialog.dart';
 import 'package:Playground/widgets/inputs/PlaygroundButton.dart';
 import 'package:Playground/widgets/playground/PlaygroundMarkSelector.dart';
 import 'package:Playground/widgets/style/PlaygorundTextFieldStyle.dart';
@@ -43,41 +44,18 @@ class AddPlaygroundCommentState extends State<AddPlaygroundCommentPage> {
       bool success = await commentService.save(newComment);
 
       if(success) {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return new AlertDialog(
-                title: new Text("Envoi de votre commentaire"),
-                content: new Text("Votre commentaire a bien été envoyé."),
-                actions: <Widget>[
-                  new FlatButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                      },
-                      child: new Text("Ok")
-                  )
-                ],
-              );
-            }
+        PlaygroundDialog.showValidDialog(
+          context,
+          "Envoi de votre commentaire",
+          "Votre commentaire a bien été envoyé.",
+          () {Navigator.pop(context); Navigator.pop(context);}
         );
       } else {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return new AlertDialog(
-                title: new Text("Oh oh..."),
-                content: new Text("Un problème est venu lors de la validation. Veuillez réessayer plus tard."),
-                actions: <Widget>[
-                  new FlatButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: new Text("Ok")
-                  )
-                ],
-              );
-            }
+        PlaygroundDialog.showErrorDialog(
+          context,
+          "Envoi de votre commentaire",
+          "Un problème est venu lors de la validation. Veuillez réessayer plus tard.",
+          () { Navigator.pop(context); }
         );
       }
     }

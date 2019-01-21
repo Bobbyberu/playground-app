@@ -53,6 +53,38 @@ public class UserController {
         return new ResponseEntity<>(userService.getUsers(),HttpStatus.OK);
     }
 
+
+    /**
+     * [GET] return true if the user doing the request is authenticated
+     *
+     * @return Boolean
+     */
+    @GetMapping(value = "/check")
+    public ResponseEntity<Boolean> checkAuth() {
+        return ResponseEntity.ok(true);
+    }
+
+    /**
+     * [GET] Return an user by his username
+     *
+     * @param username String
+     *
+     * @return ResponseEntity
+     *
+     * @throws ResourceNotFoundException User not found
+     */
+    @GetMapping(value = "/username/{username}", produces = "application/json")
+    public ResponseEntity<User> getUserByUsername(@PathVariable(value = "username") String username) throws ResourceNotFoundException {
+        User user = userService.getUserByUsername(username);
+
+        if (user == null) {
+            throw new ResourceNotFoundException("User with username " + username + " not found");
+        }
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+
     /**
      * [GET] Return a distinct list of playgrounds
      *
@@ -118,26 +150,6 @@ public class UserController {
 
         if (user == null) {
             throw new ResourceNotFoundException("User with id " + id + " not found");
-        }
-
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }
-
-    /**
-     * [GET] Return an user by his username
-     *
-     * @param username String
-     *
-     * @return ResponseEntity
-     *
-     * @throws ResourceNotFoundException User not found
-     */
-    @GetMapping(value = "/username/{username}", produces = "application/json")
-    public ResponseEntity<User> getUserByUsername(@PathVariable(value = "username") String username) throws ResourceNotFoundException {
-        User user = userService.getUserByUsername(username);
-
-        if (user == null) {
-            throw new ResourceNotFoundException("User with username " + username + " not found");
         }
 
         return new ResponseEntity<>(user, HttpStatus.OK);

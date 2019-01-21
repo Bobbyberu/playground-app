@@ -1,7 +1,6 @@
 
-import 'dart:convert';
-
 import 'package:Playground/entities/User.dart';
+import 'package:Playground/enums/ConnectionStatus.dart';
 import 'package:Playground/services/SessionManager.dart';
 import 'package:Playground/services/TokenManager.dart';
 
@@ -10,6 +9,29 @@ import 'package:Playground/controllers/AuthController.dart';
 class AuthService {
 
   AuthController _controller = new AuthController();
+
+  ///
+  /// Start a test call to the server API to check if the server is available or if the user is authenticated
+  ///
+  Future<ConnectionStatus> checkConnection() async {
+    ConnectionStatus res;
+
+    await _controller.checkConnection().then((response) {
+      if(response.statusCode != null && response.statusCode == 200) {
+        res = ConnectionStatus.AUTHENTICATED;
+      }
+      else if (response.statusCode != null && response.statusCode == 403) {
+        res = ConnectionStatus.NOT_AUTHENTICATED;
+      }
+      else {
+        res = ConnectionStatus.SERVER_UNAVAILABLE;
+      }
+    }).catchError((error) {
+      res = ConnectionStatus.SERVER_UNAVAILABLE;
+    });
+
+    return res;
+  }
 
   ///
   ///Call server auth login method to get a JWT
@@ -59,6 +81,7 @@ class AuthService {
   void logout() async {
     await _controller.logout().then((response) {
       TokenManager.getInstance().cleanToken();
+      SessionManager.getInstance().clearSession();
     }).catchError((error) {
       _controller.printError(error);
     });

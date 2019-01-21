@@ -6,6 +6,10 @@ class AuthController extends CommonController {
 
   static const String route = CommonController.baseUrl + "users/";
 
+  Future checkConnection() {
+    return get(route + "check");
+  }
+
   ///
   /// Send credential to api to receive a JWT
   ///
@@ -18,7 +22,7 @@ class AuthController extends CommonController {
   }
 
   Future getUserByUsername(String username) {
-    return get(route + "name/" + username);
+    return get(route + "username/" + username);
   }
 
   ///
