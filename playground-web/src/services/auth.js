@@ -22,7 +22,7 @@ export default class AuthService {
         return axios({
             method: 'post',
             url: this.domain + 'login',
-            data: { 'username': username, 'password': password },
+            data: { 'mail': username, 'password': password },
             headers: { 'Content-Type': 'application/json' }
         })
             .then((response) => {

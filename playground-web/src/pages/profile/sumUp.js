@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, MuiThemeProvider } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
@@ -8,14 +8,15 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '../../pictures/bob.PNG';
 
-const styles = {
-    media: {
-        width: 150,
-        height: 150,
-        borderRadius: 1000,
-        horizontalAlign: 'center'
-    }
-};
+const styles = theme => ({
+  media: {
+    width: theme.spacing.unit * 20,
+    height: theme.spacing.unit * 20,
+    margin: theme.spacing.unit * 2,
+    borderRadius: 1000,
+    display: 'inline-block',
+  },
+});
 
 function sumUp(props) {
   const { classes } = props;
@@ -27,13 +28,12 @@ function sumUp(props) {
           image={Avatar}
           title="Avatar"
         />
-        <CardContent>
+        <CardContent classname={classes.container} >
           <Typography gutterBottom variant="h6" component="h2">
-            15/02/1996
+            Bobbybel
           </Typography>
-          <Typography component="p">
-            Bonjour je m'appelle Aubien mais vous pouvez m'appelez Kali Bouc Becker akai l'impulsif.
-            J'aime beaucoup le choux rouge, les licornes et les pâtes au pesto.
+          <Typography >
+            10/05/1992
           </Typography>
         </CardContent>
       </CardActionArea>
