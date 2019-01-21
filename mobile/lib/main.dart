@@ -10,8 +10,10 @@ import 'package:Playground/pages/StartPage.dart';
 import 'package:Playground/services/AuthService.dart';
 import 'package:Playground/services/SessionManager.dart';
 import 'package:Playground/services/TokenManager.dart';
+import 'package:Playground/widgets/dialog/PlaygroundDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
+import 'package:flutter/services.dart';
 
 void main() => runApp(MyApp());
 
@@ -116,19 +118,28 @@ class PlaygroundSplashScreen2State extends State<PlaygroundSplashScreen2> with T
 
   @override
   Widget build(BuildContext context) {
+    // Force Portrait mode
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
+    if(connectionStatus != null && curvedAnimation.value == 1) {
+      if (connectionStatus == ConnectionStatus.AUTHENTICATED)
+        return new MainPage();
+      else if (connectionStatus == ConnectionStatus.NOT_AUTHENTICATED)
+        return new LoginPage();
+      else
+        return new Material(
+          color: Theme.of(context).primaryColor,
+          child: PlaygroundDialog.getNoConnectionAlertDialog(context, () {Navigator.of(context).pushReplacementNamed("/splash");})
+        );
+    }
+
     // Image dimension
     maxWidth = MediaQuery.of(context).size.width * 0.85;
     var height = maxWidth * heightPerc / 100;
     var width = maxWidth * widthPerc / 100;
-
-    if(connectionStatus != null && curvedAnimation.value == 1) {
-      if (connectionStatus == ConnectionStatus.AUTHENTICATED)
-         return new MainPage();
-      else if (connectionStatus == ConnectionStatus.NOT_AUTHENTICATED)
-         return new LoginPage();
-      else if (connectionStatus == ConnectionStatus.SERVER_UNAVAILABLE)
-         print("Cannot reach server"); // TODO display dialog
-    }
 
     return new Material(
       color: Theme.of(context).primaryColor,

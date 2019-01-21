@@ -26,6 +26,9 @@ class MainPage extends StatefulWidget {
 
 class MainPageState extends State<MainPage> {
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<FormState> _searchKey = new GlobalKey<FormState>();
+
   PlaygroundService _playgroundService = new PlaygroundService();
   List<Playground> results;
   bool searching;
@@ -51,6 +54,59 @@ class MainPageState extends State<MainPage> {
       setState(() {
         results = response;
         searching = (value.length > 0);
+
+        if(searching) {
+          _scaffoldKey.currentState.showBottomSheet<Null>((BuildContext context) {
+            return new Container(
+              height:  MediaQuery.of(context).size.height / 2,
+              width: MediaQuery.of(context).size.width,
+              decoration: new BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  new BoxShadow(
+                      color: Colors.grey[800],
+                      blurRadius: 4.0,
+                      spreadRadius: 1
+                  )
+                ]
+              ),
+              child :
+                  new Padding(
+                    padding: EdgeInsets.only(top: 12),
+                    child: new SafeArea(
+                        bottom: true,
+                        child: new SingleChildScrollView(
+                          child: new ConstrainedBox(
+                              constraints: new BoxConstraints(),
+                              child: new Padding(
+                                  padding: EdgeInsets.all(12),
+                                  child : new Column(
+                                    children: <Widget>[
+                                      new Padding(
+                                        padding: EdgeInsets.only(top: 8, bottom: 8),
+                                        child: new Text( results.length.toString() + " résultat(s) trouvé(s)"),
+                                      ),
+                                      new Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: List.generate(results.length, (index) => new Padding(padding: EdgeInsets.only(bottom: 4), child: new PlaygroundCard(playground: results.elementAt(index)))),
+                                      )
+                                    ],
+                                  )
+                              )
+                          ),
+                        )
+                    )
+                  )
+            );
+          })
+          .closed
+          .whenComplete(() {
+            setState(() {
+              searching = false;
+            });
+          });
+        }
+
       });
     });
   }
@@ -67,72 +123,62 @@ class MainPageState extends State<MainPage> {
     )); });
 
 
+    TextEditingController _searchbarController = new TextEditingController();
     var searchBar = new Container(
       width: MediaQuery.of(context).size.width,
       decoration: new BoxDecoration(
         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
-        color: (searching) ? Colors.white : Colors.transparent,
-        boxShadow:(searching) ? [new BoxShadow(
-            color: Theme.of(context).primaryColorDark,
-            blurRadius: 6.0,
-            spreadRadius: 1
-        )] : []
+        color:  Colors.transparent,
       ),
       child: new SafeArea(
         child: new Padding(
           padding: EdgeInsets.only(top:12, bottom: 0, left: 12, right: 12),
-          child:  new Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              new TextField(
-                style: new TextStyle(
-                  color: Theme.of(context).primaryColorDark,
-                  fontSize: 18,
-                ),
-                decoration: new InputDecoration(
-                  border: OutlineInputBorder(borderSide: BorderSide(style: BorderStyle.solid,width: 2,color: Theme.of(context).primaryColorLight), borderRadius: BorderRadius.circular(10)),
-                  suffixIcon: (searching) ? new Icon(Icons.clear) : new Icon(Icons.search),
-                  contentPadding: EdgeInsets.only(left: 12),
-                  hintText: "Rechercher un terrain",
-                  filled: true,
-                  fillColor: Colors.white
-                ),
-                onSubmitted: (value) {
-                  search(value);
-                }
-              ),
-
-              (searching) ?
-              new Padding(
-                padding: EdgeInsets.only(top: 18),
-                child:new Column( // Results
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          child: new Form(
+              key: _searchKey,
+              child:  new Stack(
+                  alignment: const Alignment(0.99, 0.8),
                   children: <Widget>[
-                    new Padding(
-                      padding: EdgeInsets.only(left: 12, bottom: 8),
-                      child: new Text(results.length.toString() + " résultat(s) trouvés")
-                    ),
-                    new SingleChildScrollView(
-                      scrollDirection: Axis.vertical,
-                      child: new ConstrainedBox(
-                        constraints: new BoxConstraints(minHeight: 100, maxHeight: 200),
-                        child: new ListView(
-                          scrollDirection: Axis.vertical,
-                          children: List.generate(results.length, (index) => new Padding(padding: EdgeInsets.only(bottom: 4), child: new PlaygroundCard(playground: results.elementAt(index)))),
+                    new TextFormField(
+                        controller: _searchbarController,
+                        style: new TextStyle(
+                          color: Theme.of(context).primaryColorDark,
+                          fontSize: 18,
                         ),
-                      ),
+                        decoration: new InputDecoration(
+                          border: OutlineInputBorder(borderSide: BorderSide(style: BorderStyle.solid,width: 2,color: Theme.of(context).primaryColorLight), borderRadius: BorderRadius.circular(10)),
+                          contentPadding: EdgeInsets.only(left: 12, right: 36, top: 12, bottom: 12),
+                          hintText: "Rechercher un terrain",
+                          filled: true,
+                          fillColor: Colors.white,
+                        ),
+                        onFieldSubmitted: (value) {
+                          search(value);
+                        }
+                    ),
+                    new IconButton(
+                        onPressed: () {
+                          if(!searching){
+                            search(_searchbarController.text);
+                          } else {
+                            _searchbarController.clear();
+                            setState(() {
+                              searching = false;
+                            });
+                          }
+                        },
+                        icon: (searching) ? new Icon(Icons.clear, color: Colors.grey) : new Icon(Icons.search, color: Theme.of(context).primaryColor)
                     )
-                  ],
-                )
-              ) : new Column()
-            ],
+                  ]
+              )
           )
-        )
+        ),
       ),
     );
 
+
+
     return new Scaffold(
+        key: _scaffoldKey,
         body: SizedBox.expand(
           child: new Stack(
             fit: StackFit.loose,
