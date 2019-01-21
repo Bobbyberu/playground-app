@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -13,16 +12,6 @@ import { connect } from 'react-redux';
 import PasswordDialog from './passwordDialog'
 import MailDialog from './mailDialog'
 
-const theme = createMuiTheme({
-    overrides: {
-        MuiListItemText: {
-            root: {
-                marginRight: 100,
-            },
-        },
-    },
-});
-
 const styles = theme => ({
     item: {
         marginBottom: theme.spacing.unit
@@ -34,7 +23,6 @@ class PersonalInfos extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            mail: 'zeruome@gmail.com',
             password: '******',
         };
     }
@@ -55,7 +43,7 @@ class PersonalInfos extends React.Component {
         const { classes } = this.props;
 
         return (
-            <MuiThemeProvider theme={theme}>
+            <React.Fragment>
                 <PasswordDialog />
                 <MailDialog />
                 <div>
@@ -63,10 +51,10 @@ class PersonalInfos extends React.Component {
                         <ListItem className={classes.item}>
                             <ListItemText
                                 primary={'Adresse mail'}
-                                secondary={this.state.mail}
+                                secondary={this.props.mail}
                             />
                             <ListItemSecondaryAction>
-                                <IconButton aria-label="Modifier"  onClick={this.displayMailDialog}>
+                                <IconButton aria-label="Modifier" onClick={this.displayMailDialog}>
                                     <EditIcon />
                                 </IconButton>
                             </ListItemSecondaryAction>
@@ -84,7 +72,7 @@ class PersonalInfos extends React.Component {
                         </ListItem>
                     </List>
                 </div>
-            </MuiThemeProvider>
+            </React.Fragment>
         );
     }
 }

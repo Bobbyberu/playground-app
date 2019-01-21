@@ -13,6 +13,9 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import PersonalInfos from './personal/personalInfos';
 import FavouriteInfos from './favourite/favouriteInfos';
 import Avatar from '../../pictures/bob.PNG';
+import SumUp from './sumUp'
+
+import AuthService from '../../services/auth';
 
 const theme = createMuiTheme({
     palette: {
@@ -31,6 +34,11 @@ const theme = createMuiTheme({
                 marginBottom: 10,
             },
         },
+        MuiListItemText: {
+            root: {
+                marginRight: 100,
+            },
+        },
     },
 });
 
@@ -40,10 +48,11 @@ const styles = theme => ({
         width: '20%',
         display: 'inline-block',
         verticalAlign: 'top',
-        marginTop: theme.spacing.unit * 4
+        marginTop: theme.spacing.unit * 4,
+        marginLeft: '5%'
     },
     rightColumn: {
-        width: '75%',
+        width: '70%',
         display: 'inline-block',
         marginRight: '5%'
     },
@@ -66,8 +75,19 @@ class Profile extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            birthday: '10/05/1992'
+            birthday: '10/05/1992',
+            mail: '',
+            password: '',
         };
+        this.authService = new AuthService();
+    }
+    
+    componentDidMount() {
+        let token = this.authService.decodeToken()
+        this.setState({
+            mail: token.sub
+        })
+        console.log(token)
     }
 
     render() {
@@ -77,7 +97,7 @@ class Profile extends React.Component {
             <MuiThemeProvider theme={theme}>
                 <NavBar searchbar={false} />
                 <div className={classNames(classes.leftColumn, classes.divider)}>
-                    <img src={Avatar} className={classes.img}/>
+                    <SumUp />
                 </div>
                 <div className={classNames(classes.rightColumn, classes.container)}>
                     <ExpansionPanel>
@@ -85,7 +105,7 @@ class Profile extends React.Component {
                             <Typography variant="h6">Informations de connexion</Typography>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
-                            <PersonalInfos />
+                            <PersonalInfos mail={this.state.mail}/>
                         </ExpansionPanelDetails>
                     </ExpansionPanel>
                     <ExpansionPanel>

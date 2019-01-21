@@ -21,7 +21,7 @@ import Searchbar from '../../pages/home/components/searchbar/searchbar';
 import AuthService from '../../services/auth';
 import SnackbarContentWrapper from '../../common-components/snackbar/SnackbarContentWrapper';
 
-import AddIcon from '@material-ui/icons/AddBox';
+import HomeIcon from '@material-ui/icons/Home';
 import ProfileIcon from '@material-ui/icons/People';
 import UserIcon from '@material-ui/icons/AccountBox';
 import LocationIcon from '@material-ui/icons/LocationCity';
@@ -179,7 +179,7 @@ class NavBar extends React.Component {
             );
         }
     }
-    
+
     render() {
         const { classes } = this.props;
 
@@ -188,10 +188,18 @@ class NavBar extends React.Component {
             <div className={classes.list}>
                 {/* Premiere liste d'icones (taches utilisateur) */}
                 <List>
-                    <ListItem button key={'Profile'} onClick={this.displayProfile}>
-                        <ListItemIcon><ProfileIcon /></ListItemIcon>
-                        <ListItemText primary={'Profile'} />
-                    </ListItem>
+                    <Link to="/" className={classes.link}>
+                        <ListItem button>
+                            <ListItemIcon><HomeIcon /></ListItemIcon>
+                            <ListItemText primary={'Accueil'} />
+                        </ListItem>
+                    </Link>
+                    <Link to="/profile" className={classes.link}>
+                        <ListItem button>
+                            <ListItemIcon><ProfileIcon /></ListItemIcon>
+                            <ListItemText primary={'Profil'} />
+                        </ListItem>
+                    </Link>
                 </List>
                 {/*On divise le menu en 2 parties et on propose la seconde liste d'icones(Taches administrateur)*/}
                 <Divider />
@@ -203,7 +211,7 @@ class NavBar extends React.Component {
                         </ListItem>
                     ))}
                 </List>
-            </div>
+            </div >
         );
 
         return (

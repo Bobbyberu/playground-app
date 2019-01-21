@@ -41,6 +41,11 @@ const theme = createMuiTheme({
         },
       },
     },
+    MuiExpansionPanel: {
+      root: {
+        marginBottom: 10,
+      },
+    },
   },
 });
 
@@ -52,7 +57,7 @@ function AppRouter() {
         <Route path="/details/:id" component={Child} />
         <Route path="/login" component={() => (<Login theme={theme} />)} />
         <Route path="/signup" component={() => (<SignUp theme={theme} />)} />
-        <Route path="/profile" exact component={() => (<Profile />)} />
+        <Route path="/profile" component={() => (<Profile theme={theme} />)} />
         <Route component={NoMatch} />
       </Switch>
     </Router>
