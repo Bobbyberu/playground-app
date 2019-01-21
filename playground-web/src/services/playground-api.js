@@ -60,6 +60,32 @@ export default class PlaygroundAPI {
       .catch(err => console.log(err));
   }
 
+  getUserByMail(mail) {
+    return axios({
+      method: 'get',
+      url: api + 'users/mail/' + mail,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': authService.getToken()
+      }
+    })
+      .then(response => response.data)
+      .catch(err => console.log(err));
+  }
+
+  updateUser(user) {
+    return axios({
+      method: 'put',
+      url: api + user.id,
+      data: user,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': authService.getToken()
+      }
+    })
+      .catch(err => console.log(err));
+  }
+
   getAllComments(playgroundId) {
     return axios({
       method: 'get',

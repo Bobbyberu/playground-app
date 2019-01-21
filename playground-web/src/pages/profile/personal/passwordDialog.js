@@ -15,7 +15,7 @@ const styles = theme => ({
     flexWrap: 'wrap',
   },
   textField: {
-    width : '100%',
+    width: '100%',
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
   },
@@ -23,14 +23,31 @@ const styles = theme => ({
 
 class PasswordDialog extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
+    this.state = {
+      newPassword: '',
+      confirmPassword: '',
+    }
   }
+
+  // gérer le changement de valeur des champs
+  handleChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  };
 
   handleClose = () => {
     // On ferme la fenêtre de dialogue
     const action = { type: "TOGGLE_PASSWORD_DIALOG", value: false };
     this.props.dispatch(action);
   };
+
+  handleAdding = () => {
+    if (newPassword === confirmPassword){
+      // Do Update
+    }
+  }
 
   render() {
     const { open } = this.props
@@ -43,13 +60,14 @@ class PasswordDialog extends React.Component {
           <DialogContent className={classes.container}>
             <DialogContentText >
               <TextField
-                id="password"
+                id="newPassword"
                 label="Nouveau mot de passe"
                 type="password"
-                name="password"
+                name="newPassword"
                 margin="normal"
                 variant="outlined"
                 className={classes.textField}
+                onChange={this.handleChange}
                 required
                 autoFocus
               />
@@ -61,6 +79,7 @@ class PasswordDialog extends React.Component {
                 margin="normal"
                 variant="outlined"
                 className={classes.textField}
+                onChange={this.handleChange}
                 required
               />
             </DialogContentText>
@@ -68,10 +87,10 @@ class PasswordDialog extends React.Component {
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
               Annuler
-                        </Button>
-            <Button onClick={this.handleClose} color="primary">
+            </Button>
+            <Button onClick={this.handleAdding} color="primary">
               Valider
-                        </Button>
+            </Button>
           </DialogActions>
         </Dialog>
       </div>

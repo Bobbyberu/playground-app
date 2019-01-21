@@ -40,6 +40,11 @@ export default class AuthService {
         return !!token && !this.isTokenExpired(token);
     }
 
+    // Récuperer les informations du user avec son mail
+    getUser(mail) {
+
+    }
+
     isTokenExpired(token) {
         try {
             const decoded = decode(token);

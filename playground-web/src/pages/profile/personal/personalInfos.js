@@ -62,7 +62,7 @@ class PersonalInfos extends React.Component {
                         <ListItem className={classes.item}>
                             <ListItemText
                                 primary={'Mot de passe'}
-                                secondary={this.state.password}
+                                secondary={this.props.password}
                             />
                             <ListItemSecondaryAction >
                                 <IconButton aria-label="Modifier" onClick={this.displayPasswordDialog}>

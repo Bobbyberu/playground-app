@@ -30,10 +30,10 @@ function sumUp(props) {
         />
         <CardContent classname={classes.container} >
           <Typography gutterBottom variant="h6" component="h2">
-            Bobbybel
+            {props.username}
           </Typography>
           <Typography >
-            10/05/1992
+            {props.birthDate}
           </Typography>
         </CardContent>
       </CardActionArea>
@@ -43,6 +43,8 @@ function sumUp(props) {
 
 sumUp.propTypes = {
   classes: PropTypes.object.isRequired,
+  username: PropTypes.string.isRequired,
+  birthDate: PropTypes.string.isRequired,
 };
 
 export default withStyles(styles)(sumUp);
