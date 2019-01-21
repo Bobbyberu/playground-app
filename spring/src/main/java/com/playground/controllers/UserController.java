@@ -99,7 +99,6 @@ public class UserController {
      * @param mail String
      *
      * @return ResponseEntity
-     *
      * @throws ResourceNotFoundException User not found
      */
     @GetMapping(value = "/mail/{mail}", produces = "application/json")
