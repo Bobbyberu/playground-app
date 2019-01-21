@@ -3,6 +3,7 @@ package com.playground.config;
 import com.playground.security.CorsFilter;
 import com.playground.security.JWTAuthenticationFilter;
 import com.playground.security.JWTLoginFilter;
+import com.playground.service.TokenAuthenticationService;
 import com.playground.service.UserDetailsServiceImpl;
 import com.playground.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
+    @Autowired
+    private TokenAuthenticationService tokenAuthenticationService;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().cors().disable().authorizeRequests()
@@ -44,12 +48,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //
                 // Add Filter 2 - JWTLoginFilter
                 //
-                .addFilterBefore(new JWTLoginFilter("/users/login", authenticationManager()),
+                .addFilterBefore(new JWTLoginFilter("/users/login", authenticationManager(), tokenAuthenticationService),
                         UsernamePasswordAuthenticationFilter.class)
                 //
                 // Add Filter 3 - JWTAuthenticationFilter
                 //
-                .addFilterBefore(new JWTAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JWTAuthenticationFilter(tokenAuthenticationService), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean

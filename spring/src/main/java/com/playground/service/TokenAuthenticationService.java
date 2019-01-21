@@ -1,16 +1,23 @@
 package com.playground.service;
 
+import com.playground.model.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.Date;
 
+@Service
 public class TokenAuthenticationService {
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
     static final long EXPIRATIONTIME = 864_000_000; // 10 days
 
@@ -20,21 +27,22 @@ public class TokenAuthenticationService {
 
     static final String HEADER_STRING = "Authorization";
 
-    public static void addAuthentication(HttpServletResponse res, String username) {
+    public void addAuthentication(HttpServletResponse res, String username) {
         String JWT = Jwts.builder().setSubject(username)
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATIONTIME))
                 .signWith(SignatureAlgorithm.HS512, SECRET).compact();
         res.addHeader(HEADER_STRING, TOKEN_PREFIX + " " + JWT);
     }
 
-    public static Authentication getAuthentication(HttpServletRequest request) {
+    public Authentication getAuthentication(HttpServletRequest request) {
         String token = request.getHeader(HEADER_STRING);
         if (token != null) {
             // parse the token.
-            String user = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token.replace(TOKEN_PREFIX, "")).getBody()
+            String username = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token.replace(TOKEN_PREFIX, "")).getBody()
                     .getSubject();
+            User user = userDetailsService.loadUserByUsername(username);
 
-            return user != null ? new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList()) : null;
+            return user != null ? new UsernamePasswordAuthenticationToken(user.getMail(), user.getPassword(), user.getAuthorities()) : null;
         }
         return null;
     }
