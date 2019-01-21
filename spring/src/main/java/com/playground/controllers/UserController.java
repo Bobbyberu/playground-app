@@ -2,20 +2,27 @@ package com.playground.controllers;
 
 import com.playground.model.Playground;
 import com.playground.model.User;
-import com.playground.repository.PlaygroundRepository;
-import com.playground.repository.UserRepository;
 import com.playground.service.PlaygroundService;
+import com.playground.service.TokenAuthenticationService;
 import com.playground.service.UserService;
+import com.playground.storage.StorageService;
 import com.playground.utils.ResourceNotFoundException;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
-import java.util.HashMap;
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -25,22 +32,23 @@ import java.util.Set;
 @RequestMapping("/users")
 public class UserController {
 
-    /** UserService userService */
     private final UserService userService;
 
-    /** PlaygroundService playgroundService */
     private final PlaygroundService playgroundService;
+
+    private final StorageService storageService;
 
     /**
      * UserController Constructor
      *
-     * @param userService UserService
+     * @param userService       UserService
      * @param playgroundService PlaygroundService
      */
     @Autowired
-    public UserController(UserService userService, PlaygroundService playgroundService) {
+    public UserController(UserService userService, PlaygroundService playgroundService, StorageService storageService) {
         this.userService = userService;
         this.playgroundService = playgroundService;
+        this.storageService = storageService;
     }
 
     /**
@@ -50,7 +58,7 @@ public class UserController {
      */
     @GetMapping(produces = "application/json")
     public ResponseEntity<List<User>> getUsers() {
-        return new ResponseEntity<>(userService.getUsers(),HttpStatus.OK);
+        return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
     }
 
 
@@ -89,9 +97,7 @@ public class UserController {
      * [GET] Return a distinct list of playgrounds
      *
      * @param id int
-     *
      * @return ResponseEntity
-     *
      * @throws ResourceNotFoundException User not found
      */
     @GetMapping(value = "/{id}/favouritePlaygrounds/")
@@ -108,11 +114,9 @@ public class UserController {
     /**
      * [GET] Return true if it's a user's favorite playground
      *
-     * @param userId int
+     * @param userId       int
      * @param playgroundId int
-     *
      * @return ResponseEntity
-     *
      * @throws ResourceNotFoundException User not found
      * @throws ResourceNotFoundException Playground not found
      */
@@ -139,9 +143,7 @@ public class UserController {
      * [GET] Return an user by his id
      *
      * @param id int
-     *
      * @return ResponseEntity
-     *
      * @throws ResourceNotFoundException User not found
      */
     @GetMapping(value = "/{id}", produces = "application/json")
@@ -159,7 +161,6 @@ public class UserController {
      * [POST] Create a user and return it
      *
      * @param user User
-     *
      * @return ResponseEntity
      */
     @PostMapping("/signup")
@@ -170,11 +171,9 @@ public class UserController {
     /**
      * [PUT] add/remove a user's favourite playground
      *
-     * @param userId int
+     * @param userId       int
      * @param playgroundId int
-     *
      * @return ResponseEntity
-     *
      * @throws ResourceNotFoundException User not found
      * @throws ResourceNotFoundException Playground not found
      */
@@ -194,7 +193,7 @@ public class UserController {
 
         boolean favourite;
 
-        if(user.getFavouritePlaygrounds().contains(playground)) {
+        if (user.getFavouritePlaygrounds().contains(playground)) {
             user.getFavouritePlaygrounds().remove(playground);
             favourite = false;
         } else {
@@ -210,11 +209,9 @@ public class UserController {
     /**
      * [PUT] Update an user and return it
      *
-     * @param id int
+     * @param id   int
      * @param user User
-     *
      * @return ResponseEntity
-     *
      * @throws ResourceNotFoundException User not found
      */
     @PutMapping("/{id}")
@@ -232,9 +229,7 @@ public class UserController {
      * [DELETE] Delete an user
      *
      * @param id int
-     *
      * @return ResponseEntity
-     *
      * @throws ResourceNotFoundException User not found
      */
     @DeleteMapping("/{id}")
@@ -248,6 +243,81 @@ public class UserController {
         userService.deleteUser(currentUser);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    /**
+     * [GET] get image for corresponding user
+     *
+     * @param userMail
+     * @return image
+     */
+    @GetMapping(value = "{userMail}/image", produces = "image/*")
+    @ResponseBody
+    public ResponseEntity<byte[]> getUserImage(@PathVariable String userMail) {
+        try {
+            User user = userService.getUserByMail(userMail);
+            String filename = user.getAvatarName();
+
+            Resource file;
+
+            // if playground has no image yet
+            if (filename != null) {
+                file = storageService.loadUserAsResource(filename);
+
+                // in case file is not found or does not exist
+                if (file == null) {
+                    file = storageService.loadUserAsResource("default_avatar");
+                }
+            } else {
+                file = storageService.loadUserAsResource("default_avatar");
+            }
+
+            InputStream is = new FileInputStream(file.getFile());
+
+            // Prepare buffered image.
+            BufferedImage img = ImageIO.read(is);
+
+            // Create a byte array output stream.
+            ByteArrayOutputStream bao = new ByteArrayOutputStream();
+
+            // Write to output stream
+            ImageIO.write(img, "png", bao);
+
+            return new ResponseEntity<>(bao.toByteArray(), HttpStatus.OK);
+            //return bao.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * [POST] Upload image for user
+     *
+     * @param request
+     * @param file
+     * @return ResponseEntity
+     */
+    @PostMapping("/image")
+    public ResponseEntity<?> handleUserImageUpload(HttpServletRequest request, @RequestBody MultipartFile file) {
+
+        String token = request.getHeader("authorization");
+
+        // get user mail from token
+        String userMail = Jwts.parser().setSigningKey(TokenAuthenticationService.SECRET)
+                .parseClaimsJws(token.replace(TokenAuthenticationService.TOKEN_PREFIX, "")).getBody()
+                .getSubject();
+        User user = userService.getUserByMail(userMail);
+        int id = user.getId();
+
+        if (user.getAvatarName() == null) {
+            // update user avatar name
+            user.setAvatarName("user" + id);
+            userService.updateUser(id, user);
+        }
+        String filename = user.getAvatarName();
+        storageService.storeUser(file, filename);
+
+        return ResponseEntity.ok(true);
     }
 
 }

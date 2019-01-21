@@ -35,6 +35,15 @@ public interface IUserService {
     User getUserByUsername(String username);
 
     /**
+     * Return one user
+     *
+     * @param mail String
+     *
+     * @return User
+     */
+    User getUserByMail(String username);
+
+    /**
      * Create a user and return it
      *
      * @param user User

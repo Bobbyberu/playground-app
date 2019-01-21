@@ -1,14 +1,22 @@
 package com.playground.controllers;
 
-import com.playground.model.Comment;
 import com.playground.model.Playground;
 import com.playground.service.PlaygroundService;
+import com.playground.storage.StorageService;
 import com.playground.utils.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -18,8 +26,9 @@ import java.util.List;
 @RequestMapping("/playgrounds")
 public class PlaygroundController {
 
-    /** PlaygroundService playgroundService */
     private final PlaygroundService playgroundService;
+
+    private final StorageService storageService;
 
     /**
      * PlaygroundController Constructor
@@ -27,8 +36,9 @@ public class PlaygroundController {
      * @param playgroundService PlaygroundService
      */
     @Autowired
-    public PlaygroundController(PlaygroundService playgroundService) {
+    public PlaygroundController(PlaygroundService playgroundService, StorageService storageService) {
         this.playgroundService = playgroundService;
+        this.storageService = storageService;
     }
 
     /**
@@ -126,5 +136,71 @@ public class PlaygroundController {
     @GetMapping(value = "/search/{keyword}", produces = "application/json")
     public ResponseEntity<List<Playground>> search(@PathVariable("keyword") String keyword) {
         return new ResponseEntity<>(playgroundService.searchPlaygroundByKeyword(keyword), HttpStatus.OK);
+    }
+
+    /**
+     * [GET] get image for corresponding playground
+     *
+     * @param id of playground
+     *
+     * @return image
+     */
+    @GetMapping(value = "/{playgroundId}/image", produces = "image/*")
+    @ResponseBody
+    public ResponseEntity<byte[]> getPlaygroundImage(@PathVariable int playgroundId) {
+        try {
+            String imageName = playgroundService.getPlayground(playgroundId).getImageName();
+
+            Resource file;
+
+            // if playground has no image yet
+            if(imageName != null) {
+                file = storageService.loadPlaygroundAsResource(imageName);
+
+                // in case file is not found or does not exist
+                if(file == null) {
+                    file = storageService.loadPlaygroundAsResource("default_playground");
+                }
+            }else {
+                file = storageService.loadPlaygroundAsResource("default_playground");
+            }
+
+            InputStream is = new FileInputStream(file.getFile());
+
+            // Prepare buffered image.
+            BufferedImage img = ImageIO.read(is);
+
+            // Create a byte array output stream.
+            ByteArrayOutputStream bao = new ByteArrayOutputStream();
+
+            // Write to output stream
+            ImageIO.write(img, "png", bao);
+
+            return new ResponseEntity<>(bao.toByteArray(), HttpStatus.OK);
+            //return bao.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * [POST] Upload image for playground
+     *
+     * @param playgroundId
+     * @param file
+     *
+     * @return ResponseEntity
+     */
+    @PostMapping("/{playgroundId}/image")
+    public ResponseEntity<?> handlePlaygroundImageUpload(@PathVariable int playgroundId, @RequestBody MultipartFile file) {
+        String filename = "playground" + playgroundId;
+
+        Playground playground = playgroundService.getPlayground(playgroundId);
+        playground.setImage(filename);
+        playgroundService.updatePlayground(playgroundId, playground);
+
+        storageService.storePlayground(file, filename);
+
+        return ResponseEntity.ok(true);
     }
 }

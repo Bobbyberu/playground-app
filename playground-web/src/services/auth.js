@@ -17,12 +17,12 @@ export default class AuthService {
             .catch(err => console.log(err));
     }
 
-    login(username, password) {
+    login(mail, password) {
         // get a token from api server
         return axios({
             method: 'post',
             url: this.domain + 'login',
-            data: { 'username': username, 'password': password },
+            data: { 'mail': mail, 'password': password },
             headers: { 'Content-Type': 'application/json' }
         })
             .then((response) => {

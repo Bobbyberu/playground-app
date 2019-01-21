@@ -63,7 +63,7 @@ class Login extends Component {
     super(props);
 
     this.state = {
-      login: '',
+      mail: '',
       password: '',
       redirect: false
     }
@@ -75,7 +75,7 @@ class Login extends Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    this.authService.login(this.state.login, this.state.password)
+    this.authService.login(this.state.mail, this.state.password)
       .then(() => {
         this.setState({
           redirect: true
@@ -133,7 +133,7 @@ class Login extends Component {
               <TextValidator
                 className={classes.textvalidator}
                 onChange={this.handleInputChange}
-                name="login"
+                name="mail"
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -143,7 +143,7 @@ class Login extends Component {
                   classes: { input: classes.input }
                 }}
                 placeholder="Email"
-                value={this.state.login}
+                value={this.state.mail}
                 variant="outlined"
                 validators={['required']}
                 errorMessages={['Champ obligatoire']}

@@ -7,6 +7,7 @@ import Playground from './pages/playground/Playground';
 import Login from './pages/login/login';
 import SignUp from './pages/sign-up/sign-up';
 import NotFound from './pages/404/NotFound';
+import Test from './pages/test';
 
 const theme = createMuiTheme({
   palette: {
@@ -51,6 +52,7 @@ function AppRouter() {
         <Route path="/details/:id" component={Child} />
         <Route path="/login" component={() => (<Login theme={theme} />)} />
         <Route path="/signup" component={() => (<SignUp theme={theme} />)} />
+        <Route path="/test" component={() => (<Test />)} />
         <Route component={NoMatch} />
       </Switch>
     </Router>
