@@ -37,7 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/users/login").permitAll()
                 .antMatchers(HttpMethod.GET, "/playgrounds/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/users/{userMail}/image").permitAll()
-
+                
                 //Require user rights
                 .antMatchers(HttpMethod.POST, "/playgrounds").hasRole("USER")
                 .antMatchers(HttpMethod.POST, "/reportComments").hasRole("USER")
