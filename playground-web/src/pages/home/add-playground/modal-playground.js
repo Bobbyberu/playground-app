@@ -34,27 +34,26 @@ class ModalPlayground extends React.Component {
     };
 
     handleAdding = () => {
+        // On transforme la liste de sport avec un format json
+        let sportList = [];
+        this.props.properties.sports.map((sport) => (sportList.push({"id" : sport})));
         // Récupération des propriétés du playground en cours d'ajout
         let playground = {
-            name: this.props.properties.name,
-            isPrivate: this.props.properties.isPrivate,
-            covered: this.props.properties.covered,
-            latitude: this.props.properties.latitude,
-            longitude: this.props.properties.longitude,
-            surface: this.props.properties.surface,
-            description: this.props.properties.description,
-            averageMark: this.props.properties.averageMark,
-            image: this.props.properties.image,
-            players: this.props.properties.players,
-            sports: this.props.properties.sports,
-            city: this.props.properties.city,
-            address: this.props.properties.street + " " + this.props.properties.cp + " " + this.props.properties.city
+            'name': this.props.properties.name,
+            'isPrivate': this.props.properties.private,
+            'covered': this.props.properties.covered,
+            'latitude': this.props.properties.latitude,
+            'longitude': this.props.properties.longitude,
+            'surface': this.props.properties.surface,
+            'description': this.props.properties.description,
+            'averageMark': this.props.properties.averageMark,
+            'image': this.props.properties.image,
+            'players': this.props.properties.players,
+            'sports': sportList,
+            'city': this.props.properties.city,
+            'address': this.props.properties.street + " " + this.props.properties.cp + " " + this.props.properties.city
         };
-
-        console.log("terrain : " + playground.name + " " + playground.address + " " + playground.sports)
-
         this.api.postPlayground(playground);
-        console.log("xxx")
     }
 
     render() {

@@ -90,7 +90,7 @@ class StepperModal extends React.Component {
 	
 
 	handleName = () => {
-		const action = { type: 'SET_NAME', value: this.props.name }
+		const action = { type: 'SET_NAME', value: this.state.name }
 		this.props.dispatch(action)
 	}
 

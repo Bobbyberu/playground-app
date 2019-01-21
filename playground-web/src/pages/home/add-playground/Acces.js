@@ -20,21 +20,22 @@ const styles = theme => ({
 class Acces extends React.Component {
 	state = {
 		checkedPrivate: this.props.private,
+		checkedCovered: this.props.covered,
 	};
 
-	handleChange = (event) => {
-		this.setState({ checkedPrivate: event.target.checked });
+	handleChange = name => event => {
+		this.setState({ [name]: event.target.checked });
 	};
 
 	// Dès que le composant n'est plus rendu sur le DOM on envoie l'action avec les infos récoltées
 	componentWillUnmount() {
-		const action = { type: 'SET_ACCESS', value: this.state.checkedPrivate };
+		const action = { type: 'SET_ACCESS', value: [this.state.checkedPrivate, this.state.checkedCovered] };
 		this.props.dispatch(action);
 	}
 
 	render() {
 		const { classes } = this.props;
-		const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
+		//const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
 		return (
 			<div className="container">
 				<FormGroup>
@@ -42,14 +43,24 @@ class Acces extends React.Component {
 						control={
 							<Checkbox
 								checked={this.state.checkedPrivate}
-								onChange={this.handleChange}
+								onChange={this.handleChange('checkedPrivate')}
 								value="checkedPrivate"
 							/>
 						}
 						label="Privé"
 					/>
+					<FormControlLabel
+						control={
+							<Checkbox
+								checked={this.state.checkedCovered}
+								onChange={this.handleChange('checkedCovered')}
+								value="checkedCovered"
+							/>
+						}
+						label="Couvert"
+					/>
 				</FormGroup>
-				{/* Liste des horaires pour chaque jour */}
+				{/* Liste des horaires pour chaque jour 
 				<List>
 					<div className="row">
 						{
@@ -92,7 +103,7 @@ class Acces extends React.Component {
 							))
 						}
 					</div>
-				</List>
+				</List>*/}
 			</div>
 		);
 	}
@@ -105,7 +116,8 @@ Acces.propTypes = {
 // mapping du state global dans les props du composant Acces
 const mapStateToProps = (state) => {
 	return {
-		private: state.addPlayground.private
+		private: state.addPlayground.private,
+		covered: state.addPlayground.covered,
 	}
 }
 

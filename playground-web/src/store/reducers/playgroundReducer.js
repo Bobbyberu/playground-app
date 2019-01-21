@@ -44,7 +44,8 @@ function addPlayground(state = initialState, action) {
             // Définir la privacité du terrain
             nextState = {
                 ...state,
-                private: action.value
+                private: action.value[0],
+                covered: action.value[1],
             }
             return nextState || state
 
