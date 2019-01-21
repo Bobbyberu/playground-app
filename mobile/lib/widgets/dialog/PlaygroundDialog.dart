@@ -39,6 +39,7 @@ class PlaygroundDialog {
                   padding: EdgeInsets.all(8),
                   child: new Text(
                     title,
+                    textAlign: TextAlign.center,
                     style: new TextStyle(
                         color: Colors.white,
                         fontSize: 20

@@ -77,7 +77,7 @@ class LoginPageState extends State<LoginPage> {
                 decoration: PlaygroundLoginTextFieldStyle.getDecoration(context, "Email", Icons.mail_outline),
                 validator: (value) {
                   if (value.isEmpty) return "Le champ Email est obligatoire";
-                  //if (!EmailValidator.isEmail(value)) return "L'email n'est pas valide";
+                  if (!EmailValidator.isEmail(value)) return "L'email n'est pas valide";
                 },
                 onSaved: (value) {
                   _email = value;

@@ -2,17 +2,17 @@
 import 'package:Playground/entities/Comment.dart';
 import 'package:Playground/entities/User.dart';
 
-class SignalComment {
+class ReportComment {
 
   int id;
   Comment comment;
   User author;
   String description;
 
-  SignalComment({this.id, this.comment, this.author, this.description});
+  ReportComment({this.id, this.comment, this.author, this.description});
 
-  factory SignalComment.getDefault() {
-    return new SignalComment(
+  factory ReportComment.getDefault() {
+    return new ReportComment(
       id: 0,
       description: "",
       comment: null,

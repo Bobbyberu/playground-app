@@ -1,11 +1,11 @@
 
 import 'package:Playground/entities/Playground.dart';
-import 'package:Playground/entities/SignalPlayground.dart';
+import 'package:Playground/entities/ReportPlayground.dart';
 import 'package:Playground/entities/User.dart';
 import 'package:Playground/enums/SignalPlaygroundMotives.dart';
 import 'package:Playground/pages/PlaygroundDetails.dart';
 import 'package:Playground/services/SessionManager.dart';
-import 'package:Playground/services/SignalPlaygroundService.dart';
+import 'package:Playground/services/ReportPlaygroundService.dart';
 import 'package:Playground/widgets/dialog/PlaygroundDialog.dart';
 import 'package:Playground/widgets/inputs/PlaygroundButton.dart';
 import 'package:Playground/widgets/style/PlaygorundTextFieldStyle.dart';
@@ -30,8 +30,8 @@ class SignalPlaygroundPage extends StatefulWidget {
 class SignalPlaygroundPageState extends State<SignalPlaygroundPage> {
 
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  final SignalPlaygroundService signalPlaygroundService = new SignalPlaygroundService();
-  SignalPlayground newSignal;
+  final ReportPlaygroundService signalPlaygroundService = new ReportPlaygroundService();
+  ReportPlayground newSignal;
 
   static const Map<SignalPlaygroundMotives, String> motives = {
     SignalPlaygroundMotives.CLOSED_PLAYGROUND : "Playground condamné",
@@ -45,7 +45,7 @@ class SignalPlaygroundPageState extends State<SignalPlaygroundPage> {
 
   @override
   void initState() {
-    newSignal = SignalPlayground.getDefault();
+    newSignal = ReportPlayground.getDefault();
     newSignal.playground = widget.signaledPlayground;
     User me = SessionManager.getInstance().getUser();
     newSignal.author = me;

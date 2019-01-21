@@ -87,7 +87,9 @@ class ProfilePageState extends State<ProfilePage> {
                 )
               ),
 
-              new SettingsMenuLink(label: "Modifier mon profil", icon: Icons.person, onTap: () { /* TODO */ }),
+              new SettingsMenuLink(label: "Modifier mon profil", icon: Icons.person, onTap: () {
+                Navigator.of(context).pushNamed("/profileUpdate");
+              }),
               new Divider(),
 
               new SettingsMenuLink(label: "Paramètres", icon: Icons.settings, onTap: () { /* TODO */ }),

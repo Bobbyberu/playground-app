@@ -7,6 +7,7 @@ import 'package:Playground/pages/MainPage.dart';
 import 'package:Playground/pages/ProfilePage.dart';
 import 'package:Playground/pages/SignUpPage.dart';
 import 'package:Playground/pages/StartPage.dart';
+import 'package:Playground/pages/UpdateProfilePage.dart';
 import 'package:Playground/services/AuthService.dart';
 import 'package:Playground/services/SessionManager.dart';
 import 'package:Playground/services/TokenManager.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         '/cgu'            : (context) => new CGUPage(),
         '/newplayground'  : (context) => new AddPlaygroundPage(),
         '/profile'        : (context) => new ProfilePage(),
+        '/profileUpdate'  : (context) => new UpdateProfilePage(),
         '/favourites'     : (context) => new FavouritePlaygroundsPage()
       }
     );

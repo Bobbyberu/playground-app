@@ -1,9 +1,9 @@
 
 import 'package:Playground/entities/Comment.dart';
-import 'package:Playground/entities/SignalComment.dart';
+import 'package:Playground/entities/ReportComment.dart';
 import 'package:Playground/entities/User.dart';
 import 'package:Playground/services/SessionManager.dart';
-import 'package:Playground/services/SignalCommentService.dart';
+import 'package:Playground/services/ReportCommentService.dart';
 import 'package:Playground/widgets/dialog/PlaygroundDialog.dart';
 import 'package:Playground/widgets/inputs/PlaygroundButton.dart';
 import 'package:Playground/widgets/style/PlaygorundTextFieldStyle.dart';
@@ -23,13 +23,13 @@ class SignalCommentPage extends StatefulWidget {
 
 class SignalCommentPageState extends State<SignalCommentPage> {
 
-  SignalCommentService signalCommentService = new SignalCommentService();
+  ReportCommentService signalCommentService = new ReportCommentService();
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  SignalComment signal;
+  ReportComment signal;
 
   @override
   void initState() {
-    signal = SignalComment.getDefault();
+    signal = ReportComment.getDefault();
     User me = SessionManager.getInstance().getUser();
     signal.author = me;
     signal.comment = widget.comment;

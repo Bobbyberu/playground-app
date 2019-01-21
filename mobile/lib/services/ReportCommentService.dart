@@ -1,12 +1,12 @@
 
-import 'package:Playground/controllers/SignalCommentController.dart';
-import 'package:Playground/entities/SignalComment.dart';
+import 'package:Playground/controllers/ReportCommentController.dart';
+import 'package:Playground/entities/ReportComment.dart';
 
-class SignalCommentService {
+class ReportCommentService {
 
-  SignalCommentController _controller = new SignalCommentController();
+  ReportCommentController _controller = new ReportCommentController();
 
-  Future<bool> save(SignalComment signal) async{
+  Future<bool> save(ReportComment signal) async{
     bool res = false;
 
     await _controller.postSignalComment(signal).then((response) {
