@@ -144,6 +144,26 @@ public class UserController {
     }
 
     /**
+     * [GET] Return an user by his mail
+     *
+     * @param mail String
+     *
+     * @return ResponseEntity
+     *
+     * @throws ResourceNotFoundException User not found
+     */
+    @GetMapping(value = "/mail/{mail}", produces = "application/json")
+    public ResponseEntity<User> getUserByMail(@PathVariable(value = "mail") String mail) throws ResourceNotFoundException {
+        User user = userService.getUserByMail(mail);
+
+        if (user == null) {
+            throw new ResourceNotFoundException("User with mail " + mail + " not found");
+        }
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    /**
      * [POST] Create a user and return it
      *
      * @param user User
