@@ -37,6 +37,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/users/login").permitAll()
                 .antMatchers(HttpMethod.GET, "/playgrounds/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/users/{userMail}/image").permitAll()
+
+                //Require user rights
+                .antMatchers(HttpMethod.POST, "/playgrounds").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "/reportComments").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "/reportPlaygrounds**").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "/playgrounds/**/comments**").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "/images**").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "/schedules**").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "/sessions**").hasRole("USER")
+
+                // Require admin rights
+                .antMatchers(HttpMethod.DELETE, "/playgrounds/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/playground/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/reportPlaygrounds").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/reportComments").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/playgrounds/**/comments/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/users/ban/**").hasRole("ADMIN")
+
                 // Need authentication.
                 .anyRequest().authenticated()
                 //

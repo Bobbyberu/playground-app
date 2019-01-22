@@ -19,7 +19,7 @@ import java.util.Map;
  * Class ScheduleController
  */
 @RestController
-@RequestMapping("/hours")
+@RequestMapping("/schedules")
 public class ScheduleController {
 
     /** ScheduleService scheduleService */
