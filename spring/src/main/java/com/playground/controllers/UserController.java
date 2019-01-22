@@ -32,8 +32,10 @@ import java.util.Set;
 @RequestMapping("/users")
 public class UserController {
 
+    /** UserService userService */
     private final UserService userService;
 
+    /** PlaygroundService playgroundService */
     private final PlaygroundService playgroundService;
 
     private final StorageService storageService;
@@ -43,6 +45,7 @@ public class UserController {
      *
      * @param userService       UserService
      * @param playgroundService PlaygroundService
+     * @param storageService StorageService
      */
     @Autowired
     public UserController(UserService userService, PlaygroundService playgroundService, StorageService storageService) {
@@ -58,7 +61,7 @@ public class UserController {
      */
     @GetMapping(produces = "application/json")
     public ResponseEntity<List<User>> getUsers() {
-        return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
+        return new ResponseEntity<>(userService.getUsers(),HttpStatus.OK);
     }
 
 
@@ -134,7 +137,7 @@ public class UserController {
     /**
      * [GET] Return true if it's a user's favorite playground
      *
-     * @param userId       int
+     * @param userId int
      * @param playgroundId int
      * @return ResponseEntity
      * @throws ResourceNotFoundException User not found
@@ -191,7 +194,7 @@ public class UserController {
     /**
      * [PUT] add/remove a user's favourite playground
      *
-     * @param userId       int
+     * @param userId int
      * @param playgroundId int
      * @return ResponseEntity
      * @throws ResourceNotFoundException User not found
@@ -213,7 +216,7 @@ public class UserController {
 
         boolean favourite;
 
-        if (user.getFavouritePlaygrounds().contains(playground)) {
+        if(user.getFavouritePlaygrounds().contains(playground)) {
             user.getFavouritePlaygrounds().remove(playground);
             favourite = false;
         } else {
@@ -229,7 +232,7 @@ public class UserController {
     /**
      * [PUT] Update an user and return it
      *
-     * @param id   int
+     * @param id int
      * @param user User
      * @return ResponseEntity
      * @throws ResourceNotFoundException User not found
@@ -243,6 +246,29 @@ public class UserController {
         }
 
         return new ResponseEntity<>(userService.updateUserProfile(id, currentUser, user), HttpStatus.OK);
+    }
+
+    /**
+     * [PUT] Ban an user
+     *
+     * @param id int
+     *
+     * @return ResponseEntity
+     *
+     * @throws ResourceNotFoundException User not found
+     */
+    @PutMapping("/ban/{id}")
+    public ResponseEntity<User> banUser(@PathVariable("id") int id) throws ResourceNotFoundException {
+
+        User currentUser = userService.getUser(id);
+
+        if (currentUser == null) {
+            throw new ResourceNotFoundException("User with id " + id + " not found");
+        }
+
+        User user = userService.banUser(currentUser);
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     /**
