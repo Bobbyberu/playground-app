@@ -118,6 +118,11 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public User getUserByMail(String mail) {
+        return userRepository.findByMail(mail).orElse(null);
+    }
+
+    @Override
     public User updateUser(int id, User updatedUser){
         updatedUser.setId(id);
         return userRepository.save(updatedUser);
