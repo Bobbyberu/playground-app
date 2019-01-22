@@ -89,6 +89,21 @@ Get an user by his username
 
 ___
 
+## [GET] /api/mail/\{mail\} {#5}
+
+Get an user by his mail
+
+### Parameters
+
+- *\{main\} :* String
+
+### Response (HTTP)
+
+- *200 Ok :* User
+- *404 Not found :* ResourceNotFoundException
+
+___
+
 ## [POST] /api/users/signup {#6}
 
 Create an user
