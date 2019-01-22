@@ -123,9 +123,16 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User updateUser(int id, User user) {
-        user.setId(id);
-        return userRepository.save(user);
+    public User updateUser(int id, User updatedUser){
+        updatedUser.setId(id);
+        return userRepository.save(updatedUser);
+    }
+
+    @Override
+    public User updateUserProfile(int id, User currentUser, User updatedUser){
+        updatedUser.setId(id);
+        updatedUser.setRole(currentUser.getRole());
+        return userRepository.save(updatedUser);
     }
 
     @Override

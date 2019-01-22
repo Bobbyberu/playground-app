@@ -246,7 +246,7 @@ public class UserController {
             throw new ResourceNotFoundException("User with id " + id + " not found");
         }
 
-        return new ResponseEntity<>(userService.updateUser(id, user), HttpStatus.OK);
+        return new ResponseEntity<>(userService.updateUserProfile(id, currentUser, user), HttpStatus.OK);
     }
 
     /**
