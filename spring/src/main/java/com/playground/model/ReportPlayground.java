@@ -19,6 +19,12 @@ public class ReportPlayground {
     private Playground playground;
     private String description;
 
+    public ReportPlayground(User author, Playground playground, String description) {
+        this.author = author;
+        this.playground = playground;
+        this.description = description;
+    }
+
     public ReportPlayground() {
     }
 

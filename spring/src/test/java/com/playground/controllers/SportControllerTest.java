@@ -41,7 +41,9 @@ public class SportControllerTest {
     public void testGetSportsExpectOk() throws Exception {
         Mockito.when(sportService.getSports()).thenReturn(Arrays.asList(mockSport));
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/sports").accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .get("/sports")
+                .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
