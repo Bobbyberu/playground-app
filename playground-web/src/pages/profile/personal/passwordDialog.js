@@ -43,10 +43,10 @@ class PasswordDialog extends React.Component {
     this.props.dispatch(action);
   };
 
-  handleAdding = () => {
-    if (newPassword === confirmPassword){
-      // Do Update
-    }
+  handleUpdating = () => {
+    /*
+      DO UPDATE HASH
+    }*/
   }
 
   render() {
@@ -88,7 +88,7 @@ class PasswordDialog extends React.Component {
             <Button onClick={this.handleClose} color="primary">
               Annuler
             </Button>
-            <Button onClick={this.handleAdding} color="primary">
+            <Button onClick={this.handleUpdating} color="primary">
               Valider
             </Button>
           </DialogActions>
@@ -101,7 +101,7 @@ class PasswordDialog extends React.Component {
 // mapping du state global dans les props du composant Home
 const mapStateToProps = (state) => {
   return {
-    open: state.toggleModal.openPasswordDialog
+    open: state.toggleModal.openPasswordDialog,
   }
 }
 

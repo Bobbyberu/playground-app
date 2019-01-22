@@ -45,7 +45,7 @@ class PersonalInfos extends React.Component {
         return (
             <React.Fragment>
                 <PasswordDialog />
-                <MailDialog />
+                <MailDialog userId={this.props.userId} mail={this.props.mail}/>
                 <div>
                     <List>
                         <ListItem className={classes.item}>

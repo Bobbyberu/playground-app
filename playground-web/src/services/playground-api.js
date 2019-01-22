@@ -47,6 +47,20 @@ export default class PlaygroundAPI {
       });
   }
 
+  getUserById(id) {
+    return axios({
+      method: 'get',
+      url: api + 'users/' + id,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': authService.getToken()
+      }
+    })
+      .then(response => response.data)
+      .catch(err => console.log(err));
+  }
+
+
   getUser(username) {
     return axios({
       method: 'get',
@@ -76,7 +90,7 @@ export default class PlaygroundAPI {
   updateUser(user) {
     return axios({
       method: 'put',
-      url: api + user.id,
+      url: api + 'users/'  + user.id,
       data: user,
       headers: {
         'Content-Type': 'application/json',

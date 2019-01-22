@@ -18,6 +18,13 @@ const styles = theme => ({
   },
 });
 
+function renderDate(date) {
+  let newDate = new Date(date);
+  let day = ('0' + newDate.getDay()).slice(-2);
+  let month = ('0' + newDate.getMonth()).slice(-2);
+  return day + "/" + month + "/" + newDate.getFullYear();
+}
+
 function sumUp(props) {
   const { classes } = props;
   return (
@@ -33,7 +40,7 @@ function sumUp(props) {
             {props.username}
           </Typography>
           <Typography >
-            {props.birthDate}
+            {renderDate(props.birthDate)}
           </Typography>
         </CardContent>
       </CardActionArea>

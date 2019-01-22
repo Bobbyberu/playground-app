@@ -8,6 +8,9 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import { connect } from 'react-redux';
+import PlaygroundAPI from '../../../services/playground-api';
+import AuthService from '../../../services/auth';
+import { Redirect } from 'react-router-dom';
 
 const styles = theme => ({
     container: {
@@ -23,8 +26,22 @@ const styles = theme => ({
 
 class MailDialog extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
+        this.state = {
+            newMail: '',
+            confirmMail: '',
+            redirect: false
+        };
+        this.api = new PlaygroundAPI();
+        this.authService = new AuthService();
     }
+
+    // gérer le changement de valeur des champs
+    handleChange = (event) => {
+        this.setState({
+            [event.target.name]: event.target.value
+        });
+    };
 
     handleClose = () => {
         // On ferme la fenêtre de dialogue
@@ -32,7 +49,32 @@ class MailDialog extends React.Component {
         this.props.dispatch(action);
     };
 
-    render() {
+    handleUpdating = () => {
+        this.api.getUserById(this.props.userId)
+            .then(response => {
+                if (this.state.newMail === this.state.confirmMail) {
+                    response.mail = this.state.newMail;
+                    //this.api.updateUser(this.props.userId, user);
+                }
+                this.api.updateUser(response)
+
+                // On change le state de la modale
+                const action = { type: "TOGGLE_MAIL_DIALOG", value: false };
+                this.props.dispatch(action);
+
+                // Redirection de l'utilisateur pour se reconnecter
+                this.setState({
+                    redirect: true,
+                })
+            });
+    }
+
+    handleRedirect() {
+        this.authService.logout();
+        return <Redirect to="/login" />;
+    }
+
+    renderDialog(props) {
         const { open } = this.props
         const { classes } = this.props;
 
@@ -43,13 +85,14 @@ class MailDialog extends React.Component {
                     <DialogContent className={classes.container}>
                         <DialogContentText >
                             <TextField
-                                id="mail"
+                                id="newMail"
                                 label="Nouvelle adresse mail"
                                 type="text"
-                                name="mail"
+                                name="newMail"
                                 margin="normal"
                                 variant="outlined"
                                 className={classes.textField}
+                                onChange={this.handleChange}
                                 required
                                 autoFocus
                             />
@@ -61,6 +104,7 @@ class MailDialog extends React.Component {
                                 margin="normal"
                                 variant="outlined"
                                 className={classes.textField}
+                                onChange={this.handleChange}
                                 required
                             />
                         </DialogContentText>
@@ -69,7 +113,7 @@ class MailDialog extends React.Component {
                         <Button onClick={this.handleClose} color="primary">
                             Annuler
                         </Button>
-                        <Button onClick={this.handleClose} color="primary">
+                        <Button onClick={this.handleUpdating} color="primary">
                             Valider
                         </Button>
                     </DialogActions>
@@ -77,12 +121,17 @@ class MailDialog extends React.Component {
             </div>
         );
     }
+
+    render() {
+        console.log(this.state.redirect)
+        return this.state.redirect ? this.handleRedirect() : this.renderDialog(this.props);
+    }
 }
 
 // mapping du state global dans les props du composant Home
 const mapStateToProps = (state) => {
     return {
-        open: state.toggleModal.openMailDialog
+        open: state.toggleModal.openMailDialog,
     }
 }
 
