@@ -81,17 +81,6 @@ public interface IUserService {
      * @return User
      */
     User banUser(User user);
-     
-    /**
-     * Update a user and return it
-     *
-     * @param id int
-     * @param currentUser User
-     * @param updatedUser User
-     *
-     * @return User
-     */
-    User updateUserProfile(int id, User currentUser, User updatedUser);
 
     /**
      * Delete a user
