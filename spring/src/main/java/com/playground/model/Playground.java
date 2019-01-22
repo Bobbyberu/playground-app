@@ -2,7 +2,15 @@ package com.playground.model;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
+
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.Set;
 
 @Entity
@@ -21,8 +29,7 @@ public class Playground {
     private String surface;
     private String description;
     private double averageMark;
-    @OneToOne
-    private Image image;
+    private String imageName;
     @OneToMany
     private Set<User> players;
     @ManyToMany
@@ -105,12 +112,12 @@ public class Playground {
         this.averageMark = averageMark;
     }
 
-    public Image getImage() {
-        return image;
+    public String getImageName() {
+        return imageName;
     }
 
-    public void setImage(Image image) {
-        this.image = image;
+    public void setImage(String imageName) {
+        this.imageName = imageName;
     }
 
     public Set<User> getPlayers() {

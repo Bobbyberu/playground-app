@@ -1,6 +1,5 @@
 package com.playground.service;
 
-import com.playground.model.Role;
 import com.playground.model.User;
 import com.playground.model.VerificationToken;
 import com.playground.repository.RoleRepository;
@@ -116,6 +115,11 @@ public class UserService implements IUserService {
     @Override
     public User getUserByUsername(String username) {
         return userRepository.findByUsername(username).orElse(null);
+    }
+
+    @Override
+    public User getUserByMail(String mail) {
+        return userRepository.findByMail(mail).orElse(null);
     }
 
     @Override

@@ -8,6 +8,8 @@ Back to [README.md](../README.md)
 - [[PUT] /api/playgrounds/\{id\}](#4) (ADMIN)
 - [[DELETE] /api/playgrounds/\{id\}](#5) (ADMIN)
 - [[GET] /api/playgrounds/search/\{keyword\}](#6)
+- [[GET] /api/playgrounds/\{id\}/image](#7)
+- [[POST] /api/playgrounds/\{id\}/image](#8)
 - [PATCH] /api/playgrounds/{id}/playing
 - [GET] /api/signalement/playgrounds
 
@@ -96,6 +98,35 @@ Get all playgrounds which are a linked with the keyword (sport, name, location .
 ### Response (HTTP)
 
 - *200 Ok :* Playground[]
+
+___
+
+## [GET] /api/playgrounds/\{id\}/image {#7}
+
+Get corresponding playground image
+
+### Parameters
+
+- *\{id\} :* Int
+
+### Response (HTTP)
+
+- *200 Ok* 
+
+___
+
+## [POST] /api/playgrounds/\{id\}/image {#8}
+
+Upload image for given playground
+
+### Parameters
+
+- *\{id\} :* Int
+- *\{file\} :* MultipartFile (file to be sent)
+
+### Response (HTTP)
+
+- *200 Ok* 
 
 ___
 
