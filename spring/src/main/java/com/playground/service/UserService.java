@@ -120,7 +120,7 @@ public class UserService implements IUserService {
 
     @Override
     public User getUserByMail(String mail) {
-        return userRepository.findByUsername(mail).orElse(null);
+        return userRepository.findByMail(mail).orElse(null);
     }
 
     @Override
