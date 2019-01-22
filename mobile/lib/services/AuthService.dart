@@ -41,6 +41,7 @@ class AuthService {
     bool res = false;
 
     await _controller.postCredentials(email, password).then((response) async {
+      _controller.printResponse(response);
       res = response.statusCode == 200;
       var headers = response.headers as Map<String,String>;
 

@@ -1,7 +1,7 @@
 import 'package:Playground/entities/Comment.dart';
 import 'package:Playground/entities/Playground.dart';
 import 'package:Playground/pages/PlaygroundCommentPage.dart';
-import 'package:Playground/pages/SignalPlaygroundPage.dart';
+import 'package:Playground/pages/ReportPlaygroundPage.dart';
 import 'package:Playground/services/CommentService.dart';
 import 'package:Playground/services/UserService.dart';
 import 'package:Playground/widgets/map/PlaygroundShowOnMap.dart';

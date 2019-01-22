@@ -7,6 +7,10 @@ class UserController extends CommonController {
 
   static const String route = CommonController.baseUrl + "users/";
 
+  Future putUser(User user) {
+    return put(route +  SessionManager.getInstance().getUser().id.toString(), user.toJson());
+  }
+
   Future putPlaygroundFavorite(int playgroundId) {
     return put(route + SessionManager.getInstance().getUser().id.toString() + "/favouritePlaygrounds/" + playgroundId.toString(), {});
   }

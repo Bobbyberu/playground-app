@@ -15,7 +15,7 @@ class AuthController extends CommonController {
   ///
   Future postCredentials(String email, String password) {
     Map<String,String> credentials = new Map();
-    credentials["username"] = email;
+    credentials["mail"] = email;
     credentials["password"] = password;
 
     return post(route + "login", credentials);
@@ -23,6 +23,10 @@ class AuthController extends CommonController {
 
   Future getUserByUsername(String username) {
     return get(route + "username/" + username);
+  }
+
+  Future getUserByMail(String username) {
+    return get(route + "mail/" + username);
   }
 
   ///

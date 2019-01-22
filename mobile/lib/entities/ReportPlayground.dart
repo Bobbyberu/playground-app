@@ -3,7 +3,7 @@ import 'package:Playground/entities/Playground.dart';
 import 'package:Playground/entities/User.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-class SignalPlayground {
+class ReportPlayground {
 
   int id;
   String motive;
@@ -11,10 +11,10 @@ class SignalPlayground {
   User author;
   Playground playground;
 
-  SignalPlayground({this.id, this.motive, this.description, this.author, this.playground});
+  ReportPlayground({this.id, this.motive, this.description, this.author, this.playground});
 
-  factory SignalPlayground.getDefault(){
-    return new SignalPlayground(
+  factory ReportPlayground.getDefault(){
+    return new ReportPlayground(
       id: 0,
       motive: "",
       description: "",

@@ -13,7 +13,7 @@ class PlaygroundButton extends StatelessWidget {
       child: new Text(
         this._text,
         style: new TextStyle(
-          fontSize: 28,
+          fontSize: 24,
         ),
       ),
       textColor: Colors.white,
