@@ -63,6 +63,15 @@ public interface IUserService {
     User updateUser(int id, User user);
 
     /**
+     * Ban a user and return it
+     *
+     * @param id int
+     *
+     * @return User
+     */
+    User banUser(User user);
+
+    /**
      * Delete a user
      *
      * @param user User

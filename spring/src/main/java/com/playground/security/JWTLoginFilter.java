@@ -1,8 +1,10 @@
 package com.playground.security;
 
+import com.playground.model.User;
 import com.playground.service.TokenAuthenticationService;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,9 +22,13 @@ import java.util.Collections;
 
 public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 
-    public JWTLoginFilter(String url, AuthenticationManager authManager) {
+    private TokenAuthenticationService tokenAuthenticationService;
+
+    @Autowired
+    public JWTLoginFilter(String url, AuthenticationManager authManager, TokenAuthenticationService tokenAuthenticationService) {
         super(new AntPathRequestMatcher(url));
         setAuthenticationManager(authManager);
+        this.tokenAuthenticationService = tokenAuthenticationService;
     }
 
     @Override
@@ -54,7 +60,8 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authResult) {
         // Write Authorization to Headers of Response.
-        TokenAuthenticationService.addAuthentication(response, authResult.getName());
+        User user = (User) authResult.getPrincipal();
+        tokenAuthenticationService.addAuthentication(response, user.getMail());
     }
 
 }

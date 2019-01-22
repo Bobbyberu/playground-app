@@ -1,21 +1,12 @@
 package com.playground.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Set;
+import javax.persistence.*;
+import java.util.*;
 
 @Entity
 @Table(name = "user")
@@ -66,17 +57,17 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     public void setUsername(String username) {
@@ -101,7 +92,12 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<Role> liste = new ArrayList<>();
+        if (this.role.getName().equals("ROLE_ADMIN")) {
+            liste.add(new Role("ROLE_USER"));
+        }
+        liste.add(this.role);
+        return liste;
     }
 
     public String getPassword() {
