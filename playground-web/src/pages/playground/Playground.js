@@ -148,10 +148,11 @@ class Playground extends Component {
 
     this.api = new PlaygroundAPI();
     this.auth = new AuthService();
+    this.toggleFavorite = this.toggleFavorite.bind(this);
   }
 
-  componentDidMount() {
-    this.api.getPlaygroundById(this.props.id)
+  async componentDidMount() {
+    await this.api.getPlaygroundById(this.props.id)
       .then(response => {
         this.setState({
           playground: response,
@@ -159,12 +160,35 @@ class Playground extends Component {
         });
       })
       .catch(err => console.log(err));
+
+    let user = await this.api.getUser()
+      .then(response => response)
+      .catch(err => console.log(err));
+
+    this.api.isFavourite(user.id, this.state.playground.id)
+      .then(response => {
+        this.setState({
+          favorited: response
+        });
+      })
+      .catch(err => console.log(err));
   }
 
-  toggleFavorite = () => {
+  async toggleFavorite() {
     this.setState({
       favorited: !this.state.favorited
     });
+    let user = await this.api.getUser()
+      .then(response => response)
+      .catch(err => console.log(err));
+
+    this.api.isFavourite(user.id, this.state.playground.id)
+      .catch(err => {
+        console.log(err);
+        this.setState({
+          favorited: !this.state.favorited
+        });
+      });
   }
 
   toggleReportPlayground = () => {

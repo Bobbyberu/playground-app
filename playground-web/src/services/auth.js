@@ -1,7 +1,7 @@
 import decode from 'jwt-decode';
 import axios from 'axios';
 
-export default class AuthService {
+class Authentication {
     constructor(domain) {
         this.domain = domain || 'http://localhost:8080/api/users/';
         this.login = this.login.bind(this);
@@ -26,14 +26,14 @@ export default class AuthService {
             headers: { 'Content-Type': 'application/json' }
         })
             .then((response) => {
-                // setting the token in local storage 
+                // setting the token in session storage 
                 this.setToken(response.headers['authorization']);
                 return Promise.resolve(response);
             });
     }
 
     loggedIn() {
-        // getting token from localstorage
+        // getting token from sessionstorage
         const token = this.getToken();
         // !! -> false if token empty
         // checks if there is a saved token and it's still valid
@@ -61,21 +61,34 @@ export default class AuthService {
     }
 
     getToken() {
-        // retrieves the user token from localStorage
-        return localStorage.getItem('token')
+        // retrieves the user token from sessionStorage
+        return sessionStorage.getItem('token');
+    }
+
+    getUser() {
+        return JSON.parse(sessionStorage.getItem('user'));
     }
 
     setToken(token) {
-        localStorage.setItem('token', token);
+        sessionStorage.setItem('token', token);
+    }
+
+    setUser(user) {
+        let newUser = { "id": user.id, "username": user.username, "mail": user.mail }
+        sessionStorage.setItem('user', JSON.stringify(newUser));
     }
 
     logout() {
-        // Clear user token and profile data from localStorage
-        localStorage.removeItem('token');
+        // Clear user token and profile data from sessionStorage
+        sessionStorage.removeItem('token');
     }
 
     getProfile() {
         // Using jwt-decode npm package to decode the token
         return decode(this.getToken());
     }
-}
+};
+
+var AuthService = new Authentication();
+
+export default AuthService;

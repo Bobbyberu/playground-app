@@ -34,9 +34,6 @@ class ReportPlaygroundModal extends React.Component {
             completed: false
         });
 
-        this.api = new PlaygroundAPI();
-        this.auth = new AuthService();
-
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -52,11 +49,16 @@ class ReportPlaygroundModal extends React.Component {
         });
     }
 
-    async handleSubmit() {
-        const username = this.auth.decodeToken().sub;
-        this.setState({
-            completed: true
-        });
+    handleSubmit() {
+        let user = AuthService.getUser();
+
+        PlaygroundAPI.reportPlayground(user, this.props.playground, this.state.reason)
+            .then(() => {
+                this.setState({
+                    completed: true
+                });
+            })
+            .catch(err => console.log(err));
     }
 
     handleClose() {

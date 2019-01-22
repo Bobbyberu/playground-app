@@ -52,7 +52,6 @@ class Home extends Component {
             playgrounds: [],
             snackbarOpen: false
         }
-        this.api = new PlaygroundAPI();
         this.renderPlaygrounds = this.renderPlaygrounds.bind(this);
     }
 
@@ -66,7 +65,7 @@ class Home extends Component {
         }.bind(this));
 
         // Récupérer les propriétés lieés aux terrains
-        this.api.getAllPlayground()
+        PlaygroundAPI.getAllPlayground()
             .then((response) => {
                 this.setState({
                     playgrounds: response
@@ -82,7 +81,6 @@ class Home extends Component {
 
     renderPlaygrounds() {
         let playgrounds = this.state.playgrounds;
-
         return (
             <div>
                 {playgrounds.map(playground => (

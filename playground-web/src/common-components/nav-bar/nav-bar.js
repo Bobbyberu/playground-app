@@ -123,13 +123,12 @@ class NavBar extends React.Component {
             snackbarOpen: false
         };
 
-        this.authService = new AuthService();
         this.logout = this.logout.bind(this);
     }
 
     componentDidMount() {
         this.setState({
-            loggedIn: this.authService.loggedIn()
+            loggedIn: AuthService.loggedIn()
         });
     }
 
@@ -142,7 +141,7 @@ class NavBar extends React.Component {
 
     // log out the user and toggle the snackbar
     logout() {
-        this.authService.logout();
+        AuthService.logout();
         this.setState({
             loggedIn: false,
             snackbarOpen: true
