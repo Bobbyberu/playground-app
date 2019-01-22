@@ -15,8 +15,12 @@ public class Sport {
     private String name;
     private String symbol;
 
-    public Sport() {
+    public Sport(String name, String symbol) {
+        this.name = name;
+        this.symbol = symbol;
     }
+
+    public Sport() {}
 
     public int getId() {
         return id;
