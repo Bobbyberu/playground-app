@@ -1,11 +1,13 @@
 import 'package:Playground/entities/Comment.dart';
 import 'package:Playground/entities/Playground.dart';
 import 'package:Playground/pages/PlaygroundCommentPage.dart';
-import 'package:Playground/pages/SignalPlaygroundPage.dart';
+import 'package:Playground/pages/ReportPlaygroundPage.dart';
 import 'package:Playground/services/CommentService.dart';
 import 'package:Playground/services/UserService.dart';
 import 'package:Playground/widgets/map/PlaygroundShowOnMap.dart';
 import 'package:Playground/widgets/playground/CommentStars.dart';
+import 'package:Playground/widgets/playground/FavouritePlaygroundToggle.dart';
+import 'package:Playground/widgets/sport/SportDisplay.dart';
 import 'package:flutter/material.dart';
 
 
@@ -26,7 +28,6 @@ class PlaygroundDetails extends StatefulWidget {
 class PlaygroundDetailsState extends State<PlaygroundDetails> {
 
   CommentService _commentService = new CommentService();
-  UserService _userService = new UserService();
   List<Comment> comments;
   bool isFavorite;
 
@@ -35,7 +36,6 @@ class PlaygroundDetailsState extends State<PlaygroundDetails> {
     comments = new List<Comment>();
     isFavorite = false;
     loadComments();
-    checkIfFavorite();
     super.initState();
   }
 
@@ -46,15 +46,6 @@ class PlaygroundDetailsState extends State<PlaygroundDetails> {
       });
     });
   }
-
-  void checkIfFavorite() async {
-    await _userService.checkIfFavorite(widget.playground).then((response) {
-      setState(() {
-        isFavorite = response;
-      });
-    });
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -101,35 +92,6 @@ class PlaygroundDetailsState extends State<PlaygroundDetails> {
 
                       new Positioned(
                           right: 4,
-                          bottom: 0,
-                          child:
-                          new SafeArea(
-                              top: true,
-                              child: new IconButton(
-                                icon: (isFavorite) ?
-                                new Icon(
-                                  Icons.star,
-                                  color: Theme.of(context).primaryColor,
-                                ) :
-                                new Icon(
-                                  Icons.star_border,
-                                  color: Colors.white,
-                                ),
-                                color: Colors.transparent,
-                                tooltip: "Ajouter aux favoris",
-                                onPressed: () {
-                                  _userService.togglePlaygroundFavorite(widget.playground).then((response) {
-                                    setState(() {
-                                      isFavorite = response;
-                                    });
-                                  });
-                                },
-                              )
-                          )
-                      ),
-
-                      new Positioned(
-                          right: 4,
                           child:
                           new SafeArea(
                               top: true,
@@ -166,35 +128,50 @@ class PlaygroundDetailsState extends State<PlaygroundDetails> {
                           children: <Widget>[
 
                             new Padding(
-                              padding: EdgeInsets.only(bottom: 4),
-                              child: new Text(
-                                widget.playground.name,
-                                style: new TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold
-                                ),
-                              )
+                                padding: EdgeInsets.only(bottom: 4),
+                                child: new Text(
+                                  widget.playground.name,
+                                  style: new TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold
+                                  ),
+                                )
                             ),
 
-                            new Text(
-                              widget.playground.address,
-                              style: new TextStyle(
-                                color: Colors.grey[700],
+                            new InkWell(
+                              child: new Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  new Text(
+                                    widget.playground.address,
+                                    style: new TextStyle(
+                                      color: Colors.grey[700],
+                                    ),
+                                    overflow: TextOverflow.clip,
+                                  ),
+                                  new Text(
+                                    widget.playground.city,
+                                    style: new TextStyle(
+                                      color: Colors.grey[700],
+                                    ),
+                                    overflow: TextOverflow.clip,
+                                  )
+                                ],
                               ),
-                              overflow: TextOverflow.clip,
-                            ),
-                            new Text(
-                              widget.playground.city,
-                              style: new TextStyle(
-                                color: Colors.grey[700],
-                              ),
-                              overflow: TextOverflow.clip,
+                              onTap: () {
+                                Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new PlaygroundShowOnMap(playground: widget.playground))).then((_) => loadComments());
+                              }
                             )
+
+
 
                           ]
                         ),
 
-                        new IconButton(
+
+                        new FavouritePlaygroundToggle(playground: widget.playground)
+
+                        /*new IconButton(
                             icon: new Icon(
                               Icons.my_location,
                               size: 30,
@@ -204,7 +181,7 @@ class PlaygroundDetailsState extends State<PlaygroundDetails> {
                             onPressed: () {
                               Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new PlaygroundShowOnMap(playground: widget.playground))).then((_) => loadComments());
                             }
-                        )
+                        )*/
 
                       ],
                     ),
@@ -271,7 +248,7 @@ class PlaygroundDetailsState extends State<PlaygroundDetails> {
                                   children: widget.playground.sports.map(
                                     (s) => new Padding(
                                       padding: EdgeInsets.only(bottom: 4),
-                                      child: new Text(s.name),
+                                      child: new SportDisplay(sport: s)
                                     )
                                   ).toList()
                                 ),

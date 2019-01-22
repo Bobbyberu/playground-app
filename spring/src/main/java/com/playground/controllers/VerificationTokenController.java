@@ -32,7 +32,7 @@ public class VerificationTokenController {
     @GetMapping(value = "/{token}")
     public ResponseEntity<User> verify(@PathVariable(value = "token") String token) {
         VerificationToken verificationToken = verificationTokenRepository.findByToken(token).orElseThrow(() -> new ResourceNotFoundException("Token not found"));
-        Role role = roleRepository.findByName("USER").get();
+        Role role = roleRepository.findByName("ROLE_USER").get();
         User user = userRepository.findById(verificationToken.getUser().getId()).get();
         user.setRole(role);
         user = userRepository.save(user);

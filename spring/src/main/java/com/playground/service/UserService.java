@@ -1,6 +1,5 @@
 package com.playground.service;
 
-import com.playground.model.Role;
 import com.playground.model.User;
 import com.playground.model.VerificationToken;
 import com.playground.repository.RoleRepository;
@@ -66,7 +65,7 @@ public class UserService implements IUserService {
             throw new RuntimeException("Mail is not valid");
         }
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setRole(roleRepository.findByName("UNVERIFIED").get());
+        user.setRole(roleRepository.findByName("ROLE_UNVERIFIED").get());
         user = userRepository.save(user);
         VerificationToken verificationToken = new VerificationToken(user);
         verificationTokenRepository.save(verificationToken);
@@ -124,8 +123,21 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User updateUser(int id, User user) {
-        user.setId(id);
+    public User updateUser(int id, User updatedUser){
+        updatedUser.setId(id);
+        return userRepository.save(updatedUser);
+    }
+    
+    @Override
+    public User updateUserProfile(int id, User currentUser, User updatedUser){
+        updatedUser.setId(id);
+        updatedUser.setRole(currentUser.getRole());
+        return userRepository.save(updatedUser);
+    }
+
+    @Override
+    public User banUser(User user) {
+        user.setBanned(true);
         return userRepository.save(user);
     }
 

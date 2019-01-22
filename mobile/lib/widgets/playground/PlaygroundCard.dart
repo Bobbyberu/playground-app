@@ -41,7 +41,7 @@ class PlaygroundCard extends StatelessWidget {
                     child: new Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        new Text(playground.name,
+                        new Text((playground.name != null) ? playground.name : "Sans nom",
                           style: new TextStyle(
                               fontWeight: FontWeight.bold
                           ),

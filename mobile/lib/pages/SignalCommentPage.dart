@@ -1,9 +1,10 @@
 
 import 'package:Playground/entities/Comment.dart';
-import 'package:Playground/entities/SignalComment.dart';
+import 'package:Playground/entities/ReportComment.dart';
 import 'package:Playground/entities/User.dart';
 import 'package:Playground/services/SessionManager.dart';
-import 'package:Playground/services/SignalCommentService.dart';
+import 'package:Playground/services/ReportCommentService.dart';
+import 'package:Playground/widgets/dialog/PlaygroundDialog.dart';
 import 'package:Playground/widgets/inputs/PlaygroundButton.dart';
 import 'package:Playground/widgets/style/PlaygorundTextFieldStyle.dart';
 import 'package:Playground/widgets/style/PlaygroundLabelStyle.dart';
@@ -22,13 +23,13 @@ class SignalCommentPage extends StatefulWidget {
 
 class SignalCommentPageState extends State<SignalCommentPage> {
 
-  SignalCommentService signalCommentService = new SignalCommentService();
+  ReportCommentService signalCommentService = new ReportCommentService();
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  SignalComment signal;
+  ReportComment signal;
 
   @override
   void initState() {
-    signal = SignalComment.getDefault();
+    signal = ReportComment.getDefault();
     User me = SessionManager.getInstance().getUser();
     signal.author = me;
     signal.comment = widget.comment;
@@ -42,41 +43,18 @@ class SignalCommentPageState extends State<SignalCommentPage> {
       bool success = await signalCommentService.save(signal);
 
       if(success) {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return new AlertDialog(
-                title: new Text("Envoi de votre signalement"),
-                content: new Text("Votre signalement a bien été envoyé."),
-                actions: <Widget>[
-                  new FlatButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Navigator.pop(context);
-                      },
-                      child: new Text("Ok")
-                  )
-                ],
-              );
-            }
+        PlaygroundDialog.showValidDialog(
+            context,
+            "Envoi de votre signalement",
+            "Votre signalement a bien été envoyé.",
+            () {Navigator.pop(context);Navigator.pop(context);}
         );
       } else {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return new AlertDialog(
-                title: new Text("Oh oh..."),
-                content: new Text("Un problème est venu lors de la validation. Veuillez réessayer plus tard."),
-                actions: <Widget>[
-                  new FlatButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: new Text("Ok")
-                  )
-                ],
-              );
-            }
+        PlaygroundDialog.showErrorDialog(
+            context,
+            "Envoi de votre signalement",
+            "Un problème est venu lors de la validation. Veuillez réessayer plus tard.",
+            () {Navigator.pop(context);}
         );
       }
     }

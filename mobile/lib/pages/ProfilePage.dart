@@ -7,7 +7,15 @@ import 'package:flutter/material.dart';
 ///
 /// Widget page of the profile menu
 ///
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
+
+  @override
+  State<StatefulWidget> createState() => new ProfilePageState();
+
+}
+
+
+class ProfilePageState extends State<ProfilePage> {
 
   AuthService _authService = new AuthService();
   User user = SessionManager.getInstance().getUser();
@@ -16,6 +24,16 @@ class ProfilePage extends StatelessWidget {
       fontSize: 20,
       color: Colors.grey[800]
   );
+
+  @override
+  void initState() {
+    super.initState();
+
+    user = SessionManager.getInstance().getUser();
+    if (user == null) {
+
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +73,7 @@ class ProfilePage extends StatelessWidget {
                         ),
 
                         new Text(
-                          "@ " + user.username,
+                          (user.username != null) ? "@ " + user.username : "",
                           style: new TextStyle(
                               color: Colors.grey[700],
                               fontStyle: FontStyle.italic,
@@ -69,7 +87,9 @@ class ProfilePage extends StatelessWidget {
                 )
               ),
 
-              new SettingsMenuLink(label: "Modifier mon profil", icon: Icons.person, onTap: () { /* TODO */ }),
+              new SettingsMenuLink(label: "Modifier mon profil", icon: Icons.person, onTap: () {
+                Navigator.of(context).pushNamed("/profileUpdate");
+              }),
               new Divider(),
 
               new SettingsMenuLink(label: "Paramètres", icon: Icons.settings, onTap: () { /* TODO */ }),

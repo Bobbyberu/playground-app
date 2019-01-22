@@ -9,3 +9,13 @@ class PlaygroundLabelStyle {
   }
 
 }
+
+class PlaygroundFormTitleStyle {
+
+  static TextStyle getStyle(BuildContext context) {
+    return new TextStyle(
+      fontSize: 20,
+    );
+  }
+
+}

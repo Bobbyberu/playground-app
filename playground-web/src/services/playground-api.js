@@ -35,7 +35,6 @@ export default class PlaygroundAPI {
   getPlaygroundById(id) {
     return axios({
       method: 'get',
-      //url: '/playgrounds.' + id + '.json',
       url: api + 'playgrounds/' + id,
       headers: {
         'Content-Type': 'application/json',
@@ -126,5 +125,34 @@ export default class PlaygroundAPI {
       }
     })
       .catch(err => console.log(err));
+  }
+
+  uploadImageUser(data) {
+    return axios({
+      method: 'post',
+      url: api + 'users/image',
+      data: data,
+      headers: { 'Authorization': authService.getToken() }
+    })
+      .catch(err => console.log(err));
+  }
+
+  getUserImage() {
+    let userMail = authService.decodeToken().sub;
+    return api + 'users/' + userMail + '/image';
+  }
+
+  uploadImagePlayground(id, data) {
+    return axios({
+      method: 'post',
+      url: api + 'playgrounds/' + id + '/image',
+      data: data,
+      headers: { 'Authorization': authService.getToken() }
+    })
+      .catch(err => console.log(err));
+  }
+
+  getPlaygroundImage(id) {
+    return api + 'playgrounds/' + id + '/image';
   }
 }
