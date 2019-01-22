@@ -1,6 +1,7 @@
 package com.playground.service.interfaces;
 
 import com.playground.model.Playground;
+import com.playground.model.User;
 
 import java.util.List;
 
@@ -43,6 +44,24 @@ public interface IPlaygroundService {
      * @return Playground
      */
     Playground updatePlayground(int id, Playground playground);
+
+    /**
+     * Add a player on the playground
+     *
+     * @param playground
+     * @param user
+     * @return
+     */
+    Playground addPlayerToPlayground(Playground playground, User user);
+
+    /**
+     * Remove a player from the playground
+     *
+     * @param playground
+     * @param user
+     * @return
+     */
+    Playground removePlayerFromPlayground(Playground playground, User user);
 
     /**
      * Delete a playground

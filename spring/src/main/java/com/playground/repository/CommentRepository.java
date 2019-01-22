@@ -16,4 +16,6 @@ public interface CommentRepository extends CrudRepository<Comment, Integer> {
 
     @Query("SELECT c FROM Comment c WHERE c.playground = ?1 AND c.id = ?2")
     Comment getOneByPlayground(Playground playground, int commentId);
+
+    List<Comment> getCommentsByPlayground(Playground playground);
 }
