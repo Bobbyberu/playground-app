@@ -38,7 +38,7 @@ public class SportControllerTest {
     private Sport mockSport = new Sport("Badminton", "\uD83C\uDFF8");
 
     @Test
-    public void getSports() throws Exception {
+    public void testGetSportsExpectOk() throws Exception {
         Mockito.when(sportService.getSports()).thenReturn(Arrays.asList(mockSport));
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/sports").accept(MediaType.APPLICATION_JSON);
@@ -53,7 +53,7 @@ public class SportControllerTest {
     }
 
     @Test
-    public void getSport() throws Exception {
+    public void testGetSportWithExistingIdExpectOk() throws Exception {
         Mockito.when(sportService.getSport(Mockito.anyInt())).thenReturn(mockSport);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/sports/0").accept(MediaType.APPLICATION_JSON);
@@ -70,7 +70,7 @@ public class SportControllerTest {
     }
 
     @Test
-    public void getSportWithNonExistingId() throws Exception {
+    public void testGetSportWithNonExistingIdExpectNoFound() throws Exception {
         int id = 2;
 
         Mockito.when(sportService.getSport(Mockito.anyInt())).thenReturn(null);
@@ -88,7 +88,7 @@ public class SportControllerTest {
     }
 
     @Test
-    public void createSport() throws Exception {
+    public void testCreateSportExpectCreated() throws Exception {
         Sport mockSport = new Sport("Sport","Symbol");
 
         Mockito.when(sportService.createSport(Mockito.any(Sport.class))).thenReturn(mockSport);
@@ -113,7 +113,7 @@ public class SportControllerTest {
     }
 
     @Test
-    public void updateSport() throws Exception {
+    public void testUpdateSportWithExistingIdExpectOk() throws Exception {
         Sport newMockSport = new Sport(mockSport.getName(), "Change");
         newMockSport.setId(mockSport.getId());
 
@@ -143,7 +143,7 @@ public class SportControllerTest {
     }
 
     @Test
-    public void updateSportWithNonExistingId() throws Exception {
+    public void testUpdateSportWithNonExistingIdExpectNotFound() throws Exception {
         int id = 2;
 
         Mockito.when(sportService.getSport(Mockito.anyInt())).thenReturn(null);
@@ -168,7 +168,7 @@ public class SportControllerTest {
     }
 
     @Test
-    public void deleteSport() throws Exception {
+    public void testDeleteSportWithExpectingIdExpectNoContent() throws Exception {
         Mockito.when(sportService.getSport(Mockito.anyInt())).thenReturn(mockSport);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -181,7 +181,7 @@ public class SportControllerTest {
     }
 
     @Test
-    public void deleteSportWithNonExistingId() throws Exception {
+    public void testDeleteSportWithNonExpectingIdExpectNotFound() throws Exception {
         int id = 2;
 
         Mockito.when(sportService.getSport(Mockito.anyInt())).thenReturn(null);
