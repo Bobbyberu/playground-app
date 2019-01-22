@@ -1,4 +1,4 @@
-package com.playground.playground;
+package com.playground;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

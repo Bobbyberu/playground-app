@@ -83,4 +83,10 @@ class Playground {
   }
   Map<String, dynamic> toJson() => _$PlaygroundToJson(this);
 
+  static bool validate(Playground newPlayground) {
+    return (newPlayground.name != null && newPlayground.name.isNotEmpty)
+        && (newPlayground.address != null && newPlayground.address.isNotEmpty)
+        && (newPlayground.sports.length > 0);
+  }
+
 }

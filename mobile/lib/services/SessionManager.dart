@@ -9,7 +9,7 @@ class SessionManager {
 
   static SessionManager _instance;
 
-  String username;
+  String mail;
   User user;
 
   static SessionManager getInstance() {
@@ -23,20 +23,20 @@ class SessionManager {
     this.user = user;
   }
 
-  void setUsername(String username) {
-    this.username = username;
+  void setMail(String mail) {
+    this.mail = mail;
   }
 
    User getUser(){
     return user;
   }
 
-  void loadUser(String token) async {
+  Future loadUser(String token) async {
     AuthController controller = new AuthController();
     JWT jwt = JWT.parse(token.split(" ").last);
-    SessionManager.getInstance().setUsername(jwt.subject);
+    SessionManager.getInstance().setMail(jwt.subject);
 
-    await controller.getUserByUsername(jwt.subject).then((response) {
+    await controller.getUserByMail(jwt.subject).then((response) {
       if (response.statusCode == 200) {
         User loggedUser = User.fromJson(json.decode(response.body));
         SessionManager.getInstance().setUser(loggedUser);
@@ -44,6 +44,11 @@ class SessionManager {
     }).catchError((error) {
       controller.printError(error);
     });
+  }
+
+  void clearSession() {
+    user = null;
+    mail = null;
   }
 
 }

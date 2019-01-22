@@ -8,6 +8,10 @@ class PlaygroundController extends CommonController{
 
   static const String route = CommonController.baseUrl + "playgrounds/";
 
+  Future getAllPlaygrounds() async {
+    return get(Uri.encodeFull(route));
+  }
+
   Future getPlaygroundById(int id) async {
      return get(Uri.encodeFull(route + id.toString()));
   }
