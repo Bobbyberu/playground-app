@@ -7,6 +7,7 @@ Back to [README.md](../README.md)
 - [[GET] /api/users/\{userId\}/favouritePlaygrounds/\{playgroundId\}](#3)
 - [[GET] /api/users/\{id\}](#4)
 - [[GET] /api/users/\{username\}](#5)
+- [[GET] /api/users/\{mail\}](#12)
 - [[POST] /api/users/signup](#6)
 - [[PUT] /api/users/\{userId\}/favouritePlaygrounds/\{playgroundId\}](#7)
 - [[PUT] /api/users/\{id\}](#8)
@@ -89,7 +90,7 @@ Get an user by his username
 
 ___
 
-## [GET] /api/mail/\{mail\} {#5}
+## [GET] /api/mail/\{mail\} {#12}
 
 Get an user by his mail
 
