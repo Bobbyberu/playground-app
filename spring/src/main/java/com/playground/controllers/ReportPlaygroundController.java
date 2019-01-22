@@ -1,5 +1,6 @@
 package com.playground.controllers;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.playground.model.Playground;
 import com.playground.model.ReportPlayground;
 import com.playground.service.PlaygroundService;

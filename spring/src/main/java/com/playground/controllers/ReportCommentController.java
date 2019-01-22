@@ -16,7 +16,6 @@ import java.util.List;
  * Class ReportCommentController
  */
 @RestController
-@RequestMapping("/reportComments")
 public class ReportCommentController {
 
     /** ReportCommentService reportCommentService */
