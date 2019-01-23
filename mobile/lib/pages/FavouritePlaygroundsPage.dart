@@ -16,9 +16,12 @@ class FavouritePlaygroundsPageState extends State<FavouritePlaygroundsPage> {
   Set<Playground> favouritePlaygrounds;
   UserService _userService = new UserService();
 
+  bool _isLoading;
+
   @override
   void initState() {
     favouritePlaygrounds = new Set();
+    _isLoading = true;
     loadFavourites();
     super.initState();
   }
@@ -27,6 +30,7 @@ class FavouritePlaygroundsPageState extends State<FavouritePlaygroundsPage> {
     await _userService.getFavouritesPlaygrounds().then((response){
       setState(() {
         favouritePlaygrounds = response;
+        _isLoading = false;
       });
     });
   }
@@ -53,9 +57,33 @@ class FavouritePlaygroundsPageState extends State<FavouritePlaygroundsPage> {
           ),
           child: new Padding(
             padding: EdgeInsets.all(12),
-            child: new ListView(
+            child:
+            (_isLoading) ?
+            new ListView(
+                scrollDirection: Axis.vertical,
+                children: [
+                  new Padding(
+                    padding: EdgeInsets.all(24),
+                    child: new Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        new CircularProgressIndicator(
+                          valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                        )
+                      ]
+                    )
+                  )
+                ]
+            )
+            : new ListView(
               scrollDirection: Axis.vertical,
-              children: playgroundCards
+              children: (favouritePlaygrounds.isEmpty) ?
+              [ new Padding(
+                  padding: EdgeInsets.all(24),
+                  child: new Text("Vous n'avez aucun favoris pour le moment !", textAlign: TextAlign.center,)
+                )
+              ]
+              : playgroundCards
             )
           )
         ),

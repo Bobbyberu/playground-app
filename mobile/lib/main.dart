@@ -77,11 +77,16 @@ class PlaygroundSplashScreen2State extends State<PlaygroundSplashScreen2> with T
     AuthService authService = new AuthService();
     await authService.checkConnection().then((response) async {
       if (response == ConnectionStatus.AUTHENTICATED) {
-        await SessionManager.getInstance().loadUser(token);
+        await SessionManager.getInstance().loadUser(token).whenComplete(() {
+          setState(() {
+            connectionStatus = response;
+          });
+        });
+      } else {
+        setState(() {
+          connectionStatus = response;
+        });
       }
-      setState(() {
-        connectionStatus = response;
-      });
     });
   }
 

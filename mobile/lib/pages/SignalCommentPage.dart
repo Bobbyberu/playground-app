@@ -27,9 +27,12 @@ class SignalCommentPageState extends State<SignalCommentPage> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   ReportComment signal;
 
+  bool _isLoading;
+
   @override
   void initState() {
     signal = ReportComment.getDefault();
+    _isLoading = false;
     User me = SessionManager.getInstance().getUser();
     signal.author = me;
     signal.comment = widget.comment;
@@ -40,6 +43,9 @@ class SignalCommentPageState extends State<SignalCommentPage> {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
+      setState(() {
+        _isLoading = true;
+      });
       bool success = await signalCommentService.save(signal);
 
       if(success) {
@@ -50,6 +56,9 @@ class SignalCommentPageState extends State<SignalCommentPage> {
             () {Navigator.pop(context);Navigator.pop(context);}
         );
       } else {
+        setState(() {
+          _isLoading = false;
+        });
         PlaygroundDialog.showErrorDialog(
             context,
             "Envoi de votre signalement",
@@ -114,7 +123,12 @@ class SignalCommentPageState extends State<SignalCommentPage> {
 
                       new Padding(
                           padding: EdgeInsets.all(12),
-                          child: new PlaygroundButton(
+                          child:
+                          (_isLoading) ?
+                          new CircularProgressIndicator(
+                            valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                          ) :
+                          new PlaygroundButton(
                               "Signaler",
                               validateForm
                           )

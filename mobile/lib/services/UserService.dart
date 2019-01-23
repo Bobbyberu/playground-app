@@ -1,11 +1,18 @@
 
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:Playground/controllers/CommonController.dart';
 import 'package:Playground/controllers/UserController.dart';
 import 'package:Playground/entities/Playground.dart';
 import 'package:Playground/entities/User.dart';
+import 'package:http/http.dart';
 
 class UserService {
+
+  static String getUserAvatarUrl(User user) {
+    return CommonController.baseUrl + "users/" + user.mail + "/image";
+  }
 
   UserController _controller = new UserController();
 
@@ -75,6 +82,21 @@ class UserService {
     bool res = false;
 
     return res;
+  }
+
+
+  Future<bool> uploadAvatar(File avatar) async {
+    bool success = false;
+    
+    await _controller.postImage(avatar).then((response) {
+      StreamedResponse res = response as StreamedResponse;
+      success = res.statusCode != null && res.statusCode == 200;
+    }).catchError((error) {
+      print(error);
+      _controller.printError(error);
+    });
+    
+    return success;
   }
 
 

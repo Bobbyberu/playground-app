@@ -1,6 +1,9 @@
 
+import 'dart:io';
+
 import 'package:Playground/entities/Playground.dart';
 import 'package:Playground/entities/Sport.dart';
+import 'package:Playground/services/LocationService.dart';
 import 'package:Playground/services/PlaygroundService.dart';
 import 'package:Playground/widgets/dialog/PlaygroundDialog.dart';
 import 'package:Playground/widgets/inputs/PlaygroundCheckbox.dart';
@@ -8,6 +11,7 @@ import 'package:Playground/widgets/inputs/PlaygroundSportSelection.dart';
 import 'package:Playground/widgets/style/PlaygorundTextFieldStyle.dart';
 import 'package:Playground/widgets/style/PlaygroundLabelStyle.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddPlaygroundPage extends StatefulWidget {
 
@@ -19,6 +23,7 @@ class AddPlaygroundPage extends StatefulWidget {
 class AddPlaygroundPageState extends State<AddPlaygroundPage> {
 
   Playground newPlayground = Playground.getDefault();
+  File playgroundImg = null;
   int currentStep;
   int realStep;
 
@@ -28,10 +33,12 @@ class AddPlaygroundPageState extends State<AddPlaygroundPage> {
   final GlobalKey<FormState> _sportsKey = new GlobalKey<FormState>();
   final GlobalKey<FormState> _descriptionKey = new GlobalKey<FormState>();
 
+  bool _isLoading;
 
   @override
   void initState() {
     super.initState();
+    _isLoading = false;
     currentStep = 0;
     realStep = 0;
   }
@@ -55,7 +62,13 @@ class AddPlaygroundPageState extends State<AddPlaygroundPage> {
             padding: EdgeInsets.only(top: 18),
             child:Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
+              children: (_isLoading) ?
+              <Widget>[
+                new CircularProgressIndicator(
+                  valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                )
+              ] :
+              <Widget>[
                 FlatButton(
                     onPressed: onStepCancel,
                     child: new Text("RETOUR", style: new TextStyle(color: Colors.grey))
@@ -132,6 +145,28 @@ class AddPlaygroundPageState extends State<AddPlaygroundPage> {
                         onSaved: (value) {
                           newPlayground.name = value.trim();
                         }
+                    )
+                ),
+
+                new Padding(
+                    padding: EdgeInsets.only(bottom: 12,top: 24),
+                    child: new Text("Photo de votre Playground", textAlign: TextAlign.center, style: PlaygroundFormTitleStyle.getStyle(context))
+                ),
+                new Padding(
+                    padding: EdgeInsets.all(12),
+                    child: new Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        IconButton(
+                            icon: Icon(Icons.image, color: Theme.of(context).primaryColor),
+                            onPressed: () async {
+                              playgroundImg = await ImagePicker.pickImage(source: ImageSource.gallery);
+                            }
+                        ),
+                        (playgroundImg != null) ?
+                            new Image.file(playgroundImg, width: 200, fit: BoxFit.fitWidth) :
+                            new Image.asset("images/default_playground.png",  width: 200, fit: BoxFit.fitWidth)
+                      ]
                     )
                 ),
               ],
@@ -372,7 +407,7 @@ class AddPlaygroundPageState extends State<AddPlaygroundPage> {
   /// Function called each time the next step is called. It validates the current form.
   /// If validated, the form go to the next step
   ///
-  void validateStep() {
+  void validateStep() async {
     switch(currentStep) {
       case 0: // NAME
         if (_nameKey.currentState.validate()) {
@@ -383,7 +418,16 @@ class AddPlaygroundPageState extends State<AddPlaygroundPage> {
       case 1: // ADRESSE
         if (_addressKey.currentState.validate()) {
           _addressKey.currentState.save();
-          setState(() { currentStep++; if(realStep < 2) realStep = 2; });
+          await LocationService.getCoordOfAddress(newPlayground.address).then((response) {
+            print(response);
+            if (response == null) {
+              PlaygroundDialog.showWarningDialog(context, "Validation de l'adresse", "L'adresse renseignée ne semble pas exister. Veuillez réessayer avec une adresse différente.", () {Navigator.of(context).pop();});
+            } else {
+              newPlayground.longitude = response.longitude;
+              newPlayground.latitude = response.latitude;
+              setState(() { currentStep++; if(realStep < 2) realStep = 2; });
+            }
+          });
         }
         break;
       case 2: // SPORTS
@@ -435,7 +479,10 @@ class AddPlaygroundPageState extends State<AddPlaygroundPage> {
   ///
   void validatePlayground() async {
     PlaygroundService playgroundService = new PlaygroundService();
-    await playgroundService.save(newPlayground, null).then((result) {
+    setState(() {
+      _isLoading = true;
+    });
+    await playgroundService.save(newPlayground, playgroundImg).then((result) {
       if (result) {
         PlaygroundDialog.showValidDialog(
             context,
@@ -444,6 +491,9 @@ class AddPlaygroundPageState extends State<AddPlaygroundPage> {
                 () {Navigator.pushReplacementNamed(context, '/home');}
         );
       } else {
+        setState(() {
+          _isLoading = false;
+        });
         PlaygroundDialog.showErrorDialog(
             context,
             "Validation",

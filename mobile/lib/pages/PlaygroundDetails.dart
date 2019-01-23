@@ -3,6 +3,7 @@ import 'package:Playground/entities/Playground.dart';
 import 'package:Playground/pages/PlaygroundCommentPage.dart';
 import 'package:Playground/pages/ReportPlaygroundPage.dart';
 import 'package:Playground/services/CommentService.dart';
+import 'package:Playground/services/PlaygroundService.dart';
 import 'package:Playground/services/UserService.dart';
 import 'package:Playground/widgets/map/PlaygroundShowOnMap.dart';
 import 'package:Playground/widgets/playground/CommentStars.dart';
@@ -67,7 +68,7 @@ class PlaygroundDetailsState extends State<PlaygroundDetails> {
                     fit: StackFit.passthrough,
                     children: <Widget>[
                       FadeInImage(
-                        image: (widget.playground.imgPath != null) ? NetworkImage(widget.playground.imgPath) : AssetImage("images/default_playground.png"),
+                        image: NetworkImage(PlaygroundService.getPlaygroundImageUrl(widget.playground)),
                         fit: BoxFit.cover,
                         placeholder: AssetImage("images/playground_placeholder.png"),
                         height: 200.0,
@@ -161,27 +162,56 @@ class PlaygroundDetailsState extends State<PlaygroundDetails> {
                               onTap: () {
                                 Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new PlaygroundShowOnMap(playground: widget.playground))).then((_) => loadComments());
                               }
-                            )
+                            ),
 
+                            Padding(
+                              padding: EdgeInsets.only(top: 8),
+                              child: new Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+
+                                  (widget.playground.isPrivate != null && widget.playground.isPrivate) ?
+                                  new Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(padding: EdgeInsets.only(right: 4), child: new Icon(Icons.lock_outline, size: 16)),
+                                      new Text("Privé")
+                                    ],
+                                  )
+                                  : new Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(padding: EdgeInsets.only(right: 4), child: new Icon(Icons.lock_open, size: 16)),
+                                      new Text("Public")
+                                    ],
+                                  ),
+
+                                  (widget.playground.covered != null && widget.playground.covered) ?
+                                  new Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(padding: EdgeInsets.only(right: 4), child: new Icon(Icons.home, size: 16)),
+                                      new Text("Couvert")
+                                    ],
+                                  )
+                                      : new Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(padding: EdgeInsets.only(right: 4), child:new Icon(Icons.landscape, size: 16)),
+                                      new Text("Non couvert")
+                                    ],
+                                  ),
+
+                                ],
+                              )
+                            )
 
 
                           ]
                         ),
 
-
                         new FavouritePlaygroundToggle(playground: widget.playground)
-
-                        /*new IconButton(
-                            icon: new Icon(
-                              Icons.my_location,
-                              size: 30,
-                            ),
-                            color: Theme.of(context).primaryColor,
-                            tooltip: "Voir sur la carte",
-                            onPressed: () {
-                              Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new PlaygroundShowOnMap(playground: widget.playground))).then((_) => loadComments());
-                            }
-                        )*/
 
                       ],
                     ),

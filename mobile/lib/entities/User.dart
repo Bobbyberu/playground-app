@@ -4,9 +4,9 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'User.g.dart';
 
-/**
- * User entity class
- */
+///
+/// User entity class
+///
 @JsonSerializable(nullable: false)
 class User {
 
@@ -44,6 +44,19 @@ class User {
   }
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
-  Map<String, dynamic> toJson() => _$UserToJson(this);
 
+  Map<String, dynamic> toJson() => <String, dynamic>{
+    'id': this.id,
+    'username': this.username,
+    'mail': this.mail,
+    'birthDate': this.birthDate.toIso8601String(),
+    'password': this.password,
+    'city': this.city,
+    'enabled': this.enabled,
+    'archived': this.archived,
+    'banned': this.banned,
+    'friends': (this.friends != null) ? this.friends.toList() : new List(),
+    'favouriteSports': (this.favouriteSports != null) ? this.favouriteSports.toList() : new List(),
+    'favouritePlaygrounds': (this.favouritePlaygrounds != null) ? this.favouritePlaygrounds.toList() : new List()
+  };
 }

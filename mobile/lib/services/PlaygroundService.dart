@@ -1,6 +1,7 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'package:Playground/controllers/CommonController.dart';
 import 'package:Playground/controllers/PlaygroundController.dart';
 import 'package:Playground/entities/Comment.dart';
 import 'package:Playground/entities/Playground.dart';
@@ -9,6 +10,10 @@ import 'package:Playground/entities/Sport.dart';
 import 'package:http/http.dart' as http;
 
 class PlaygroundService {
+
+  static String getPlaygroundImageUrl(Playground playground) {
+    return CommonController.baseUrl + "playgrounds/" + playground.id.toString() + "/image";
+  }
 
   PlaygroundController _controller = new PlaygroundController();
 
@@ -19,9 +24,11 @@ class PlaygroundService {
   Future<bool> save(Playground playground, File img) async {
     bool res = false;
 
-    await _controller.postPlayground(playground).then((response) {
+    await _controller.postPlayground(playground).then((response) async {
       http.Response resp = response as http.Response;
       res = response.statusCode == 201 || response.statusCode == 200;
+      Playground pgCreated = Playground.fromJson(json.decode(response.body));
+      await _controller.postImage(pgCreated.id, img);
     }).catchError((error) {
       _controller.printError(error);
     });
