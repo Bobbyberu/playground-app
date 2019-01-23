@@ -29,7 +29,7 @@ class ModalPlayground extends React.Component {
 
     handleClose = () => {
         // Action à envoyer au store
-        const action = { type: "TOGGLE_STATE_MODAL", value: false }
+        const action = { type: "TOGGLE_ADD_PLAYGROUND", value: false }
         this.props.dispatch(action)
     };
 
@@ -88,9 +88,13 @@ class ModalPlayground extends React.Component {
 // mapping du state global dans les props du composant Home
 const mapStateToProps = (state) => {
     return {
+<<<<<<< HEAD
         open: state.toggleModal.open,
         step: state.addPlayground.step,
         properties: state.addPlayground
+=======
+        open: state.toggleModal.openAddPlayground
+>>>>>>> develop
     }
 }
 

@@ -1,8 +1,10 @@
 package com.playground.security;
 
+import com.playground.model.User;
 import com.playground.service.TokenAuthenticationService;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,9 +22,13 @@ import java.util.Collections;
 
 public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 
-    public JWTLoginFilter(String url, AuthenticationManager authManager) {
+    private TokenAuthenticationService tokenAuthenticationService;
+
+    @Autowired
+    public JWTLoginFilter(String url, AuthenticationManager authManager, TokenAuthenticationService tokenAuthenticationService) {
         super(new AntPathRequestMatcher(url));
         setAuthenticationManager(authManager);
+        this.tokenAuthenticationService = tokenAuthenticationService;
     }
 
     @Override
@@ -31,14 +37,19 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
         String username;
         String password;
 
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Headers", "*");
+        response.setHeader("Access-Control-Expose-Headers", "*");
+
         String jsonString = IOUtils.toString(request.getInputStream(), Charset.defaultCharset());
-        JSONObject json = new JSONObject(jsonString);
+        if (!StringUtils.isEmpty(jsonString)) {
+            JSONObject json = new JSONObject(jsonString);
 
-        username = json.getString("username");
-        password = json.getString("password");
-
-        System.out.printf("JWTLoginFilter.attemptAuthentication: username/password= %s,%s", username, password);
-        System.out.println();
+            username = json.getString("mail");
+            password = json.getString("password");
+        } else {
+            return null;
+        }
 
         return getAuthenticationManager()
                 .authenticate(new UsernamePasswordAuthenticationToken(username, password, Collections.emptyList()));
@@ -47,15 +58,9 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authResult) {
-
-        System.out.println("JWTLoginFilter.successfulAuthentication:");
-
         // Write Authorization to Headers of Response.
-        TokenAuthenticationService.addAuthentication(response, authResult.getName());
-
-        String authorizationString = response.getHeader("Authorization");
-
-        System.out.println("Authorization String=" + authorizationString);
+        User user = (User) authResult.getPrincipal();
+        tokenAuthenticationService.addAuthentication(response, user.getMail());
     }
 
 }

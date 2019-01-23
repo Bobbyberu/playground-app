@@ -47,31 +47,6 @@ class CommentService {
       }
     });
 
-    /*
-    Comment comment1 = new Comment();
-    comment1.comment = "C'est génial !";
-    comment1.mark = 4;
-    comment1.author = User.getDefault();
-    comments.add(comment1);
-
-    Comment comment2 = new Comment();
-    comment2.comment = "Ouffissime ! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ";
-    comment2.mark = 4;
-    comment2.author = User.getDefault();
-    comments.add(comment2);
-
-    Comment comment3 = new Comment();
-    comment3.comment = "ça va, ça passe";
-    comment3.mark = 3;
-    comment3.author = User.getDefault();
-    comments.add(comment3);
-
-    Comment comment4 = new Comment();
-    comment4.comment = "YEEEEEEEEEEEEES";
-    comment4.mark = 4.2;
-    comment4.author = User.getDefault();
-    comments.add(comment4);*/
-
     return comments;
   }
 

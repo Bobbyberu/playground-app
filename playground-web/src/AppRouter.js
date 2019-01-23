@@ -1,11 +1,13 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { createMuiTheme } from '@material-ui/core/styles';
 import grey from '@material-ui/core/colors/grey';
 import Home from './pages/home/home';
-import PlaygroundNew from './pages/playground-new/playground-new';
+import Playground from './pages/playground/Playground';
 import Login from './pages/login/login';
 import SignUp from './pages/sign-up/sign-up';
+import NotFound from './pages/404/NotFound';
+import Test from './pages/test';
 
 const theme = createMuiTheme({
   palette: {
@@ -42,15 +44,31 @@ const theme = createMuiTheme({
   },
 });
 
-const AppRouter = () => (
-  <React.Fragment>
-    <Route path="/" exact component={() => (<Home />)} />
-    <Route path="/details" component={() => (<PlaygroundNew />)} />
-    <MuiThemeProvider theme={theme}>
-      <Route path="/login" component={() => (<Login />)} />
-      <Route path="/signup" component={() => (<SignUp />)} />
-    </MuiThemeProvider>
-  </React.Fragment>
-);
+function AppRouter() {
+  return (
+    <Router>
+      <Switch>
+        <Route path="/" exact component={() => (<Home />)} />
+        <Route path="/details/:id" component={Child} />
+        <Route path="/login" component={() => (<Login theme={theme} />)} />
+        <Route path="/signup" component={() => (<SignUp theme={theme} />)} />
+        <Route path="/test" component={() => (<Test />)} />
+        <Route component={NoMatch} />
+      </Switch>
+    </Router>
+  );
+}
+
+function Child({ match }) {
+  return (
+    <div className="playground-page">
+      <Playground id={match.params.id} />
+    </div>
+  );
+}
+
+function NoMatch({ location }) {
+  return (<NotFound path={location.pathname} />);
+}
 
 export default AppRouter;

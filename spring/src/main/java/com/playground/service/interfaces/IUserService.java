@@ -26,13 +26,31 @@ public interface IUserService {
     User getUser(int id);
 
     /**
+     * Return one user
+     *
+     * @param username String
+     *
+     * @return User
+     */
+    User getUserByUsername(String username);
+
+    /**
+     * Return one user
+     *
+     * @param mail String
+     *
+     * @return User
+     */
+    User getUserByMail(String username);
+
+    /**
      * Create a user and return it
      *
      * @param user User
      *
      * @return User
      */
-    User createUser(User user);
+    User signup(User user);
 
     /**
      * Update a user and return it
@@ -43,6 +61,26 @@ public interface IUserService {
      * @return User
      */
     User updateUser(int id, User user);
+
+    /**
+     * Update a user and return it
+     *
+     * @param id int
+     * @param currentUser User
+     * @param updatedUser User
+     *
+     * @return User
+     */
+    User updateUserProfile(int id, User currentUser, User updatedUser);
+
+    /**
+     * Ban a user and return it
+     *
+     * @param id int
+     *
+     * @return User
+     */
+    User banUser(User user);
 
     /**
      * Delete a user

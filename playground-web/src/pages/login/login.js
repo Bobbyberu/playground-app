@@ -4,6 +4,7 @@ import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Button from '@material-ui/core/Button';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 
@@ -11,6 +12,7 @@ import MailOutline from '@material-ui/icons/MailOutline';
 import VpnKey from '@material-ui/icons/VpnKey';
 
 import AuthService from '../../services/auth';
+import PlaygroundAPI from '../../services/playground-api';
 import './login.css';
 
 const styles = ({
@@ -62,27 +64,36 @@ class Login extends Component {
     super(props);
 
     this.state = {
-      login: '',
+      mail: '',
       password: '',
       redirect: false
     }
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.authService = new AuthService();
   }
 
-  handleSubmit(event) {
+  async handleSubmit(event) {
     event.preventDefault();
+    let loginSuccess = false;
 
-    this.authService.login(this.state.login, this.state.password)
-      .then(() => {
-        this.setState({
-          redirect: true
-        });
-      })
+    await AuthService.login(this.state.mail, this.state.password)
+      .then(() => loginSuccess = true)
       .catch(err => {
         console.log(err);
       });
+
+    if (loginSuccess) {
+      await PlaygroundAPI.getUser(this.state.mail)
+        .then(response => {
+          AuthService.setUser(response);
+          this.setState({
+            redirect: true
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   }
 
   handleInputChange(event) {
@@ -97,16 +108,17 @@ class Login extends Component {
 
   render() {
     const content = () => {
-      if (this.authService.loggedIn()) {
+      if (AuthService.loggedIn()) {
         return this.redirect()
       } else {
         return this.state.redirect ? this.redirect() : this.renderForm(this.props);
       }
     };
     return (
-      <React.Fragment>
+
+      <MuiThemeProvider theme={this.props.theme}>
         {content()}
-      </React.Fragment>
+      </MuiThemeProvider>
     );
   }
 
@@ -131,7 +143,7 @@ class Login extends Component {
               <TextValidator
                 className={classes.textvalidator}
                 onChange={this.handleInputChange}
-                name="login"
+                name="mail"
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -141,7 +153,7 @@ class Login extends Component {
                   classes: { input: classes.input }
                 }}
                 placeholder="Email"
-                value={this.state.login}
+                value={this.state.mail}
                 variant="outlined"
                 validators={['required']}
                 errorMessages={['Champ obligatoire']}

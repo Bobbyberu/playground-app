@@ -1,0 +1,8 @@
+
+enum ConnectionStatus {
+
+  AUTHENTICATED,
+  NOT_AUTHENTICATED,
+  SERVER_UNAVAILABLE
+
+}

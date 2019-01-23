@@ -5,10 +5,16 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.util.*;
 
 @Entity
 @Table(name = "user")
@@ -23,8 +29,7 @@ public class User implements UserDetails {
     private String mail;
     private Date birthDate;
     private String password;
-    @OneToOne
-    private Image avatar;
+    private String avatarName;
     @ManyToMany
     private Set<User> friends;
     @ManyToMany
@@ -60,17 +65,17 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     public void setUsername(String username) {
@@ -94,8 +99,14 @@ public class User implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<Role> liste = new ArrayList<>();
+        if (this.role.getName().equals("ROLE_ADMIN")) {
+            liste.add(new Role("ROLE_USER"));
+        }
+        liste.add(this.role);
+        return liste;
     }
 
     public String getPassword() {
@@ -106,12 +117,12 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public Image getAvatar() {
-        return avatar;
+    public String getAvatarName() {
+        return avatarName;
     }
 
-    public void setAvatar(Image avatar) {
-        this.avatar = avatar;
+    public void setAvatarName(String avatarName) {
+        this.avatarName = avatarName;
     }
 
     public Set<User> getFriends() {

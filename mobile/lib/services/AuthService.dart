@@ -1,13 +1,37 @@
 
 import 'package:Playground/entities/User.dart';
+import 'package:Playground/enums/ConnectionStatus.dart';
+import 'package:Playground/services/SessionManager.dart';
 import 'package:Playground/services/TokenManager.dart';
-import 'package:http/http.dart' as http;
 
 import 'package:Playground/controllers/AuthController.dart';
 
 class AuthService {
 
   AuthController _controller = new AuthController();
+
+  ///
+  /// Start a test call to the server API to check if the server is available or if the user is authenticated
+  ///
+  Future<ConnectionStatus> checkConnection() async {
+    ConnectionStatus res;
+
+    await _controller.checkConnection().then((response) {
+      if(response.statusCode != null && response.statusCode == 200) {
+        res = ConnectionStatus.AUTHENTICATED;
+      }
+      else if (response.statusCode != null && response.statusCode == 403) {
+        res = ConnectionStatus.NOT_AUTHENTICATED;
+      }
+      else {
+        res = ConnectionStatus.SERVER_UNAVAILABLE;
+      }
+    }).catchError((error) {
+      res = ConnectionStatus.SERVER_UNAVAILABLE;
+    });
+
+    return res;
+  }
 
   ///
   ///Call server auth login method to get a JWT
@@ -17,18 +41,18 @@ class AuthService {
     bool res = false;
 
     await _controller.postCredentials(email, password).then((response) async {
-      print(response.statusCode);
+      _controller.printResponse(response);
       res = response.statusCode == 200;
-      print(res);
       var headers = response.headers as Map<String,String>;
-      print("headers parsed");
 
       if(headers.containsKey("authorization")) {
-        print("setting token " + headers["authorization"]);
-        TokenManager.getInstance().setToken(headers["authorization"]);
+        var token =  headers["authorization"];
+        TokenManager.getInstance().setToken(token);
+        SessionManager.getInstance().loadUser(token);
       }
     }).catchError((error) {
       _controller.printError(error);
+      res = false;
     });
 
     return res;
@@ -58,6 +82,7 @@ class AuthService {
   void logout() async {
     await _controller.logout().then((response) {
       TokenManager.getInstance().cleanToken();
+      SessionManager.getInstance().clearSession();
     }).catchError((error) {
       _controller.printError(error);
     });

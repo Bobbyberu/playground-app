@@ -1,26 +1,39 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import FavoriteIconEmpty from '@material-ui/icons/StarBorder';
-import FavoriteIconFull from '@material-ui/icons/StarRate';
+import Favorite from '@material-ui/icons/Favorite';
+import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
-import { connect } from 'react-redux';
 import Emoji from '../../common-components/emoji/emoji';
+import green from '@material-ui/core/colors/green';
+import grey from '@material-ui/core/colors/grey';
+import defaultPlayground from '../../assets/img/default_playground.png';
+import PlaygroundAPI from '../../services/playground-api';
+import AuthService from '../../services/auth';
 
 // Override de certains éléments de la card
 const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: green[700],
+    },
+    secondary: {
+      main: grey[50],
+    },
+  },
   overrides: {
     MuiListItem: {
       gutters: {
@@ -86,6 +99,13 @@ const styles = theme => ({
   section2: {
     marginBottom: theme.spacing.unit,
   },
+  link: {
+    color: green[500],
+    '&:hover': {
+      textDecoration: 'none',
+      color: fade(green[500], 0.8),
+    },
+  },
 });
 
 /*
@@ -94,24 +114,54 @@ const styles = theme => ({
 class PlaygroundDetails extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = ({
+      favorited: false
+    });
+
+    this.toggleFavorite = this.toggleFavorite.bind(this);
+  }
+
+  componentDidMount() {
+    if (AuthService.loggedIn()) {
+      let user = AuthService.getUser();
+
+      PlaygroundAPI.isFavorite(user.id, this.props.playground.id)
+        .then(response => {
+          this.setState({
+            favorited: response
+          });
+        })
+        .catch(err => console.log(err));
+    }
   }
 
   toggleFavorite() {
-    // Action à envoyer au store
-    const action = { type: 'TOGGLE_FAVORITE', value: this.props.playground };
-    this.props.dispatch(action);
+    this.setState({
+      favorited: !this.state.favorited
+    });
+
+    let user = AuthService.getUser();
+
+    PlaygroundAPI.updateFavorite(user.id, this.props.playground.id)
+      .catch(err => {
+        console.log(err);
+        this.setState({
+          favorited: !this.state.favorited
+        });
+      });
   }
 
   displayFavoriteIcon() {
     // On modifie l'icône 'favori' en fonction de l'état du playground sélectionné
-    const favorite = (this.props.favoritePlaygrounds.findIndex(item => item.id === this.props.playground.id) !== -1);
     return (
-      favorite ? <FavoriteIconFull /> : <FavoriteIconEmpty />
+      this.state.favorited ? <Favorite /> : <FavoriteBorder />
     );
   }
 
   render() {
     const { classes } = this.props;
+    let playgroundImg = this.props.playground.image ? this.props.playground.image : defaultPlayground;
 
     return (
       <MuiThemeProvider theme={theme}>
@@ -120,7 +170,7 @@ class PlaygroundDetails extends React.Component {
             {/* Image associée au playground */}
             <CardMedia
               className={classes.media}
-              image={this.props.playground.image}
+              image={playgroundImg}
               title="Photo du playground"
             />
             {/* Informations sur le playground */}
@@ -146,9 +196,7 @@ class PlaygroundDetails extends React.Component {
                     {
                       this.props.playground.sports.map(sport => (
                         <ListItem>
-                          <Avatar className={classes.avatar}>
-                            <Emoji symbol={sport.symbol} label={sport.name} />
-                          </Avatar>
+                          <Emoji symbol={sport.symbol} label={sport.name} />
                           <ListItemText primary={sport.name} />
                         </ListItem>
                       ))
@@ -159,12 +207,16 @@ class PlaygroundDetails extends React.Component {
             </CardContent>
             {/* Actions associés à l acard (favoris et détails) */}
             <CardActions className={classes.button}>
-              <IconButton aria-label="Ajouter aux favoris" onClick={() => this.toggleFavorite()}>
-                {this.displayFavoriteIcon()}
-              </IconButton>
-              <Button size="small" color="primary">
-                Détails
-              </Button>
+              <Link to={'/details/' + this.props.playground.id} className={classes.link}>
+                <Button size="small" color="primary">
+                  Détails
+                </Button>
+              </Link>
+              {AuthService.loggedIn() &&
+                <IconButton aria-label="Ajouter aux favoris" color="primary" onClick={() => this.toggleFavorite()}>
+                  {this.displayFavoriteIcon()}
+                </IconButton>
+              }
             </CardActions>
           </Card>
         </div>
@@ -178,10 +230,5 @@ PlaygroundDetails.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-// mapping du state global dans les props du composant PlaygroundDetails
-const mapStateToProps = state => ({
-  favoritePlaygrounds: state.toggleFavorite.favoritePlaygrounds,
-});
-
 // La fonction mapStateToProps permet d'abonner le composant aux changements du store Redux
-export default connect(mapStateToProps)(withStyles(styles)(PlaygroundDetails));
+export default withStyles(styles)(PlaygroundDetails);

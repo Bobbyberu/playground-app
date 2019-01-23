@@ -6,20 +6,20 @@ import AddIcon from '@material-ui/icons/Add';
 import { connect } from 'react-redux'
 
 const styles = theme => ({
-  margin: {
-    margin: theme.spacing.unit,
-    position: 'absolute',
-    right: 25,
-    bottom: 25,
-    zIndex: 1000,
-  },
+    margin: {
+        margin: theme.spacing.unit,
+        position: 'absolute',
+        right: 25,
+        bottom: 25,
+        zIndex: 1000,
+    },
 });
 
 class ButtonAdd extends React.Component {
 
     displayModal = () => {
         // Action à envoyer au store
-        const action = { type: "TOGGLE_STATE_MODAL", value: true }
+        const action = { type: "TOGGLE_ADD_PLAYGROUND", value: true }
         this.props.dispatch(action)
     }
 
@@ -33,7 +33,7 @@ class ButtonAdd extends React.Component {
                 className={classes.margin}
                 onClick={this.displayModal}
             >
-                <AddIcon /> 
+                <AddIcon />
             </Fab>
         )
     }
@@ -42,7 +42,7 @@ class ButtonAdd extends React.Component {
 // mapping du state global dans les props du composant Home
 const mapStateToProps = (state) => {
     return {
-        open: state.open
+        open: state.toggleModal.openAddPlayground
     }
 }
 

@@ -50,4 +50,13 @@ public interface IPlaygroundService {
      * @param playground Playground
      */
     void deletePlayground(Playground playground);
+
+    /**
+     * Get all playgrounds which are linked with the keyword
+     *
+     * @param keyword String
+     *
+     * @return List<Playground>
+     */
+    List<Playground> searchPlaygroundByKeyword(String keyword);
 }

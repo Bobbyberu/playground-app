@@ -7,15 +7,11 @@ class CommentController extends CommonController {
   static const String route = CommonController.baseUrl + "comments/";
 
   Future postComment(Comment comment) {
-    return post(route, comment.toJson());
+    return post("playgrounds/" + comment.playground.id.toString() + "/comments", comment.toJson());
   }
 
   Future getCommentById(int id){
     return get( Uri.encodeFull(route + id.toString()) );
-  }
-
-  Future getCommentByPlaygroundId(int playgroundId){
-    return get( Uri.encodeFull(route + playgroundId.toString()) );
   }
 
 }

@@ -2,16 +2,13 @@ import AuthService from './auth';
 
 const axios = require('axios');
 const api = 'http://localhost:8080/api/';
-const authService = new AuthService();
 
-export default class PlaygroundAPI {
+class API {
   getAllPlayground() {
-    let token = authService.getToken();
     return axios({
       method: 'get',
       url: api + 'playgrounds/',
       headers: {
-        'Authorization': token,
         'Content-Type': 'application/json'
       }
     })
@@ -19,32 +16,47 @@ export default class PlaygroundAPI {
   }
 
   getSearchResult(searchTerm) {
-    let token = authService.getToken();
     return axios({
       method: 'get',
       url: api + 'playgrounds/search/' + searchTerm,
       headers: {
-        'Authorization': token,
         'Content-Type': 'application/json'
       }
     })
       .then(response => response.data);
   }
 
-  getRandomPlaygrounds() {
-    return axios.get('/playgrounds.json')
-      .then((response) => {
-        const max = response.data.result.length;
-
-        const start = Math.floor(Math.random() * (max / 2));
-        const end = Math.floor((Math.random() * max) + max / 2);
-        return response.data.result.slice(start, end);
-      });
-  }
-
   getAllSports() {
     return axios.get('/sports.json')
       .then(response => response.data.result);
+  }
+
+  getPlaygroundById(id) {
+    return axios({
+      method: 'get',
+      url: api + 'playgrounds/' + id,
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+      .then(response => response.data)
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  getUser() {
+    let mail = AuthService.decodeToken().sub;
+    return axios({
+      method: 'get',
+      url: api + 'users/mail/' + mail,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': AuthService.getToken()
+      }
+    })
+      .then(response => response.data)
+      .catch(err => console.log(err));
   }
 
   postPlayground(playground) {
@@ -61,3 +73,110 @@ export default class PlaygroundAPI {
       .catch(err => console.log(err));
   }
 }
+  getAllComments(playgroundId) {
+    return axios({
+      method: 'get',
+      //url: '/comments.json',
+      url: api + 'playgrounds/' + playgroundId + '/comments',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => response.data)
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  postComment(comment) {
+    let idPlayground = comment.playground.id;
+    return axios({
+      method: 'post',
+      url: api + 'playgrounds/' + idPlayground + '/comments',
+      data: comment,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': AuthService.getToken()
+      }
+    })
+      .catch(err => console.log(err));
+  }
+
+  uploadImageUser(data) {
+    return axios({
+      method: 'post',
+      url: api + 'users/image',
+      data: data,
+      headers: { 'Authorization': AuthService.getToken() }
+    })
+      .catch(err => console.log(err));
+  }
+
+  getUserImage() {
+    let userMail = AuthService.decodeToken().sub;
+    return api + 'users/' + userMail + '/image';
+  }
+
+  uploadImagePlayground(id, data) {
+    return axios({
+      method: 'post',
+      url: api + 'playgrounds/' + id + '/image',
+      data: data,
+      headers: { 'Authorization': AuthService.getToken() }
+    })
+      .catch(err => console.log(err));
+  }
+
+  getPlaygroundImage(id) {
+    return api + 'playgrounds/' + id + '/image';
+  }
+
+  isFavorite(user, playground) {
+    return axios({
+      method: 'get',
+      url: api + 'users/' + user + '/favouritePlaygrounds/' + playground,
+      headers: { 'Authorization': AuthService.getToken() }
+    })
+      .then(response => response.data)
+      .catch(err => console.log(err));
+  }
+
+  updateFavorite(user, playground) {
+    return axios({
+      method: 'put',
+      url: api + 'users/' + user + '/favouritePlaygrounds/' + playground,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': AuthService.getToken()
+      }
+    })
+      .then(response => response.data)
+      .catch(err => console.log(err));
+  }
+
+  reportPlayground(user, playground, description) {
+    let data = { "author": user, "playground": playground, "description": description }
+    return axios({
+      method: 'post',
+      url: api + 'playgrounds/' + playground.id + '/reportPlaygrounds',
+      data: data,
+      headers: { 'Authorization': AuthService.getToken() }
+    })
+      .catch(err => console.log(err));
+  }
+
+  reportComment(user, comment, description) {
+    let data = { "author": user, "comment": comment, "description": description }
+    return axios({
+      method: 'post',
+      url: api + 'comments/' + comment.id + '/reportComments',
+      data: data,
+      headers: { 'Authorization': AuthService.getToken() }
+    })
+      .catch(err => console.log(err));
+  }
+};
+
+var PlaygroundAPI = new API();
+
+export default PlaygroundAPI;
