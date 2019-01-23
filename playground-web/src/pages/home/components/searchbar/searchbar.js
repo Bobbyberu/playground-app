@@ -8,7 +8,6 @@ import { fade } from '@material-ui/core/styles/colorManipulator';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 
-const api = new PlaygroundAPI();
 var timeout = null;
 
 // styles
@@ -57,7 +56,7 @@ const styles = theme => ({
 });
 
 function getSuggestions(searchTerm) {
-    return api.getSearchResult(searchTerm);
+    return PlaygroundAPI.getSearchResult(searchTerm);
 }
 
 function getSuggestionValue(suggestion) {

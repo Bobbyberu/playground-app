@@ -28,8 +28,8 @@ import Timetable from './components/Timetable';
 
 import './playground.css';
 import defaultPlayground from '../../assets/img/default_playground.png';
-import FavoriteIcon from '@material-ui/icons/Star';
-import FavoriteIconEmpty from '@material-ui/icons/StarBorder';
+import Favorite from '@material-ui/icons/Favorite';
+import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 import Flag from '@material-ui/icons/Flag';
 import grey from '@material-ui/core/colors/grey';
 import green from '@material-ui/core/colors/green';
@@ -146,25 +146,46 @@ class Playground extends Component {
       loggedIn: false
     });
 
-    this.api = new PlaygroundAPI();
-    this.auth = new AuthService();
+    this.toggleFavorite = this.toggleFavorite.bind(this);
   }
 
-  componentDidMount() {
-    this.api.getPlaygroundById(this.props.id)
+  async componentDidMount() {
+    await PlaygroundAPI.getPlaygroundById(this.props.id)
       .then(response => {
         this.setState({
           playground: response,
-          loggedIn: this.auth.loggedIn()
+          loggedIn: AuthService.loggedIn()
         });
       })
       .catch(err => console.log(err));
+
+    if (AuthService.loggedIn()) {
+      let user = AuthService.getUser();
+
+      PlaygroundAPI.isFavorite(user.id, this.state.playground.id)
+        .then(response => {
+          this.setState({
+            favorited: response
+          });
+        })
+        .catch(err => console.log(err));
+    }
   }
 
-  toggleFavorite = () => {
+  async toggleFavorite() {
     this.setState({
       favorited: !this.state.favorited
     });
+
+    let user = AuthService.getUser();
+
+    PlaygroundAPI.updateFavorite(user.id, this.state.playground.id)
+      .catch(err => {
+        console.log(err);
+        this.setState({
+          favorited: !this.state.favorited
+        });
+      });
   }
 
   toggleReportPlayground = () => {
@@ -175,9 +196,9 @@ class Playground extends Component {
 
   displayFavoriteIcon = (classes) => {
     if (this.state.favorited) {
-      return <FavoriteIcon className={classes.topIcon} />;
+      return <Favorite className={classes.topIcon} />;
     } else {
-      return <FavoriteIconEmpty className={classes.topIcon} />;
+      return <FavoriteBorder className={classes.topIcon} />;
     }
   }
 

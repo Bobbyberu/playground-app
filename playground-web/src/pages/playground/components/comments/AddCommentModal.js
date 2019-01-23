@@ -42,9 +42,6 @@ class AddCommentModal extends React.Component {
             completed: false
         });
 
-        this.api = new PlaygroundAPI();
-        this.auth = new AuthService();
-
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -61,10 +58,7 @@ class AddCommentModal extends React.Component {
     }
 
     async handleSubmit() {
-        const username = this.auth.decodeToken().sub;
-
-        let user = await this.api.getUser(username)
-            .catch(err => console.log(err));
+        let user = AuthService.getUser();
 
         let comment = {
             playground: this.props.playground,
@@ -74,7 +68,7 @@ class AddCommentModal extends React.Component {
             mark: this.state.mark
         };
 
-        this.api.postComment(comment)
+        PlaygroundAPI.postComment(comment)
             .then(() => {
                 this.setState({
                     completed: true

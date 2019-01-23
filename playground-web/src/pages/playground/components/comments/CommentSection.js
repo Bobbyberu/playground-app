@@ -40,17 +40,15 @@ class CommentSection extends React.Component {
             comments: 0,
             loggedIn: false
         })
-        this.api = new PlaygroundAPI();
-        this.auth = new AuthService();
         this.toggleModal = this.toggleModal.bind(this);
     }
 
     componentDidMount() {
-        this.api.getAllComments(this.props.playgroundId)
+        PlaygroundAPI.getAllComments(this.props.playgroundId)
             .then(response => {
                 this.setState({
                     comments: response,
-                    loggedIn: this.auth.loggedIn()
+                    loggedIn: AuthService.loggedIn()
                 });
             })
             .catch(err => console.log(err));

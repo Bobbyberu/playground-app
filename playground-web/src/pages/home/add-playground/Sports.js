@@ -33,12 +33,11 @@ class Sports extends React.Component {
             checked: [0],
             sports: []
         }
-        this.api = new PlaygroundAPI();
     }
 
     componentDidMount() {
         // Récupérer la liste des sports après que le composant ait été retranscrit dans le DOM
-        this.api.getAllSports()
+        PlaygroundAPI.getAllSports()
             .then((response) => {
                 this.setState({
                     sports: response

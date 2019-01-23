@@ -115,7 +115,6 @@ class SignUp extends Component {
       finalized: false,
     };
 
-    this.authService = new AuthService();
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleErrors = this.handleErrors.bind(this);
@@ -151,7 +150,7 @@ class SignUp extends Component {
         birthDate: birthDate
       }
 
-      this.authService.signUp(user)
+      AuthService.signUp(user)
         .then(() => {
           this.setState({
             finalized: true,
