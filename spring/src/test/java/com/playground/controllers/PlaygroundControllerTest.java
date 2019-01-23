@@ -2,6 +2,7 @@ package com.playground.controllers;
 
 import com.playground.model.Playground;
 import com.playground.service.PlaygroundService;
+import com.playground.service.UserService;
 import com.playground.storage.StorageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +39,9 @@ public class PlaygroundControllerTest {
 
     @MockBean
     private StorageService storageService;
+
+    @MockBean
+    private UserService userService;
 
     private Playground mockPlayground = new Playground("name", false, false, 0, 0, "surface", "description", "city", "address");
 
