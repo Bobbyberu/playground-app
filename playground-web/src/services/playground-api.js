@@ -161,6 +161,26 @@ class API {
     })
       .catch(err => console.log(err));
   }
+
+  // admin endpoints
+
+  deletePlayground(playgroundId) {
+    return axios({
+      method: 'delete',
+      url: api + 'playgrounds/' + playgroundId,
+      headers: { 'Authorization': AuthService.getToken() }
+    })
+      .catch(err => console.log(err));
+  }
+
+  deleteComment(commentId) {
+    return axios({
+      method: 'delete',
+      url: api + 'comments/' + commentId,
+      headers: { 'Authorization': AuthService.getToken() }
+    })
+      .catch(err => console.log(err));
+  }
 };
 
 var PlaygroundAPI = new API();

@@ -1,15 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
 import IconButton from '@material-ui/core/IconButton';
 
-import ReportCommentModal from './ReportCommentModal';
+import AuthService from '../../../../services/auth';
+import PlaygroundAPI from '../../../../services/playground-api';
 import StarRating from '../StarRating';
 
 import { withStyles } from '@material-ui/core/styles';
 import avatar from '../../../../assets/img/default_avatar.png';
+import Delete from '@material-ui/icons/Delete';
 import Flag from '@material-ui/icons/Flag';
 import green from '@material-ui/core/colors/green';
 
@@ -41,7 +44,11 @@ const styles = {
 }
 
 class Comment extends React.Component {
-    toggleReportComment() {
+    state = ({
+        redirect: false
+    })
+
+    toggleReportComment = () => {
         let value = {
             open: true,
             comment: this.props.comment
@@ -51,7 +58,23 @@ class Comment extends React.Component {
         this.props.dispatch(action)
     }
 
+    deleteComment = () => {
+        let confirm = window.confirm("Voulez-vous vraiment supprimer ce commentaire ?");
+        if (confirm) {
+            PlaygroundAPI.deleteComment(this.props.comment.id)
+                .then(() => window.location.reload())
+                .catch(err => console.log(err));
+        }
+    }
+
     render() {
+        if (this.state.redirect) {
+            return (
+                <React.Fragment>
+                    <Redirect to="/" />
+                </React.Fragment>
+            );
+        }
         const { classes } = this.props;
         let comment = this.props.comment;
         let author = comment.author;
@@ -72,9 +95,15 @@ class Comment extends React.Component {
                         </div>
                     </div>
                     <p className={classes.comment + ' col-12'}>{comment.comment}</p>
-                    {this.props.canReport &&
-                        <IconButton className={classes.report} onClick={this.toggleReportComment.bind(this)}>
+                    {AuthService.isUser() &&
+                        <IconButton className={classes.report} onClick={this.toggleReportComment}>
                             <Flag color="primary" />
+                        </IconButton>
+                    }
+
+                    {AuthService.isAdmin() &&
+                        <IconButton className={classes.report} onClick={this.deleteComment}>
+                            <Delete color="primary" />
                         </IconButton>
                     }
                 </div>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -28,6 +29,7 @@ import Timetable from './components/Timetable';
 
 import './playground.css';
 import defaultPlayground from '../../assets/img/default_playground.png';
+import Delete from '@material-ui/icons/Delete';
 import Favorite from '@material-ui/icons/Favorite';
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 import Flag from '@material-ui/icons/Flag';
@@ -64,7 +66,7 @@ const styles = theme => ({
   topIcon: {
     fontSize: 50
   },
-  report: {
+  topRightIcon: {
     top: 0,
     right: 0,
     position: 'absolute',
@@ -143,7 +145,9 @@ class Playground extends Component {
       loading: true,
       playground: 0,
       favorited: false,
-      loggedIn: false
+      loggedIn: false,
+      // if we should be redirected or not
+      redirect: false
     });
 
     this.toggleFavorite = this.toggleFavorite.bind(this);
@@ -159,7 +163,7 @@ class Playground extends Component {
       })
       .catch(err => console.log(err));
 
-    if (AuthService.loggedIn()) {
+    if (AuthService.isUser()) {
       let user = AuthService.getUser();
 
       PlaygroundAPI.isFavorite(user.id, this.state.playground.id)
@@ -194,6 +198,19 @@ class Playground extends Component {
     this.props.dispatch(action);
   }
 
+  deletePlayground = () => {
+    let confirm = window.confirm("Voulez-vous vraiment supprimer ce playground ?");
+    if (confirm) {
+      PlaygroundAPI.deletePlayground(this.state.playground.id)
+        .then(() => {
+          this.setState({
+            redirect: true
+          });
+        })
+        .catch(err => console.log(err));
+    }
+  }
+
   displayFavoriteIcon = (classes) => {
     if (this.state.favorited) {
       return <Favorite className={classes.topIcon} />;
@@ -203,7 +220,14 @@ class Playground extends Component {
   }
 
   render() {
-    if (this.state.playground === 0) {
+    if (this.state.redirect) {
+      // redirection to home page
+      return (
+        <React.Fragment>
+          <Redirect to="/" />
+        </React.Fragment>
+      );
+    } else if (this.state.playground === 0) {
       return (<div>Loading mon petit pote</div>)
     } else if (!this.state.playground) {
       return (
@@ -213,7 +237,7 @@ class Playground extends Component {
       );
     } else {
 
-      const { classes, reportedComment } = this.props;
+      const { classes } = this.props;
 
       let playgroundImg = this.state.playground.image ? this.state.playground.image : defaultPlayground;
       return (
@@ -237,19 +261,29 @@ class Playground extends Component {
                     </Typography>
 
                     {/** available only if authenticated */}
-                    {this.state.loggedIn &&
+                    {AuthService.isUser() &&
                       <React.Fragment>
                         {/* Favorite a card */}
                         <CardActions className={classes.favorite} title="Ajouter ce playground à vos favoris">
-                          <IconButton color="primary" className={classes.favorite} aria-label="Ajouter aux favoris" onClick={this.toggleFavorite}>
+                          <IconButton color="primary" className={classes.favorite} onClick={this.toggleFavorite}>
                             {this.displayFavoriteIcon(classes)}
                           </IconButton>
                         </CardActions>
 
                         {/* Report a playground */}
-                        <CardActions className={classes.report} title="Signaler un playground">
-                          <IconButton color="primary" aria-label="Ajouter aux favoris" onClick={this.toggleReportPlayground}>
+                        <CardActions className={classes.topRightIcon} title="Signaler un playground">
+                          <IconButton color="primary" onClick={this.toggleReportPlayground}>
                             <Flag className={classes.topIcon} />
+                          </IconButton>
+                        </CardActions>
+                      </React.Fragment>
+                    }
+                    {AuthService.isAdmin() &&
+                      <React.Fragment>
+                        {/* Report a playground */}
+                        <CardActions className={classes.topRightIcon} title="Supprimer un playground">
+                          <IconButton color="primary" onClick={this.deletePlayground}>
+                            <Delete className={classes.topIcon} />
                           </IconButton>
                         </CardActions>
                       </React.Fragment>
@@ -285,7 +319,7 @@ class Playground extends Component {
                 {this.state.playground.timetable &&
                   <div id="timetable-section">
                     <Divider className={classes.divider} variant="fullWidth" />
-                    <div className={classes.sectionTitle}><h5>⏰ Horaires</h5></div>
+                    <div className={classes.sectionTitle}><h5><span aria-label="clock" role="img">⏰</span> Horaires</h5></div>
                     <div className={classes.timetable}>
                       <Timetable timetable={this.state.playground.timetable} />
                     </div>
