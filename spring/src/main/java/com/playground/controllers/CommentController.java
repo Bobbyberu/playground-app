@@ -126,7 +126,6 @@ public class CommentController {
     /**
      * [DELETE] Delete a comment
      *
-     * @param playgroundId playgroundId
      * @param commentId int
      *
      * @return ResponseEntity
@@ -134,15 +133,10 @@ public class CommentController {
      * @throws ResourceNotFoundException Playground not found
      * @throws ResourceNotFoundException Comment not found
      */
-    @DeleteMapping("/playgrounds/{playgroundId}/comments/{commentId}")
-    public ResponseEntity deleteComment(@PathVariable("playgroundId") int playgroundId, @PathVariable("commentId") int commentId) throws ResourceNotFoundException {
-        Playground playground = playgroundService.getPlayground(playgroundId);
+    @DeleteMapping("/comments/{commentId}")
+    public ResponseEntity deleteComment(@PathVariable("commentId") int commentId) throws ResourceNotFoundException {
 
-        if (playground == null) {
-            throw new ResourceNotFoundException("Playground with id " + playgroundId + " not found");
-        }
-
-        Comment currentComment = commentService.getCommentByPlayground(playground, commentId);
+        Comment currentComment = commentService.getComment(commentId);
 
         if (currentComment == null) {
             throw new ResourceNotFoundException("Comment with id " + commentId + " not found for this playground");

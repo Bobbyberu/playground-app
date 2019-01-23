@@ -23,6 +23,7 @@ import grey from '@material-ui/core/colors/grey';
 import defaultPlayground from '../../assets/img/default_playground.png';
 import PlaygroundAPI from '../../services/playground-api';
 import AuthService from '../../services/auth';
+import Delete from '@material-ui/icons/Delete';
 
 // Override de certains éléments de la card
 const theme = createMuiTheme({
@@ -123,7 +124,7 @@ class PlaygroundDetails extends React.Component {
   }
 
   componentDidMount() {
-    if (AuthService.loggedIn()) {
+    if (AuthService.isUser()) {
       let user = AuthService.getUser();
 
       PlaygroundAPI.isFavorite(user.id, this.props.playground.id)
@@ -150,6 +151,15 @@ class PlaygroundDetails extends React.Component {
           favorited: !this.state.favorited
         });
       });
+  }
+
+  deletePlayground = () => {
+    let confirm = window.confirm("Voulez-vous vraiment supprimer ce playground ?");
+    if (confirm) {
+      PlaygroundAPI.deletePlayground(this.props.playground.id)
+        .then(() => window.location.reload())
+        .catch(err => console.log(err));
+    }
   }
 
   displayFavoriteIcon() {
@@ -212,9 +222,18 @@ class PlaygroundDetails extends React.Component {
                   Détails
                 </Button>
               </Link>
-              {AuthService.loggedIn() &&
+              {AuthService.isUser() &&
                 <IconButton aria-label="Ajouter aux favoris" color="primary" onClick={() => this.toggleFavorite()}>
                   {this.displayFavoriteIcon()}
+                </IconButton>
+              }
+              {AuthService.isAdmin() &&
+                <IconButton title="Supprimer le playground"
+                  aria-label="Supprimer le playground"
+                  color="primary"
+                  onClick={this.deletePlayground}
+                >
+                  <Delete />
                 </IconButton>
               }
             </CardActions>

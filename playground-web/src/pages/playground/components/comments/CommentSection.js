@@ -37,8 +37,7 @@ class CommentSection extends React.Component {
         super(props);
 
         this.state = ({
-            comments: 0,
-            loggedIn: false
+            comments: 0
         })
         this.toggleModal = this.toggleModal.bind(this);
     }
@@ -47,8 +46,7 @@ class CommentSection extends React.Component {
         PlaygroundAPI.getAllComments(this.props.playgroundId)
             .then(response => {
                 this.setState({
-                    comments: response,
-                    loggedIn: AuthService.loggedIn()
+                    comments: response
                 });
             })
             .catch(err => console.log(err));
@@ -69,7 +67,7 @@ class CommentSection extends React.Component {
         } else {
             commentsDisplay = comments.map(comment => (
                 <div className={classes.comment + ' col-6'} key={comment.id}>
-                    <Comment comment={comment} canReport={this.state.loggedIn} />
+                    <Comment comment={comment} />
                 </div>
             ));
         }
@@ -78,11 +76,11 @@ class CommentSection extends React.Component {
             <div id="comment-section">
                 <div className={classes.topRow + ' row col-12 justify-content-between'}>
                     <div className={classes.sectionTitle}><h5>📝 Avis</h5></div>
-                    {this.state.loggedIn &&
+                    {AuthService.isUser() &&
                         <div>
                             <Fab variant="extended" color="primary" onClick={this.toggleModal}>
                                 <AddComment className={classes.addIcon} />Rédiger un avis
-                        </Fab>
+                            </Fab>
                         </div>
                     }
                 </div>
