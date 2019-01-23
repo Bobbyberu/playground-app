@@ -42,6 +42,8 @@ public class User implements UserDetails {
     private boolean enabled;
     private boolean archived;
     private boolean banned;
+    @ManyToOne
+    private Sport playing;
 
     public User() {
     }
@@ -187,5 +189,13 @@ public class User implements UserDetails {
 
     public void setBanned(boolean banned) {
         this.banned = banned;
+    }
+
+    public Sport getPlaying() {
+        return playing;
+    }
+
+    public void setPlaying(Sport playing) {
+        this.playing = playing;
     }
 }
