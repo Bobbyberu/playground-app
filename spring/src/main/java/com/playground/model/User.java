@@ -35,7 +35,6 @@ public class User implements UserDetails {
     @ManyToMany
     private Set<Sport> favouriteSports;
     @ManyToMany
-    @JsonIgnore
     private Set<Playground> favouritePlaygrounds;
     private String city;
     @ManyToOne

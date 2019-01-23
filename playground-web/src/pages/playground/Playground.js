@@ -27,7 +27,6 @@ import ReportPlaygroundModal from './components/ReportPlaygroundModal';
 import StarRating from './components/StarRating';
 import Timetable from './components/Timetable';
 
-import './playground.css';
 import defaultPlayground from '../../assets/img/default_playground.png';
 import Delete from '@material-ui/icons/Delete';
 import Favorite from '@material-ui/icons/Favorite';

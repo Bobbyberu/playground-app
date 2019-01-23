@@ -202,6 +202,46 @@ class API {
     })
       .catch(err => console.log(err));
   }
+
+  getAllPlaygroundReports() {
+    return axios({
+      method: 'get',
+      url: api + 'reportPlaygrounds',
+      headers: { 'Authorization': AuthService.getToken() }
+    })
+      .then(response => response.data)
+      .catch(err => console.log(err));
+  }
+
+  deletePlaygroundReport(reportId) {
+    return axios({
+      method: 'delete',
+      url: api + 'reportPlaygrounds/' + reportId,
+      headers: { 'Authorization': AuthService.getToken() }
+    })
+      .catch(err => {
+        console.log(err);
+        return Promise.reject("Could not delete report");
+      });
+  }
+
+  getAllCommentReports() {
+    return axios({
+      method: 'get',
+      url: api + 'reportComments',
+      headers: { 'Authorization': AuthService.getToken() }
+    })
+      .then(response => response.data)
+      .catch(err => console.log(err));
+  }
+
+  deleteCommentReport(reportId) {
+    return axios({
+      method: 'delete',
+      url: api + 'reportComments/' + reportId,
+      headers: { 'Authorization': AuthService.getToken() }
+    })
+  }
 };
 
 var PlaygroundAPI = new API();

@@ -6,7 +6,7 @@ Back to [README.md](../README.md)
 - [[GET] /api/comments/\{commentId\}/reportComments/\{reportCommentId\}](#2)
 - [[POST] /api/comments/\{commentId\}/reportComments](#3)
 - [[PUT] /api/comments/\{commentId\}/reportComments/\{reportCommentId\}](#4)
-- [[DELETE] /api/comments/\{commentId\}/reportComments/\{reportCommentId\}](#5)
+- [[DELETE] /api/reportComments/\{reportCommentId\}](#5)
 
 ___
 
@@ -73,13 +73,12 @@ Update a reportComment
 
 ___
 
-## [DELETE] /api/comments/\{commentId\}/reportComments/\{reportCommentId\} {#5}
+## [DELETE] /api/reportComments/\{reportCommentId\} {#5}
 
 Delete a reportComment
 
 ### Parameters
 
-- *\{commentId\} :* integer
 - *\{reportCommentId\} :* integer
 
 ### Response (HTTP)
