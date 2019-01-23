@@ -1,5 +1,6 @@
 import 'package:Playground/entities/Playground.dart';
 import 'package:Playground/pages/PlaygroundDetails.dart';
+import 'package:Playground/services/PlaygroundService.dart';
 import 'package:flutter/material.dart';
 
 class PlaygroundCard extends StatelessWidget {
@@ -24,7 +25,7 @@ class PlaygroundCard extends StatelessWidget {
               height: 100,
               width: MediaQuery.of(context).size.width,
               child: FadeInImage(
-                image: (playground.imgPath != null) ? NetworkImage(playground.imgPath) : AssetImage("images/default_playground.png"),
+                image: (PlaygroundService.getPlaygroundImageUrl(playground) != null) ? NetworkImage(PlaygroundService.getPlaygroundImageUrl(playground)) : AssetImage("images/default_playground.png"),
                 fit: BoxFit.cover,
                 placeholder: AssetImage("images/playground_placeholder.png"),
                 height: 100.0,
@@ -46,7 +47,8 @@ class PlaygroundCard extends StatelessWidget {
                               fontWeight: FontWeight.bold
                           ),
                         ),
-                        new Text(playground.address + " " + playground.city,
+                        new Text(playground.address,
+                          overflow: TextOverflow.fade,
                           style: new TextStyle(
                               color: Colors.grey[500]
                           ),

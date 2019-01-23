@@ -7,7 +7,7 @@ class ReportPlaygroundController extends CommonController {
   static const String route = CommonController.baseUrl + "reportPlaygrounds/";
 
   Future postSignalPlayground(ReportPlayground signal) {
-    return post("/playgrounds/" + signal.playground.toString() + "/reportPlaygrounds", signal.toJson());
+    return post(CommonController.baseUrl + "playgrounds/" + signal.playground.id.toString() + "/reportPlaygrounds", signal.toJson());
   }
 
 }

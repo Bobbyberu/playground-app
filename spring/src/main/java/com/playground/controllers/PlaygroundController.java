@@ -236,7 +236,7 @@ public class PlaygroundController {
      *
      * @return image
      */
-    @GetMapping(value = "/{playgroundId}/image", produces = "image/*")
+    @GetMapping(value = "/{playgroundId}/image", produces = "image/png")
     @ResponseBody
     public ResponseEntity<byte[]> getPlaygroundImage(@PathVariable int playgroundId) {
         try {

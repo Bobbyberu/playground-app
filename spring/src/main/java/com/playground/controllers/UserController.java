@@ -305,7 +305,7 @@ public class UserController {
      * @param userMail
      * @return image
      */
-    @GetMapping(value = "{userMail}/image", produces = "image/*")
+    @GetMapping(value = "{userMail}/image", produces = "image/png")
     @ResponseBody
     public ResponseEntity<byte[]> getUserImage(@PathVariable String userMail) {
         try {
@@ -353,7 +353,6 @@ public class UserController {
      */
     @PostMapping("/image")
     public ResponseEntity<?> handleUserImageUpload(HttpServletRequest request, @RequestBody MultipartFile file) {
-
         String token = request.getHeader("authorization");
 
         // get user mail from token

@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:Playground/controllers/CommonController.dart';
 import 'package:Playground/services/SessionManager.dart';
 import 'package:Playground/entities/User.dart';
@@ -6,6 +8,11 @@ import 'package:Playground/entities/User.dart';
 class UserController extends CommonController {
 
   static const String route = CommonController.baseUrl + "users/";
+
+  Future postImage(File file) {
+    Uri url = Uri.http(CommonController.domain, "/api/users/image");
+    return postFile(url, file);
+  }
 
   Future putUser(User user) {
     return put(route +  SessionManager.getInstance().getUser().id.toString(), user.toJson());

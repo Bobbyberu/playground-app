@@ -3,14 +3,12 @@ import 'package:Playground/validators/EmailValidator.dart';
 import 'package:Playground/widgets/style/PlaygroundLoginTextFieldStyle.dart';
 import 'package:flutter/material.dart';
 
-/**
- * Widget page for login.
- * First page the user should see if not connected
- * Simple form email/password to authenticate in the application
- */
+///
+/// Widget page for login.
+///First page the user should see if not connected
+///Simple form email/password to authenticate in the application
+///
 class LoginPage extends StatefulWidget {
-
-  //TODO check if user already connected ==> redirect to /home
 
   @override
   State<StatefulWidget> createState() => new LoginPageState();

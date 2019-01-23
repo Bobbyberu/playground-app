@@ -25,7 +25,7 @@ class CommentCard extends StatelessWidget {
               children: <Widget>[
                 new Row(
                   children: <Widget>[
-                    new UserAvatarCircle(size: 50),
+                    new UserAvatarCircle(size: 50, user: comment.author),
                     new Padding(
                       padding: EdgeInsets.only(left: 8),
                       child: new Text(comment.author.username, style: new TextStyle(fontWeight: FontWeight.bold))

@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:Playground/controllers/CommonController.dart';
 import 'package:Playground/entities/Playground.dart';
 import 'dart:convert';
@@ -26,6 +28,11 @@ class PlaygroundController extends CommonController{
 
   Future postPlayground(Playground playground) async {
     return post(route, playground.toJson());
+  }
+
+  Future postImage(int playgroundId, File file) {
+    Uri url = Uri.http(CommonController.domain, "/api/playgrounds/" + playgroundId.toString() + "/image");
+    return postFile(url, file);
   }
 
 }

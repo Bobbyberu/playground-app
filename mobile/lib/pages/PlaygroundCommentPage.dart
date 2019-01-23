@@ -24,8 +24,11 @@ class PlaygroundCommentPageState extends State<PlaygroundCommentPage> {
   CommentService commentService = new CommentService();
   List<Comment> comments;
 
+  bool _isLoading;
+
   @override
   void initState() {
+    _isLoading = true;
     comments = new List();
     loadComments();
     super.initState();
@@ -35,6 +38,7 @@ class PlaygroundCommentPageState extends State<PlaygroundCommentPage> {
     await commentService.getCommentsOfPlayground(widget.playground.id).then((response){
       setState(() {
         comments = response;
+        _isLoading = false;
       });
     });
   }
@@ -81,18 +85,30 @@ class PlaygroundCommentPageState extends State<PlaygroundCommentPage> {
 
                   child: new Padding(
                     padding: EdgeInsets.all(12),
-                    child: (comments.isEmpty ) ?
-                    new Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        new Padding(padding: EdgeInsets.all(12), child: new Text("Aucun commentaire disponible"))
-                      ],
-                    ) :
-                    new ListView(
-                      scrollDirection: Axis.vertical,
-                      children: commentItems,
-                    ),
+                    child:
+                    (_isLoading) ?
+                      new Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          new CircularProgressIndicator(
+                            valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                          )
+                        ],
+                      )
+                      :
+                      (comments.isEmpty) ?
+                      new Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          new Padding(padding: EdgeInsets.all(12), child: new Text("Aucun commentaire disponible"))
+                        ],
+                      ) :
+                      new ListView(
+                        scrollDirection: Axis.vertical,
+                        children: commentItems,
+                      ),
                   )
 
                 ),

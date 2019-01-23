@@ -4,10 +4,12 @@ import 'dart:convert';
 import 'package:Playground/services/AuthService.dart';
 import 'package:Playground/services/TokenManager.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 class CommonController {
 
   static const String baseUrl = "http://localhost:8080/api/";
+  static const String domain = "localhost:8080";
 
   Future<Map<String, String>> _getHeaders() async{
     String token = await TokenManager.getInstance().getToken();
@@ -45,6 +47,24 @@ class CommonController {
     ).whenComplete(client.close);
   }
 
+  Future<http.StreamedResponse> postFile(Uri url, File file) async {
+    print("POST File " + url.toString());
+
+    var request = new http.MultipartRequest("POST", url);
+    http.MultipartFile fileToUpload = await http.MultipartFile.fromPath(
+      'file',
+      file.path,
+      contentType: new MediaType('image', '*'),
+    );
+
+    var fileHeaders = await _getHeaders();
+    fileHeaders.remove("Content-Type");
+    request.headers["Authorization"] = fileHeaders["Authorization"];
+
+    request.files.add(fileToUpload);
+    return request.send();
+  }
+
   Future put(String url, Map jsonData) async {
     print("PUT " + url);
     var client = new http.Client();
@@ -72,6 +92,7 @@ class CommonController {
   void printResponse(http.Response response) {
     print("==== Response " + this.runtimeType.toString());
     print(response.statusCode.toString() + " " + response.reasonPhrase);
+    print(response.reasonPhrase);
     print(response.body);
   }
 }
