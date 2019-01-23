@@ -180,12 +180,11 @@ public class CommentControllerTest {
 
 
     @Test
-    public void testDeleteCommentWithExistingPlaygroundAndExistingIdExpectNoContent() throws Exception {
-        Mockito.when(playgroundService.getPlayground(Mockito.anyInt())).thenReturn(mockPlayground);
-        Mockito.when(commentService.getCommentByPlayground(Mockito.any(Playground.class),Mockito.anyInt())).thenReturn(mockComment);
+    public void testDeleteCommentWithExistingIdExpectNoContent() throws Exception {
+        Mockito.when(commentService.getComment(Mockito.anyInt())).thenReturn(mockComment);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .delete("/playgrounds/0/comments/0")
+                .delete("/comments/0")
                 .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
@@ -194,32 +193,13 @@ public class CommentControllerTest {
     }
 
     @Test
-    public void testDeleteCommentWithNonExistingPlaygroundExpectNotFound() throws Exception {
-        int id = 2;
-
-        Mockito.when(playgroundService.getPlayground(Mockito.anyInt())).thenReturn(null);
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .delete("/playgrounds/" + id + "/comments/0")
-                .accept(MediaType.APPLICATION_JSON);
-
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-
-        System.out.println(result.getResolvedException().getMessage());
-
-        assertEquals(HttpStatus.NOT_FOUND.value(), result.getResponse().getStatus());
-        assertEquals("Playground with id "+ id +" not found", result.getResolvedException().getMessage());
-    }
-
-    @Test
     public void testDeleteCommentWithExistingPlaygroundAndNonExistingIdExpectNotFound() throws Exception {
         int id = 2;
 
-        Mockito.when(playgroundService.getPlayground(Mockito.anyInt())).thenReturn(mockPlayground);
-        Mockito.when(commentService.getCommentByPlayground(Mockito.any(Playground.class),Mockito.anyInt())).thenReturn(null);
+        Mockito.when(commentService.getComment(Mockito.anyInt())).thenReturn(null);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .delete("/playgrounds/0/comments/" + id)
+                .delete("/comments/" + id)
                 .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
