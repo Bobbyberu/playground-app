@@ -45,7 +45,7 @@ public class CommentService implements ICommentService {
 
     @Override
     public List<Comment> getCommentsByPlayground(Playground playground) {
-        return commentRepository.getByPlayground(playground);
+        return commentRepository.getCommentsByPlayground(playground);
     }
 
     @Override
