@@ -1,6 +1,7 @@
 package com.playground.service.interfaces;
 
 import com.playground.model.Playground;
+import com.playground.model.Sport;
 import com.playground.model.User;
 
 import java.util.List;
@@ -52,7 +53,7 @@ public interface IPlaygroundService {
      * @param user
      * @return
      */
-    Playground addPlayerToPlayground(Playground playground, User user);
+    Playground addPlayerToPlayground(Playground playground, User user, Sport sport);
 
     /**
      * Remove a player from the playground
@@ -62,6 +63,14 @@ public interface IPlaygroundService {
      * @return
      */
     Playground removePlayerFromPlayground(Playground playground, User user);
+
+    /**
+     * Get all the user playing on the playground
+     *
+     * @param playground
+     * @return
+     */
+    List<User> getPlayersOnPlayground(Playground playground);
 
     /**
      * Delete a playground

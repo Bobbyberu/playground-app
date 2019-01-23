@@ -56,7 +56,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // Require admin rights
                 .antMatchers(HttpMethod.DELETE, "/playgrounds/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT, "/playground/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/reportPlaygrounds").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/reportComments").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/playgrounds/**/comments/**").hasRole("ADMIN")
