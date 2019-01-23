@@ -1,7 +1,7 @@
 package com.playground.controllers;
 
-import com.playground.model.Sport;
-import com.playground.service.SportService;
+import com.playground.model.Role;
+import com.playground.service.RoleService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -23,42 +23,42 @@ import java.util.Arrays;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(value = SportController.class, secure = false)
-public class SportControllerTest {
+@WebMvcTest(value = RoleController.class, secure = false)
+public class RoleControllerTest {
 
     @Autowired
-    private SportController sportController;
+    private RoleController roleController;
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private SportService sportService;
+    private RoleService roleService;
 
-    private Sport mockSport = new Sport("Badminton", "\uD83C\uDFF8");
+    private Role mockRole = new Role("ROLE_TEST");
 
     @Test
-    public void testGetSportsExpectOk() throws Exception {
-        Mockito.when(sportService.getSports()).thenReturn(Arrays.asList(mockSport));
+    public void testGetRolesExpectOk() throws Exception {
+        Mockito.when(roleService.getRoles()).thenReturn(Arrays.asList(mockRole));
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .get("/sports")
+                .get("/roles")
                 .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
         System.out.println(result.getResponse().getContentAsString());
 
-        String expected = "[{\"id\":0,\"name\":\"Badminton\", \"symbol\":\"\uD83C\uDFF8\"}]";
+        String expected = "[{\"id\":0,\"name\":\"ROLE_TEST\",\"authority\":\"ROLE_TEST\"}]";
 
         JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
     }
 
     @Test
-    public void testGetSportWithExistingIdExpectOk() throws Exception {
-        Mockito.when(sportService.getSport(Mockito.anyInt())).thenReturn(mockSport);
+    public void testGetRoleWithExistingIdExpectOk() throws Exception {
+        Mockito.when(roleService.getRole(Mockito.anyInt())).thenReturn(mockRole);
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/sports/0").accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/roles/0").accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
@@ -66,18 +66,18 @@ public class SportControllerTest {
 
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
 
-        String expected = "{\"id\":0,\"name\":\"Badminton\", \"symbol\":\"\uD83C\uDFF8\"}";
+        String expected = "{\"id\":0,\"name\":\"ROLE_TEST\", \"authority\":\"ROLE_TEST\"}";
 
         JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
     }
 
     @Test
-    public void testGetSportWithNonExistingIdExpectNoFound() throws Exception {
+    public void testGetRoleWithNonExistingIdExpectNoFound() throws Exception {
         int id = 2;
 
-        Mockito.when(sportService.getSport(Mockito.anyInt())).thenReturn(null);
+        Mockito.when(roleService.getRole(Mockito.anyInt())).thenReturn(null);
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/sports/" + id).accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/roles/" + id).accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
@@ -86,19 +86,19 @@ public class SportControllerTest {
         System.out.println(result.getResolvedException().getMessage());
 
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-        assertEquals("Sport with id "+ id +" not found", result.getResolvedException().getMessage());
+        assertEquals("Role with id "+ id +" not found", result.getResolvedException().getMessage());
     }
 
     @Test
-    public void testCreateSportExpectCreated() throws Exception {
-        Sport mockSport = new Sport("Sport","Symbol");
+    public void testCreateRoleExpectCreated() throws Exception {
+        Role mockRole = new Role("Role");
 
-        Mockito.when(sportService.createSport(Mockito.any(Sport.class))).thenReturn(mockSport);
+        Mockito.when(roleService.createRole(Mockito.any(Role.class))).thenReturn(mockRole);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .post("/sports")
+                .post("/roles")
                 .accept(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"Test\",\"symbol\":\"test\"}")
+                .content("{\"name\":\"Role\"}")
                 .contentType(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
@@ -109,23 +109,23 @@ public class SportControllerTest {
 
         assertEquals(HttpStatus.CREATED.value(), response.getStatus());
 
-        String expected = "{\"id\":0,\"name\":\"Sport\", \"symbol\":\"Symbol\"}";
+        String expected = "{\"id\":0,\"name\":\"Role\", \"authority\":\"Role\"}";
 
         JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
     }
 
     @Test
-    public void testUpdateSportWithExistingIdExpectOk() throws Exception {
-        Sport newMockSport = new Sport(mockSport.getName(), "Change");
-        newMockSport.setId(mockSport.getId());
+    public void testUpdateRoleWithExistingIdExpectOk() throws Exception {
+        Role newMockRole = new Role("ROLE_CHANGE");
+        newMockRole.setId(mockRole.getId());
 
-        Mockito.when(sportService.getSport(Mockito.anyInt())).thenReturn(mockSport);
-        Mockito.when(sportService.updateSport(Mockito.anyInt(), Mockito.any(Sport.class))).thenReturn(newMockSport);
+        Mockito.when(roleService.getRole(Mockito.anyInt())).thenReturn(mockRole);
+        Mockito.when(roleService.updateRole(Mockito.anyInt(), Mockito.any(Role.class))).thenReturn(newMockRole);
 
-        String content = "{\"name\":\"Badminton\",\"symbol\":\"Change\"}";
+        String content = "{\"name\":\"ROLE_CHANGE\"}";
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .put("/sports/" + mockSport.getId())
+                .put("/roles/" + mockRole.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(content)
@@ -139,21 +139,21 @@ public class SportControllerTest {
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
 
-        String expected = "{\"id\":0,\"name\":\"Badminton\", \"symbol\":\"Change\"}";
+        String expected = "{\"id\":0,\"name\":\"ROLE_CHANGE\", \"authority\":\"ROLE_CHANGE\"}";
 
         JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
     }
 
     @Test
-    public void testUpdateSportWithNonExistingIdExpectNotFound() throws Exception {
+    public void testUpdateRoleWithNonExistingIdExpectNotFound() throws Exception {
         int id = 2;
 
-        Mockito.when(sportService.getSport(Mockito.anyInt())).thenReturn(null);
+        Mockito.when(roleService.getRole(Mockito.anyInt())).thenReturn(null);
 
-        String content = "{\"name\":\"Badminton\",\"symbol\":\"Change\"}";
+        String content = "{\"name\":\"ROLE\"}";
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .put("/sports/" + id)
+                .put("/roles/" + id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(content)
@@ -166,15 +166,15 @@ public class SportControllerTest {
         System.out.println(result.getResolvedException().getMessage());
 
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-        assertEquals("Sport with id "+ id +" not found", result.getResolvedException().getMessage());
+        assertEquals("Role with id "+ id +" not found", result.getResolvedException().getMessage());
     }
 
     @Test
-    public void testDeleteSportWithExpectingIdExpectNoContent() throws Exception {
-        Mockito.when(sportService.getSport(Mockito.anyInt())).thenReturn(mockSport);
+    public void testDeleteRoleWithExpectingIdExpectNoContent() throws Exception {
+        Mockito.when(roleService.getRole(Mockito.anyInt())).thenReturn(mockRole);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .delete("/sports/0")
+                .delete("/roles/0")
                 .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
@@ -183,13 +183,13 @@ public class SportControllerTest {
     }
 
     @Test
-    public void testDeleteSportWithNonExpectingIdExpectNotFound() throws Exception {
+    public void testDeleteRoleWithNonExpectingIdExpectNotFound() throws Exception {
         int id = 2;
 
-        Mockito.when(sportService.getSport(Mockito.anyInt())).thenReturn(null);
+        Mockito.when(roleService.getRole(Mockito.anyInt())).thenReturn(null);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .delete("/sports/" + id)
+                .delete("/roles/" + id)
                 .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
@@ -197,6 +197,6 @@ public class SportControllerTest {
         System.out.println(result.getResolvedException().getMessage());
 
         assertEquals(HttpStatus.NOT_FOUND.value(), result.getResponse().getStatus());
-        assertEquals("Sport with id "+ id +" not found", result.getResolvedException().getMessage());
+        assertEquals("Role with id "+ id +" not found", result.getResolvedException().getMessage());
     }
 }

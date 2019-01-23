@@ -20,8 +20,15 @@ public class Comment {
     private String comment;
     private double mark;
 
-    public Comment() {
+    public Comment(Playground playground, User author, String comment, double mark) {
+        this.playground = playground;
+        this.author = author;
+        this.archived = false;
+        this.comment = comment;
+        this.mark = mark;
     }
+
+    public Comment() {}
 
     public int getId() {
         return id;

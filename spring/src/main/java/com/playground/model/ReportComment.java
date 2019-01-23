@@ -18,8 +18,13 @@ public class ReportComment {
     private User author;
     private String description;
 
-    public ReportComment() {
+    public ReportComment(User author, Comment comment, String description) {
+        this.author = author;
+        this.comment = comment;
+        this.description = description;
     }
+
+    public ReportComment() {}
 
     public int getId() {
         return id;
