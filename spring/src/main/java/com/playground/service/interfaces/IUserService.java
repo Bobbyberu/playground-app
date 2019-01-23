@@ -76,7 +76,7 @@ public interface IUserService {
     /**
      * Ban a user and return it
      *
-     * @param id int
+     * @param user User
      *
      * @return User
      */

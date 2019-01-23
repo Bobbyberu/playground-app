@@ -38,18 +38,23 @@ public class UserController {
 
     private final StorageService storageService;
 
+    private final TokenAuthenticationService tokenAuthenticationService;
+
     /**
      * UserController Constructor
      *
      * @param userService       UserService
      * @param playgroundService PlaygroundService
      * @param storageService StorageService
+     * @param tokenAuthenticationService TokenAuthenticationService
      */
     @Autowired
-    public UserController(UserService userService, PlaygroundService playgroundService, StorageService storageService) {
+    public UserController(UserService userService, PlaygroundService playgroundService, StorageService storageService,
+                          TokenAuthenticationService tokenAuthenticationService) {
         this.userService = userService;
         this.playgroundService = playgroundService;
         this.storageService = storageService;
+        this.tokenAuthenticationService = tokenAuthenticationService;
     }
 
     /**
@@ -236,11 +241,18 @@ public class UserController {
      * @throws ResourceNotFoundException User not found
      */
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable("id") int id, @RequestBody User user) throws ResourceNotFoundException {
-        User currentUser = userService.getUser(id);
+    public ResponseEntity<User> updateUser(@PathVariable("id") int id, @RequestBody User user, @RequestHeader("Authorization") String authorization) throws ResourceNotFoundException {
 
-        if (currentUser == null) {
+        User currentUser = tokenAuthenticationService.getUser(authorization.replace("Bearer ",""));
+
+        User userToUpdate = userService.getUser(id);
+
+        if (userToUpdate == null) {
             throw new ResourceNotFoundException("User with id " + id + " not found");
+        }
+
+        if (currentUser.getId() != userToUpdate.getId()) {
+            return new ResponseEntity<>(user, HttpStatus.FORBIDDEN);
         }
 
         return new ResponseEntity<>(userService.updateUserProfile(id, currentUser, user), HttpStatus.OK);

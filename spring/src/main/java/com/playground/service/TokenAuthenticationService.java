@@ -38,13 +38,17 @@ public class TokenAuthenticationService {
         String token = request.getHeader(HEADER_STRING);
         if (token != null) {
             // parse the token.
-            String username = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token.replace(TOKEN_PREFIX, "")).getBody()
-                    .getSubject();
-            User user = userDetailsService.loadUserByUsername(username);
+            User user = getUser(token);
 
             return user != null ? new UsernamePasswordAuthenticationToken(user.getMail(), user.getPassword(), user.getAuthorities()) : null;
         }
         return null;
+    }
+
+    public User getUser(String token) {
+        String username = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token.replace(TOKEN_PREFIX, "")).getBody()
+                .getSubject();
+        return userDetailsService.loadUserByUsername(username);
     }
 
 }
