@@ -64,6 +64,7 @@ public class UserService implements IUserService {
         if (StringUtils.isEmpty(user.getMail())) {
             throw new RuntimeException("Mail is not valid");
         }
+        user.setEnabled(true);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setRole(roleRepository.findByName("ROLE_UNVERIFIED").get());
         user = userRepository.save(user);

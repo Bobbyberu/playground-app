@@ -247,7 +247,7 @@ public class UserController {
 
         User userToUpdate = userService.getUser(id);
 
-        if (currentUser == null) {
+        if (userToUpdate == null) {
             throw new ResourceNotFoundException("User with id " + id + " not found");
         }
 
