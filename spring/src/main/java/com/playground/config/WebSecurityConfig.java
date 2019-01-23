@@ -47,6 +47,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/schedules**").hasRole("USER")
                 .antMatchers(HttpMethod.POST, "/sessions**").hasRole("USER")
 
+                //Require user rights
+                .antMatchers(HttpMethod.PUT, "/playgrounds/**").hasRole("USER")
+                .antMatchers(HttpMethod.PUT, "/user/**").hasRole("USER")
+                .antMatchers(HttpMethod.PUT, "/playgrounds/**/comments**").hasRole("USER")
+                .antMatchers(HttpMethod.PUT, "/schedules/**").hasRole("USER")
+                .antMatchers(HttpMethod.PUT, "/sessions**").hasRole("USER")
+
                 // Require admin rights
                 .antMatchers(HttpMethod.DELETE, "/playgrounds/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT, "/playground/**").hasRole("ADMIN")
