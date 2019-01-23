@@ -19,8 +19,8 @@ class LocationService {
     await _controller.get(API_URL + args).then((response) {
       _controller.printResponse(response);
       if(response.statusCode != null && response.statusCode == 200) {
-        var data = json.decode(response.body);
-        if(data[0] != null && data[0]["lat"] != null && data[0]["lon"] != null) {
+        var data = json.decode(response.body) as List<dynamic>;
+        if(data[0] != null && data[0]["lat"] != null && data[0]["lon"] != null && data.length < 3) {
           double lat = double.parse(data[0]["lat"]);
           double lon = double.parse(data[0]["lon"]);
           coords = new LatLng(lat,lon);

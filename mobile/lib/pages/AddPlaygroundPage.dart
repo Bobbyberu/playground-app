@@ -195,14 +195,14 @@ class AddPlaygroundPageState extends State<AddPlaygroundPage> {
                         style: PlaygroundTextFieldStyle.getStyle(context),
                         decoration: PlaygroundTextFieldStyle.getDecoration(context, "24 Rue du plaisir"),
                         validator : (value) {
-                          print("value : " + value);
                           if(value.isEmpty) return "Le champ Adresse est obligatoire";
                         },
                         onSaved: (value) {
                           newPlayground.address = value.trim();
-                        }
+                        },
                     )
                 ),
+
               ],
             )
         )
@@ -367,7 +367,8 @@ class AddPlaygroundPageState extends State<AddPlaygroundPage> {
                       ),
                     ],
                   ),
-                )
+                ),
+
               ],
             )
         )
@@ -418,8 +419,11 @@ class AddPlaygroundPageState extends State<AddPlaygroundPage> {
       case 1: // ADRESSE
         if (_addressKey.currentState.validate()) {
           _addressKey.currentState.save();
+          setState(() {
+            newPlayground.latitude = null;
+            newPlayground.longitude = null;
+          });
           await LocationService.getCoordOfAddress(newPlayground.address).then((response) {
-            print(response);
             if (response == null) {
               PlaygroundDialog.showWarningDialog(context, "Validation de l'adresse", "L'adresse renseignée ne semble pas exister. Veuillez réessayer avec une adresse différente.", () {Navigator.of(context).pop();});
             } else {
