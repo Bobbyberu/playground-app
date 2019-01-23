@@ -3,10 +3,12 @@ package com.playground.service;
 import com.playground.model.Comment;
 import com.playground.model.Playground;
 import com.playground.repository.CommentRepository;
+import com.playground.repository.PlaygroundRepository;
 import com.playground.service.interfaces.ICommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,14 +21,18 @@ public class CommentService implements ICommentService {
     /** CommentRepository commentRepository */
     private final CommentRepository commentRepository;
 
+    /** CommentRepository commentRepository */
+    private final PlaygroundRepository playgroundRepository;
+
     /**
      * CommentService Constructor
      *
      * @param commentRepository CommentRepository
      */
     @Autowired
-    public CommentService(CommentRepository commentRepository) {
+    public CommentService(CommentRepository commentRepository, PlaygroundRepository playgroundRepository) {
         this.commentRepository = commentRepository;
+        this.playgroundRepository = playgroundRepository;
     }
 
     @Override
@@ -39,7 +45,7 @@ public class CommentService implements ICommentService {
 
     @Override
     public List<Comment> getCommentsByPlayground(Playground playground) {
-        return commentRepository.getByPlayground(playground);
+        return commentRepository.getCommentsByPlayground(playground);
     }
 
     @Override
@@ -54,7 +60,15 @@ public class CommentService implements ICommentService {
 
     @Override
     public Comment createComment(Playground playground, Comment comment) {
+
         comment.setPlayground(playground);
+        List<Comment> list = commentRepository.getCommentsByPlayground(playground);
+        double sum = 0;
+        for (Comment comm : list) {
+            sum = sum + comm.getMark();
+        }
+        playground.setAverageMark(Math.floor((sum + comment.getMark()) / (list.size()+1) * 100) / 100);
+        playgroundRepository.save(playground);
 
         return commentRepository.save(comment);
     }

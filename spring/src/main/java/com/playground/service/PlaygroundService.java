@@ -1,6 +1,7 @@
 package com.playground.service;
 
 import com.playground.model.Playground;
+import com.playground.model.User;
 import com.playground.repository.PlaygroundRepository;
 import com.playground.service.interfaces.IPlaygroundService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Class PlaygroundService
@@ -49,6 +51,22 @@ public class PlaygroundService implements IPlaygroundService {
     @Override
     public Playground updatePlayground(int id, Playground playground) {
         playground.setId(id);
+        return playgroundRepository.save(playground);
+    }
+
+    @Override
+    public Playground addPlayerToPlayground(Playground playground, User user) {
+        Set<User> players = playground.getPlayers();
+        players.add(user);
+        playground.setPlayers(players);
+        return playgroundRepository.save(playground);
+    }
+
+    @Override
+    public Playground removePlayerFromPlayground(Playground playground, User user) {
+        Set<User> players = playground.getPlayers();
+        players.remove(user);
+        playground.setPlayers(players);
         return playgroundRepository.save(playground);
     }
 

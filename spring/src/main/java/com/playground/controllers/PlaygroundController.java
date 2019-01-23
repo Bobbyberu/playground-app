@@ -1,7 +1,9 @@
 package com.playground.controllers;
 
 import com.playground.model.Playground;
+import com.playground.model.User;
 import com.playground.service.PlaygroundService;
+import com.playground.service.UserService;
 import com.playground.storage.StorageService;
 import com.playground.utils.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Class PlaygroundController
@@ -30,15 +33,18 @@ public class PlaygroundController {
 
     private final StorageService storageService;
 
+    private final UserService userService;
+
     /**
      * PlaygroundController Constructor
      *
      * @param playgroundService PlaygroundService
      */
     @Autowired
-    public PlaygroundController(PlaygroundService playgroundService, StorageService storageService) {
+    public PlaygroundController(PlaygroundService playgroundService, StorageService storageService, UserService userService) {
         this.playgroundService = playgroundService;
         this.storageService = storageService;
+        this.userService = userService;
     }
 
     /**
@@ -105,6 +111,56 @@ public class PlaygroundController {
     }
 
     /**
+     * [PUT] Add a player on the playground
+     *
+     * @param idPlayground int
+     * @param idUser Playground
+     *
+     * @return ResponseEntity
+     *
+     * @throws ResourceNotFoundException Playground not found
+     */
+    @PutMapping("/playground/{idPlayground}/player/{idUser}/add")
+    public ResponseEntity<Playground> addPlayerToPlayground(@PathVariable(value = "idPlayground") int idPlayground, @PathVariable(value = "idUser") int idUser) throws ResourceNotFoundException {
+        Playground currentPlayground = playgroundService.getPlayground(idPlayground);
+        if (currentPlayground == null) {
+            throw new ResourceNotFoundException("Playground with id " + idPlayground + " not found");
+        }
+
+        User user = userService.getUser(idUser);
+        if (user == null) {
+            throw new ResourceNotFoundException("User with id " + idUser + " not found");
+        }
+
+        return new ResponseEntity<>(playgroundService.addPlayerToPlayground(currentPlayground, user), HttpStatus.OK);
+    }
+
+    /**
+     * [PUT] Remove a player from the playground
+     *
+     * @param idPlayground int
+     * @param idUser Playground
+     *
+     * @return ResponseEntity
+     *
+     * @throws ResourceNotFoundException Playground not found
+     */
+    @PutMapping("/playground/{idPlayground}/player/{idUser}/remove")
+    public ResponseEntity<Playground> removePlayerFromPlayground(@PathVariable(value = "idPlayground") int idPlayground, @PathVariable(value = "idUser") int idUser) throws ResourceNotFoundException {
+        Playground playground = playgroundService.getPlayground(idPlayground);
+        if (playground == null) {
+            throw new ResourceNotFoundException("Playground with id " + idPlayground + " not found");
+        }
+
+        User user = userService.getUser(idUser);
+        if (user == null) {
+            throw new ResourceNotFoundException("User with id " + idUser + " not found");
+        }
+
+        return new ResponseEntity<>(playgroundService.removePlayerFromPlayground(playground, user), HttpStatus.OK);
+    }
+
+    /**
      * [DELETE] Delete a playground
      *
      * @param id int
@@ -141,7 +197,7 @@ public class PlaygroundController {
     /**
      * [GET] get image for corresponding playground
      *
-     * @param id of playground
+     * @param playgroundId id of playground
      *
      * @return image
      */

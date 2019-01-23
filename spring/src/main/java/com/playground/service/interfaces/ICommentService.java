@@ -46,7 +46,7 @@ public interface ICommentService {
     Comment getCommentByPlayground(Playground playground, int id);
 
     /**
-     * Create a comment and return it
+     * Create a comment, update average mark on playground and return it
      *
      * @param playground Playground
      * @param comment Comment
