@@ -185,7 +185,7 @@ public class PlaygroundController {
      *
      * @throws ResourceNotFoundException Playground not found
      */
-    @GetMapping("/{idPlayground}/users")
+    @GetMapping("/{idPlayground}/players")
     public ResponseEntity<List<User>> getPlayersOnPlayground(@PathVariable(value = "idPlayground") int idPlayground) throws ResourceNotFoundException {
         Playground playground = playgroundService.getPlayground(idPlayground);
         if (playground == null) {

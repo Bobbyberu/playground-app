@@ -14,7 +14,7 @@ Back to [README.md](../README.md)
 - [GET] /api/signalement/playgrounds
 - [PUT] /api/playgrounds/{idPlayground}/player/{idUser}/add (#9)
 - [PUT] /api/playgrounds/{idPlayground}/player/{idUser}/remove (#10)
-- [GET] /api/playgrounds/{idPlayground}/users (#11)
+- [GET] /api/playgrounds/{idPlayground}/players (#11)
 
 
 ## [GET] /api/playgrounds {#1}
@@ -134,7 +134,7 @@ Upload image for given playground
 
 ___
 
-## [PUT] /api/playground/{idPlayground}/player/{idUser}/add {#9}
+## [PUT] /api/playgrounds/{idPlayground}/player/{idUser}/add {#9}
 
 Add a user playing on the playground
 
@@ -149,7 +149,7 @@ Add a user playing on the playground
 
 ___
 
-## [PUT] /api/playground/{idPlayground}/player/{idUser}/remove {#10}
+## [PUT] /api/playgrounds/{idPlayground}/player/{idUser}/remove {#10}
 
 Remove the user playing on the playground
 
@@ -164,7 +164,7 @@ Remove the user playing on the playground
 
 ___
 
-## [GET] /api/playground/{idPlayground}/users {#11}
+## [GET] /api/playgrounds/{idPlayground}/players {#11}
 
 Get all the users playing on the selected playground
 
