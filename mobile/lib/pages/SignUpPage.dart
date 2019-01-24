@@ -30,6 +30,8 @@ class SignUpPageState extends State<SignUpPage> {
   bool _cguAccepted;
   String _cguAcceptMessage;
 
+  bool _isLoading;
+
   AuthService _authService;
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
@@ -42,6 +44,8 @@ class SignUpPageState extends State<SignUpPage> {
     _mdpConfirmation = "";
     _cguAccepted = false;
     _cguAcceptMessage = "";
+
+    _isLoading = false;
 
     _authService = new AuthService();
     super.initState();
@@ -64,8 +68,9 @@ class SignUpPageState extends State<SignUpPage> {
           birthDate: _birthDate
         );
 
+        setState(() { _isLoading = true; });
         bool result = await _authService.signUp(newUser);
-
+        setState(() { _isLoading = false; });
         if (result) {
           PlaygroundDialog.showValidDialog(
               context,
@@ -266,7 +271,11 @@ class SignUpPageState extends State<SignUpPage> {
 
                     new Padding(
                       padding: EdgeInsets.only(top:18, bottom: 18, left:28, right: 28),
-                      child: new MaterialButton(
+                      child: (_isLoading) ?
+                      new CircularProgressIndicator(
+                        valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                      ) :
+                      new MaterialButton(
                           child: new Text(
                               "Valider",
                               style: new TextStyle(

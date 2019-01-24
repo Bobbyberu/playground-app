@@ -6,6 +6,7 @@ import 'package:Playground/controllers/PlaygroundController.dart';
 import 'package:Playground/entities/Comment.dart';
 import 'package:Playground/entities/Playground.dart';
 import 'package:Playground/entities/Sport.dart';
+import 'package:Playground/entities/User.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -83,6 +84,50 @@ class PlaygroundService {
     });
 
     return playgrounds;
+  }
+
+  Future<List<User>> getPlayingUser(Playground playground) async{
+    List<User> players = new List();
+
+    await _controller.getPlayersOfPlayground(playground.id).then((response){
+      if (response.statusCode != null && response.statusCode == 200) {
+        print(response.body);
+        List<dynamic> playersJson = json.decode(response.body);
+
+        playersJson.forEach((u) {
+          User user = User.fromJson(u as Map<String, dynamic>);
+          players.add(user);
+        });
+      }
+    });
+
+    return players;
+  }
+
+  Future<bool> addPlayerInPlayground(Playground playground, User player, Sport sport) async {
+    bool success = false;
+
+    await _controller.putPlayerInPlayground(playground.id, player.id, sport.id).then((response) {
+      _controller.printResponse(response);
+      success = response.statusCode == 200;
+    }).catchError((error){
+      _controller.printError(error);
+    });
+
+    return success;
+  }
+
+  Future<bool> addPlayerOutPlayground(Playground playground, User player) async {
+    bool success = false;
+
+    await _controller.putPlayerOutPlayground(playground.id, player.id).then((response) {
+      _controller.printResponse(response);
+      success = response.statusCode == 200;
+    }).catchError((error){
+      _controller.printError(error);
+    });
+
+    return success;
   }
 
 }
