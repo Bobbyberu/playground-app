@@ -14,4 +14,4 @@ password: test
 
 ### Admin account
 admin: admin@test.fr
-password: test
+password: Password123*
