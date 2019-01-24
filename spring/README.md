@@ -19,7 +19,7 @@ spring.datasource.password=[database password]
 playground.img.playground=[path to save playground image]
 playground.img.user=[path to save user avatar]
 ```
-
+Try to use the actual database. The databse is running on a Rasp. But if it doesn't work tou can use a local database
 If you use a local database, import `playground.sql` (/playground-app/tree/develop/spring/src/main/resources)
 
 # Run Project
