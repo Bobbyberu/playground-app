@@ -37,8 +37,6 @@ public class PlaygroundController {
 
     private final CommentService commentService;
 
-    private final ReportCommentService reportCommentService;
-
     private final ReportPlaygroundService reportPlaygroundService;
 
     /**
@@ -49,14 +47,12 @@ public class PlaygroundController {
     @Autowired
     public PlaygroundController(PlaygroundService playgroundService, StorageService storageService,
                                 UserService userService, SportService sportService, CommentService commentService,
-                                ReportCommentService reportCommentService,
                                 ReportPlaygroundService reportPlaygroundService) {
         this.playgroundService = playgroundService;
         this.storageService = storageService;
         this.userService = userService;
         this.sportService = sportService;
         this.commentService = commentService;
-        this.reportCommentService = reportCommentService;
         this.reportPlaygroundService = reportPlaygroundService;
     }
 
@@ -220,13 +216,8 @@ public class PlaygroundController {
         }
 
         List<Comment> comments = commentService.getCommentsByPlayground(currentPlayground);
-        List<ReportComment> commentReports;
 
         for (Comment comment : comments) {
-            commentReports = reportCommentService.getReportCommentsByComment(comment);
-            for (ReportComment reportComment : commentReports) {
-                reportCommentService.deleteReportComment(reportComment);
-            }
             commentService.deleteComment(comment);
         }
 
