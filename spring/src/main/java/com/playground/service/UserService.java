@@ -79,7 +79,7 @@ public class UserService implements IUserService {
                 "\n" +
                 "Merci de vous etre enregistré sur Playground. Voici votre lien de vérification :\n" +
                 "\n" +
-                servletContext.getContextPath() + "/verification_token/" + verificationToken.getToken() + "\n" +
+                "http://localhost:8080" + servletContext.getContextPath() + "/verification_token/" + verificationToken.getToken() + "\n" +
                 "\n" +
                 "Amusez-vous bien!\n" +
                 "\n" +
