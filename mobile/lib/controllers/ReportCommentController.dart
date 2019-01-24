@@ -4,7 +4,7 @@ import 'package:Playground/entities/ReportComment.dart';
 
 class ReportCommentController extends CommonController {
 
-  static const String route = CommonController.baseUrl + "reportComments/";
+  static const String route = CommonController.baseUrl;
 
   Future postSignalComment(ReportComment signal) {
     return post(route + "comments/" + signal.comment.id.toString() + "/reportComments", signal.toJson());

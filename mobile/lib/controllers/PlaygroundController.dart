@@ -34,5 +34,16 @@ class PlaygroundController extends CommonController{
     Uri url = Uri.http(CommonController.domain, "/api/playgrounds/" + playgroundId.toString() + "/image");
     return postFile(url, file);
   }
+  
+  Future getPlayersOfPlayground(int playgroundId) {
+    return get(route + playgroundId.toString() + "/players");
+  }
 
+  Future putPlayerInPlayground(int playgroundId, int userId, int sportId) {
+    return put(route + playgroundId.toString() + "/player/" + userId.toString() + "/sport/" + sportId.toString() + "/add", {});
+  }
+
+  Future putPlayerOutPlayground(int playgroundId, int userId) {
+    return put(route + playgroundId.toString() + "/player/" + userId.toString() + "/remove", {});
+  }
 }

@@ -2,7 +2,6 @@ import 'package:Playground/entities/Playground.dart';
 import 'package:Playground/entities/Sport.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'User.g.dart';
 
 ///
 /// User entity class
@@ -20,16 +19,15 @@ class User {
   bool archived;
   bool banned;
 
-  Set<User> friends = new Set();
-  Set<Sport> favouriteSports = new Set();
+  Sport playing;
   Set<Playground> favouritePlaygrounds = new Set();
 
-  User({this.id, this.username, this.mail, this.birthDate, this.password, this.city, this.enabled, this.archived, this.banned, this.friends, this.favouriteSports, this.favouritePlaygrounds});
+  User({this.id, this.username, this.mail, this.birthDate, this.password, this.city, this.enabled, this.archived, this.banned, this.playing, this.favouritePlaygrounds});
 
   factory User.getDefault() {
     return new User(
       id: 0,
-      username: "Jean-Louis",
+      username: "",
       mail: "",
       birthDate: DateTime.now(),
       password: "",
@@ -37,13 +35,28 @@ class User {
       enabled: false,
       archived: false,
       banned: false,
+      playing: null,
       favouritePlaygrounds: new Set(),
-      favouriteSports: new Set(),
-      friends: new Set()
     );
   }
 
-  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+        id: json['id'] as int,
+        username: json['username'] as String,
+        mail: json['mail'] as String,
+        birthDate: DateTime.parse(json['birthDate'] as String),
+        password: json['password'] as String,
+        city: json['city'] as String,
+        enabled: json['enabled'] as bool,
+        archived: json['archived'] as bool,
+        banned: json['banned'] as bool,
+        playing: (json['playing'] != null) ? Sport.fromJson(json['playing'] as Map<String, dynamic>) : null,
+        favouritePlaygrounds: (json['favouritePlaygrounds'] == null) ? Set() : (json['favouritePlaygrounds'] as List)
+            .map((e) => Playground.fromJson(e as Map<String, dynamic>))
+            .toSet()
+    );
+  }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
     'id': this.id,
@@ -55,8 +68,7 @@ class User {
     'enabled': this.enabled,
     'archived': this.archived,
     'banned': this.banned,
-    'friends': (this.friends != null) ? this.friends.toList() : new List(),
-    'favouriteSports': (this.favouriteSports != null) ? this.favouriteSports.toList() : new List(),
+    'playing' : (this.playing == null) ? null : this.playing.toJson(),
     'favouritePlaygrounds': (this.favouritePlaygrounds != null) ? this.favouritePlaygrounds.toList() : new List()
   };
 }

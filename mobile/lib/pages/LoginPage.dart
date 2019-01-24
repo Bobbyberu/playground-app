@@ -21,6 +21,7 @@ class LoginPageState extends State<LoginPage> {
   String _password;
   String _errorMessage;
   AuthService _authService;
+  bool _isLoading;
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
   @override
@@ -29,13 +30,16 @@ class LoginPageState extends State<LoginPage> {
     _password = "";
     _errorMessage = "";
     _authService = new AuthService();
+    _isLoading = false;
     super.initState();
   }
 
   void validateForm() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
+      setState(() {_isLoading = true;});
       bool result = await _authService.login(_email, _password);
+      setState(() {_isLoading = false;});
       if (result) {
         Navigator.pushReplacementNamed(context, '/home');
       } else {
@@ -120,7 +124,11 @@ class LoginPageState extends State<LoginPage> {
 
             new Padding(
                 padding: EdgeInsets.only(top:18, bottom: 18, left:28, right: 28),
-                child: new MaterialButton(
+                child: (_isLoading) ?
+                new CircularProgressIndicator(
+                  valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColorLight),
+                ) :
+                new MaterialButton(
                     child: new Text(
                         "Se connecter",
                         style: new TextStyle(
