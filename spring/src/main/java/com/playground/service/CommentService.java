@@ -2,6 +2,7 @@ package com.playground.service;
 
 import com.playground.model.Comment;
 import com.playground.model.Playground;
+import com.playground.model.ReportComment;
 import com.playground.repository.CommentRepository;
 import com.playground.repository.PlaygroundRepository;
 import com.playground.service.interfaces.ICommentService;
@@ -24,15 +25,19 @@ public class CommentService implements ICommentService {
     /** CommentRepository commentRepository */
     private final PlaygroundRepository playgroundRepository;
 
+    private final ReportCommentService reportCommentService;
+
     /**
      * CommentService Constructor
      *
      * @param commentRepository CommentRepository
      */
     @Autowired
-    public CommentService(CommentRepository commentRepository, PlaygroundRepository playgroundRepository) {
+    public CommentService(CommentRepository commentRepository, PlaygroundRepository playgroundRepository,
+                          ReportCommentService reportCommentService) {
         this.commentRepository = commentRepository;
         this.playgroundRepository = playgroundRepository;
+        this.reportCommentService = reportCommentService;
     }
 
     @Override
@@ -81,6 +86,10 @@ public class CommentService implements ICommentService {
 
     @Override
     public void deleteComment(Comment comment) {
+        List<ReportComment> commentReports = reportCommentService.getReportCommentsByComment(comment);
+        for (ReportComment reportComment : commentReports) {
+            reportCommentService.deleteReportComment(reportComment);
+        }
         commentRepository.delete(comment);
     }
 
