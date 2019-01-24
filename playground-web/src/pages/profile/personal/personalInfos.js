@@ -23,7 +23,7 @@ class PersonalInfos extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            password: '******',
+            password: '*********',
         };
     }
 
@@ -62,7 +62,7 @@ class PersonalInfos extends React.Component {
                         <ListItem className={classes.item}>
                             <ListItemText
                                 primary={'Mot de passe'}
-                                secondary={this.props.password}
+                                secondary={this.state.password}
                             />
                             <ListItemSecondaryAction >
                                 <IconButton aria-label="Modifier" onClick={this.displayPasswordDialog}>

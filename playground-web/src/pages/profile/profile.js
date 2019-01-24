@@ -86,7 +86,6 @@ class Profile extends React.Component {
 
     async componentDidMount() {
         //Récuperer le mail du user connecté
-        let getToken = await this.authService.getToken();
         let token = await this.authService.decodeToken();
         this.setState({
             mail: token.sub
@@ -104,7 +103,6 @@ class Profile extends React.Component {
             })  
             .catch(err => console.log(err));
 
-        console.log(token)
     }
 
     render() {

@@ -29,21 +29,19 @@ function sumUp(props) {
   const { classes } = props;
   return (
     <Card className={classes.card}>
-      <CardActionArea>
-        <CardMedia
-          className={classes.media}
-          image={Avatar}
-          title="Avatar"
-        />
-        <CardContent classname={classes.container} >
-          <Typography gutterBottom variant="h6" component="h2">
-            {props.username}
-          </Typography>
-          <Typography >
-            {renderDate(props.birthDate)}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
+      <CardMedia
+        className={classes.media}
+        image={Avatar}
+        title="Avatar"
+      />
+      <CardContent classname={classes.container} >
+        <Typography gutterBottom variant="h6" component="h2">
+          {props.username}
+        </Typography>
+        <Typography >
+          {'Date de naissance : ' + renderDate(props.birthDate)}
+        </Typography>
+      </CardContent> 
     </Card>
   );
 }
