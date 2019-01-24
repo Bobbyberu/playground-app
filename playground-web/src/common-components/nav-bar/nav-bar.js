@@ -23,8 +23,8 @@ import logo from '../../assets/img/logo_full.png';
 
 import HomeIcon from '@material-ui/icons/Home';
 import ProfileIcon from '@material-ui/icons/People';
-import UserIcon from '@material-ui/icons/AccountBox';
-import LocationIcon from '@material-ui/icons/LocationCity';
+import CommentIcon from '@material-ui/icons/Comment';
+import FlagIcon from '@material-ui/icons/Flag';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Account from '@material-ui/icons/AccountCircle';
@@ -209,16 +209,6 @@ class NavBar extends React.Component {
                         </ListItem>
                     </Link>
                 </List>
-                {/*On divise le menu en 2 parties et on propose la seconde liste d'icones(Taches administrateur)*/}
-                <Divider />
-                <List>
-                    {['Playgrounds', 'Users'].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <LocationIcon /> : <UserIcon />}</ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItem>
-                    ))}
-                </List>
 
             </div>
         );
@@ -229,8 +219,18 @@ class NavBar extends React.Component {
                 <React.Fragment>
                     <Divider />
                     <List>
-                        <Link to="/report/playgrounds"><ListItem>Signalement playgrounds</ListItem></Link>
-                        <Link to="/report/comments"><ListItem>Signalement avis</ListItem></Link>
+                        <Link to="/report/playgrounds">
+                            <ListItem button >
+                                <ListItemIcon><FlagIcon /></ListItemIcon>
+                                <ListItemText primary={'Signalement playgrounds'} />
+                            </ListItem>
+                        </Link>
+                        <Link to="/report/comments">
+                            <ListItem button >
+                                <ListItemIcon><CommentIcon /></ListItemIcon>
+                                <ListItemText primary={'Signalement avis'} />
+                            </ListItem>
+                        </Link>
                     </List>
                 </React.Fragment>
             );

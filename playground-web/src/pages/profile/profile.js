@@ -80,19 +80,17 @@ class Profile extends React.Component {
             password: '',
             username: '',
         };
-        this.api = new PlaygroundAPI();
-        this.authService = new AuthService();
     }
 
     async componentDidMount() {
         //Récuperer le mail du user connecté
-        let token = await this.authService.decodeToken();
+        let token = await AuthService.decodeToken();
         this.setState({
             mail: token.sub
         });
         
         //Récuperer les infos complémentaires à partir de l'email
-        await this.api.getUserByMail(this.state.mail)
+        await PlaygroundAPI.getUserByMail(this.state.mail)
             .then(response => {
                 this.setState({
                     userId: response.id,
@@ -102,7 +100,6 @@ class Profile extends React.Component {
                 });
             })  
             .catch(err => console.log(err));
-
     }
 
     render() {

@@ -57,7 +57,7 @@ class API {
       url: api + 'users/' + id,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': authService.getToken()
+        'Authorization': AuthService.getToken()
       }
     })
       .then(response => response.data)
@@ -65,7 +65,7 @@ class API {
   }
 
 
-  getUser(username) {
+  getUser(mail) {
     return axios({
       method: 'get',
       url: api + 'users/mail/' + mail,
@@ -84,7 +84,7 @@ class API {
       url: api + 'users/mail/' + mail,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': authService.getToken()
+        'Authorization': AuthService.getToken()
       }
     })
       .then(response => response.data)
@@ -98,7 +98,7 @@ class API {
       data: user,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': authService.getToken()
+        'Authorization': AuthService.getToken()
       }
     })
   }

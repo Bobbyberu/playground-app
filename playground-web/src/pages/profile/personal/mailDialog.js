@@ -32,8 +32,6 @@ class MailDialog extends React.Component {
             confirmMail: '',
             redirect: false
         };
-        this.api = new PlaygroundAPI();
-        this.authService = new AuthService();
     }
 
     // gérer le changement de valeur des champs
@@ -50,13 +48,12 @@ class MailDialog extends React.Component {
     };
 
     handleUpdating = () => {
-        this.api.getUserById(this.props.userId)
+        PlaygroundAPI.getUserById(this.props.userId)
             .then(response => {
                 if (this.state.newMail === this.state.confirmMail) {
                     response.mail = this.state.newMail;
-                    //this.api.updateUser(this.props.userId, user);
                 }
-                this.api.updateUser(response)
+                PlaygroundAPI.updateUser(response)
 
                 // On change le state de la modale
                 const action = { type: "TOGGLE_MAIL_DIALOG", value: false };
@@ -70,7 +67,7 @@ class MailDialog extends React.Component {
     }
 
     handleRedirect() {
-        this.authService.logout();
+        AuthService.logout();
         return <Redirect to="/login" />;
     }
 

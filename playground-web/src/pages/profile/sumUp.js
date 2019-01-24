@@ -27,6 +27,7 @@ function renderDate(date) {
 
 function sumUp(props) {
   const { classes } = props;
+  console.log(props)
   return (
     <Card className={classes.card}>
       <CardMedia
