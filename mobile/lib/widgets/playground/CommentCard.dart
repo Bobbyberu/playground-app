@@ -3,6 +3,7 @@ import 'package:Playground/entities/Comment.dart';
 import 'package:Playground/pages/SignalCommentPage.dart';
 import 'package:Playground/widgets/playground/CommentStars.dart';
 import 'package:Playground/widgets/user/UserAvatarCircle.dart';
+import 'package:Playground/widgets/user/UserSummary.dart';
 import 'package:flutter/material.dart';
 
 class CommentCard extends StatelessWidget {
@@ -23,15 +24,7 @@ class CommentCard extends StatelessWidget {
             new Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                new Row(
-                  children: <Widget>[
-                    new UserAvatarCircle(size: 50),
-                    new Padding(
-                      padding: EdgeInsets.only(left: 8),
-                      child: new Text(comment.author.username, style: new TextStyle(fontWeight: FontWeight.bold))
-                    ),
-                  ],
-                ),
+                UserSummary(user: comment.author, avatarSize: 50),
 
                 new Row(
                   crossAxisAlignment: CrossAxisAlignment.center,

@@ -6,7 +6,6 @@ import { withStyles } from '@material-ui/core/styles';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 
 import Divider from "@material-ui/core/Divider/Divider";
@@ -20,6 +19,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Searchbar from '../../pages/home/components/searchbar/searchbar';
 import AuthService from '../../services/auth';
 import SnackbarContentWrapper from '../../common-components/snackbar/SnackbarContentWrapper';
+import logo from '../../assets/img/logo_full.png';
 
 import HomeIcon from '@material-ui/icons/Home';
 import ProfileIcon from '@material-ui/icons/People';
@@ -43,12 +43,21 @@ const styles = theme => ({
     menuButton: {
         marginLeft: -12,
         marginRight: 20,
+        color: theme.palette.common.white
+    },
+    button: {
+        color: theme.palette.common.white
     },
     root: {
         left: 0,
         right: 0,
         zIndex: 1000,
-        height: 64
+        height: 64,
+    },
+    logoPlayground: {
+        height: 45,
+        position: 'absolute',
+        top: 12
     },
     list: {
         width: 250,
@@ -123,13 +132,12 @@ class NavBar extends React.Component {
             snackbarOpen: false
         };
 
-        this.authService = new AuthService();
         this.logout = this.logout.bind(this);
     }
 
     componentDidMount() {
         this.setState({
-            loggedIn: this.authService.loggedIn()
+            loggedIn: AuthService.loggedIn()
         });
     }
 
@@ -142,7 +150,7 @@ class NavBar extends React.Component {
 
     // log out the user and toggle the snackbar
     logout() {
-        this.authService.logout();
+        AuthService.logout();
         this.setState({
             loggedIn: false,
             snackbarOpen: true
@@ -164,14 +172,14 @@ class NavBar extends React.Component {
 
         if (this.state.loggedIn) {
             return (
-                <Button className={classes.button} onClick={this.logout} color="inherit">
+                <Button className={classes.button} onClick={this.logout}>
                     <ExitToApp />
                 </Button>
             );
         } else {
             return (
                 <Link to="/login" className={classes.link}>
-                    <Button className={classes.button} color="inherit">
+                    <Button className={classes.button}>
                         Login
                     <Account />
                     </Button>
@@ -211,8 +219,22 @@ class NavBar extends React.Component {
                         </ListItem>
                     ))}
                 </List>
-            </div >
+
+            </div>
         );
+
+        let adminPages;
+        if (AuthService.isAdmin()) {
+            adminPages = (
+                <React.Fragment>
+                    <Divider />
+                    <List>
+                        <Link to="/report/playgrounds"><ListItem>Signalement playgrounds</ListItem></Link>
+                        <Link to="/report/comments"><ListItem>Signalement avis</ListItem></Link>
+                    </List>
+                </React.Fragment>
+            );
+        }
 
         return (
             <div className={classes.root}>
@@ -221,7 +243,6 @@ class NavBar extends React.Component {
                     <Toolbar>
                         {/* Icone du menu avec ouverture du menu coulissant au clic*/}
                         <IconButton className={classes.menuButton}
-                            color="inherit"
                             aria-label="Menu"
                             onClick={this.toggleDrawer('left', true)}
                         >
@@ -236,13 +257,12 @@ class NavBar extends React.Component {
                                 onKeyDown={this.toggleDrawer('left', false)}
                             >
                                 {sideList}
+                                {adminPages}
                             </div>
                         </Drawer>
                         <div className={classes.navbarRight}>
                             <Link to="/" className={classes.link}>
-                                <Typography variant="title" color="inherit" className={classes.title} noWrap>
-                                    Playground
-                                </Typography>
+                                <img src={logo} className={classes.logoPlayground} />
                             </Link>
                             {this.props.searchbar &&
                                 <div className={classes.overlay}>
@@ -267,7 +287,7 @@ class NavBar extends React.Component {
                 >
                     <SnackbarContentWrapper
                         onClose={this.handleSnackbarClose.bind(this)}
-                        variant="success"
+                        variant="info"
                         message={'Vous êtes déconnecté'}
                     />
                 </Snackbar>

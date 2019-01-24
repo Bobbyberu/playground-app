@@ -14,6 +14,8 @@ import SnackbarContentWrapper from '../../common-components/snackbar/SnackbarCon
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import green from '@material-ui/core/colors/green';
 
+import NominatimAPI from '../../services/nominatimAPI';
+
 import './home.css';
 
 var Tools = require('../../services/tools');
@@ -52,7 +54,6 @@ class Home extends Component {
             playgrounds: [],
             snackbarOpen: false
         }
-        this.api = new PlaygroundAPI();
         this.renderPlaygrounds = this.renderPlaygrounds.bind(this);
     }
 
@@ -66,7 +67,7 @@ class Home extends Component {
         }.bind(this));
 
         // Récupérer les propriétés lieés aux terrains
-        this.api.getAllPlayground()
+        PlaygroundAPI.getAllPlayground()
             .then((response) => {
                 this.setState({
                     playgrounds: response
@@ -82,7 +83,6 @@ class Home extends Component {
 
     renderPlaygrounds() {
         let playgrounds = this.state.playgrounds;
-
         return (
             <div>
                 {playgrounds.map(playground => (
@@ -98,11 +98,12 @@ class Home extends Component {
         );
     }
 
-    getSnackbarErrorMessage() {
+    // fat arrow for binding
+    getSnackbarErrorMessage = () => {
         return 'Les playgrounds n\'ont pas pu être récupérés';
     }
 
-    handleSnackbarClose(event, reason) {
+    handleSnackbarClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
@@ -132,10 +133,10 @@ class Home extends Component {
                         }}
                         open={this.state.snackbarOpen}
                         autoHideDuration={6000}
-                        onClose={this.handleSnackbarClose.bind(this)}
+                        onClose={this.handleSnackbarClose}
                     >
                         <SnackbarContentWrapper
-                            onClose={this.handleSnackbarClose.bind(this)}
+                            onClose={this.handleSnackbarClose}
                             variant="error"
                             message={this.getSnackbarErrorMessage()}
                         />

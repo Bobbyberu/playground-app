@@ -1,5 +1,7 @@
 
+import 'package:Playground/controllers/CommonController.dart';
 import 'package:Playground/entities/User.dart';
+import 'package:Playground/services/UserService.dart';
 import 'package:flutter/material.dart';
 
 ///
@@ -19,6 +21,8 @@ class UserAvatarCircle extends StatefulWidget {
 
 class UserAvatarCircleState extends State<UserAvatarCircle> {
 
+  String url;
+
   @override
   void initState() {
     super.initState();
@@ -26,6 +30,8 @@ class UserAvatarCircleState extends State<UserAvatarCircle> {
 
   @override
   Widget build(BuildContext context) {
+    url = UserService.getUserAvatarUrl(widget.user);
+
     return new Container(
       decoration: new BoxDecoration(
           shape: BoxShape.circle,
@@ -33,8 +39,13 @@ class UserAvatarCircleState extends State<UserAvatarCircle> {
           image: DecorationImage(
             fit: BoxFit.cover,
             image: new NetworkImage(
-              "https://proxy.duckduckgo.com/iu/?u=https%3A%2F%2Fyt3.ggpht.com%2F-Zbx5nbYMCM8%2FAAAAAAAAAAI%2FAAAAAAAAAAA%2FYZ4Lebmnjz0%2Fs900-c-k-no-rj-c0xffffff%2Fphoto.jpg&f=1",
+                url,
+                headers: {
+                  "Accept": "image/png",
+                  "Accept-Encoding": "*"
+                }
             ),
+
           )
       ),
       width: widget.size,

@@ -10,18 +10,20 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import FavoriteIconEmpty from '@material-ui/icons/StarBorder';
-import FavoriteIconFull from '@material-ui/icons/StarRate';
+import Favorite from '@material-ui/icons/Favorite';
+import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
-import { connect } from 'react-redux';
 import Emoji from '../../common-components/emoji/emoji';
 import green from '@material-ui/core/colors/green';
 import grey from '@material-ui/core/colors/grey';
 import defaultPlayground from '../../assets/img/default_playground.png';
+import PlaygroundAPI from '../../services/playground-api';
+import AuthService from '../../services/auth';
+import Delete from '@material-ui/icons/Delete';
 
 // Override de certains éléments de la card
 const theme = createMuiTheme({
@@ -113,26 +115,63 @@ const styles = theme => ({
 class PlaygroundDetails extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = ({
+      favorited: false
+    });
+
+    this.toggleFavorite = this.toggleFavorite.bind(this);
+  }
+
+  componentDidMount() {
+    if (AuthService.isUser()) {
+      let user = AuthService.getUser();
+
+      PlaygroundAPI.isFavorite(user.id, this.props.playground.id)
+        .then(response => {
+          this.setState({
+            favorited: response
+          });
+        })
+        .catch(err => console.log(err));
+    }
   }
 
   toggleFavorite() {
-    // Action à envoyer au store
-    const action = { type: 'TOGGLE_FAVORITE', value: this.props.playground };
-    this.props.dispatch(action);
+    this.setState({
+      favorited: !this.state.favorited
+    });
+
+    let user = AuthService.getUser();
+
+    PlaygroundAPI.updateFavorite(user.id, this.props.playground.id)
+      .catch(err => {
+        console.log(err);
+        this.setState({
+          favorited: !this.state.favorited
+        });
+      });
+  }
+
+  deletePlayground = () => {
+    let confirm = window.confirm("Voulez-vous vraiment supprimer ce playground ?");
+    if (confirm) {
+      PlaygroundAPI.deletePlayground(this.props.playground.id)
+        .then(() => window.location.reload())
+        .catch(err => console.log(err));
+    }
   }
 
   displayFavoriteIcon() {
     // On modifie l'icône 'favori' en fonction de l'état du playground sélectionné
-    const favorite = (this.props.favoritePlaygrounds.findIndex(item => item.id === this.props.playground.id) !== -1);
     return (
-      favorite ? <FavoriteIconFull /> : <FavoriteIconEmpty />
+      this.state.favorited ? <Favorite /> : <FavoriteBorder />
     );
   }
 
   render() {
     const { classes } = this.props;
-    let playgroundImg = this.props.playground.image ? this.props.playground.image : defaultPlayground;
-
+    
     return (
       <MuiThemeProvider theme={theme}>
         <div className="global">
@@ -140,7 +179,7 @@ class PlaygroundDetails extends React.Component {
             {/* Image associée au playground */}
             <CardMedia
               className={classes.media}
-              image={playgroundImg}
+              image={PlaygroundAPI.getPlaygroundImage(this.props.playground.id)}
               title="Photo du playground"
             />
             {/* Informations sur le playground */}
@@ -177,14 +216,25 @@ class PlaygroundDetails extends React.Component {
             </CardContent>
             {/* Actions associés à l acard (favoris et détails) */}
             <CardActions className={classes.button}>
-              <IconButton aria-label="Ajouter aux favoris" color="primary" onClick={() => this.toggleFavorite()}>
-                {this.displayFavoriteIcon()}
-              </IconButton>
               <Link to={'/details/' + this.props.playground.id} className={classes.link}>
                 <Button size="small" color="primary">
                   Détails
                 </Button>
               </Link>
+              {AuthService.isUser() &&
+                <IconButton aria-label="Ajouter aux favoris" color="primary" onClick={() => this.toggleFavorite()}>
+                  {this.displayFavoriteIcon()}
+                </IconButton>
+              }
+              {AuthService.isAdmin() &&
+                <IconButton title="Supprimer le playground"
+                  aria-label="Supprimer le playground"
+                  color="primary"
+                  onClick={this.deletePlayground}
+                >
+                  <Delete />
+                </IconButton>
+              }
             </CardActions>
           </Card>
         </div>
@@ -198,10 +248,5 @@ PlaygroundDetails.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-// mapping du state global dans les props du composant PlaygroundDetails
-const mapStateToProps = state => ({
-  favoritePlaygrounds: state.toggleFavorite.favoritePlaygrounds,
-});
-
 // La fonction mapStateToProps permet d'abonner le composant aux changements du store Redux
-export default connect(mapStateToProps)(withStyles(styles)(PlaygroundDetails));
+export default withStyles(styles)(PlaygroundDetails);

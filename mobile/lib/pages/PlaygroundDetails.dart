@@ -1,13 +1,19 @@
 import 'package:Playground/entities/Comment.dart';
 import 'package:Playground/entities/Playground.dart';
+import 'package:Playground/entities/Sport.dart';
+import 'package:Playground/entities/User.dart';
 import 'package:Playground/pages/PlaygroundCommentPage.dart';
 import 'package:Playground/pages/ReportPlaygroundPage.dart';
 import 'package:Playground/services/CommentService.dart';
+import 'package:Playground/services/PlaygroundService.dart';
+import 'package:Playground/services/SessionManager.dart';
 import 'package:Playground/services/UserService.dart';
 import 'package:Playground/widgets/map/PlaygroundShowOnMap.dart';
 import 'package:Playground/widgets/playground/CommentStars.dart';
 import 'package:Playground/widgets/playground/FavouritePlaygroundToggle.dart';
 import 'package:Playground/widgets/sport/SportDisplay.dart';
+import 'package:Playground/widgets/sport/UniqueSportSelection.dart';
+import 'package:Playground/widgets/user/UserSummary.dart';
 import 'package:flutter/material.dart';
 
 
@@ -28,14 +34,20 @@ class PlaygroundDetails extends StatefulWidget {
 class PlaygroundDetailsState extends State<PlaygroundDetails> {
 
   CommentService _commentService = new CommentService();
+  PlaygroundService _playgroundService = new PlaygroundService();
   List<Comment> comments;
+  List<User> players;
   bool isFavorite;
+
+  bool _isPlayingLoading;
 
   @override
   void initState() {
     comments = new List<Comment>();
     isFavorite = false;
+    _isPlayingLoading = false;
     loadComments();
+    loadPlayers();
     super.initState();
   }
 
@@ -43,6 +55,14 @@ class PlaygroundDetailsState extends State<PlaygroundDetails> {
     await _commentService.getCommentsOfPlayground(widget.playground.id).then((response) {
       setState(() {
         comments = response;
+      });
+    });
+  }
+
+  void loadPlayers() async {
+    await _playgroundService.getPlayingUser(widget.playground).then((response) {
+      setState(() {
+        players = response;
       });
     });
   }
@@ -67,7 +87,7 @@ class PlaygroundDetailsState extends State<PlaygroundDetails> {
                     fit: StackFit.passthrough,
                     children: <Widget>[
                       FadeInImage(
-                        image: (widget.playground.imgPath != null) ? NetworkImage(widget.playground.imgPath) : AssetImage("images/default_playground.png"),
+                        image: NetworkImage(PlaygroundService.getPlaygroundImageUrl(widget.playground)),
                         fit: BoxFit.cover,
                         placeholder: AssetImage("images/playground_placeholder.png"),
                         height: 200.0,
@@ -161,27 +181,56 @@ class PlaygroundDetailsState extends State<PlaygroundDetails> {
                               onTap: () {
                                 Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new PlaygroundShowOnMap(playground: widget.playground))).then((_) => loadComments());
                               }
-                            )
+                            ),
 
+                            Padding(
+                              padding: EdgeInsets.only(top: 8),
+                              child: new Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+
+                                  (widget.playground.isPrivate != null && widget.playground.isPrivate) ?
+                                  new Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(padding: EdgeInsets.only(right: 4), child: new Icon(Icons.lock_outline, size: 16)),
+                                      new Text("Privé")
+                                    ],
+                                  )
+                                  : new Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(padding: EdgeInsets.only(right: 4), child: new Icon(Icons.lock_open, size: 16)),
+                                      new Text("Public")
+                                    ],
+                                  ),
+
+                                  (widget.playground.covered != null && widget.playground.covered) ?
+                                  new Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(padding: EdgeInsets.only(right: 4), child: new Icon(Icons.home, size: 16)),
+                                      new Text("Couvert")
+                                    ],
+                                  )
+                                      : new Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(padding: EdgeInsets.only(right: 4), child:new Icon(Icons.landscape, size: 16)),
+                                      new Text("Non couvert")
+                                    ],
+                                  ),
+
+                                ],
+                              )
+                            )
 
 
                           ]
                         ),
 
-
                         new FavouritePlaygroundToggle(playground: widget.playground)
-
-                        /*new IconButton(
-                            icon: new Icon(
-                              Icons.my_location,
-                              size: 30,
-                            ),
-                            color: Theme.of(context).primaryColor,
-                            tooltip: "Voir sur la carte",
-                            onPressed: () {
-                              Navigator.of(context).push(new MaterialPageRoute(builder: (context) => new PlaygroundShowOnMap(playground: widget.playground))).then((_) => loadComments());
-                            }
-                        )*/
 
                       ],
                     ),
@@ -276,6 +325,85 @@ class PlaygroundDetailsState extends State<PlaygroundDetails> {
                               (widget.playground.description != null && widget.playground.description.length > 0) ? widget.playground.description : "Aucune description n'est disponible",
                               textAlign: TextAlign.justify,
                             ),
+                          )
+                        ],
+                      ),
+                    ),
+
+                    new Padding(
+                      padding: EdgeInsets.only(top: 18),
+                      child: new Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          new Text(
+                            "Joueurs",
+                            style: new TextStyle(
+                                fontSize: 18
+                            ),
+                          ),
+                          (players != null) ?
+                          new Padding(
+                            padding: EdgeInsets.only(top: 8, bottom: 8),
+                            child: (_isPlayingLoading) ?
+                            new CircularProgressIndicator(
+                              valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                            )
+                            :
+                            (players.where((u) => u.id == SessionManager.getInstance().getUser().id).isNotEmpty) ?
+                              new InkWell(
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(Icons.close, color: Colors.redAccent),
+                                    Text("Je ne joue plus", style: TextStyle(color: Colors.redAccent))
+                                  ]
+                                ),
+                                onTap: () async {
+                                  setState(() { _isPlayingLoading = true; });
+                                  await _playgroundService.addPlayerOutPlayground(widget.playground, SessionManager.getInstance().getUser()).then((response){
+                                    loadPlayers();
+                                    setState(() { _isPlayingLoading = false; });
+                                  });
+                                },
+                              )
+                              : new InkWell(
+                                child: Row(
+                                    children: <Widget>[
+                                      Icon(Icons.add, color: Theme.of(context).primaryColor),
+                                      Text("Je suis en train de jouer", style: TextStyle(color: Theme.of(context).primaryColor))
+                                    ]
+                                ),
+                                onTap: () async {
+                                  Sport playedSport = await Navigator.of(context).push(
+                                    new MaterialPageRoute<Sport>(
+                                      builder: (BuildContext context) {
+                                        return new UniqueSportSelection(sports: widget.playground.sports);
+                                      },
+                                      fullscreenDialog: true
+                                    )
+                                  );
+                                  setState(() { _isPlayingLoading = true; });
+                                  await _playgroundService.addPlayerInPlayground(widget.playground, SessionManager.getInstance().getUser(), playedSport).then((response){
+                                    loadPlayers();
+                                    setState(() { _isPlayingLoading = false; });
+                                  });
+                                },
+                             )
+                          ) : Padding(padding: EdgeInsets.only(top: 8, bottom: 8)),
+
+                          new Padding(
+                            padding: EdgeInsets.all(8),
+                            child:
+                            (players == null) ?
+                              new Container():
+                              (players.isEmpty) ?
+                                new Text("Aucun joueur n'est actuellement sur le playground") :
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: players.map((p) => Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: UserSummary(user: p, avatarSize: 50, playing: true),
+                                  )).toList(),
+                                ),
                           )
                         ],
                       ),

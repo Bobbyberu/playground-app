@@ -1,5 +1,6 @@
 package com.playground.controllers;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.playground.model.Playground;
 import com.playground.model.ReportPlayground;
 import com.playground.service.PlaygroundService;
@@ -128,7 +129,6 @@ public class ReportPlaygroundController {
     /**
      * [DELETE] Delete a report playground
      *
-     * @param playgroundId playgroundId
      * @param reportPlaygroundId int
      *
      * @return ResponseEntity
@@ -136,15 +136,10 @@ public class ReportPlaygroundController {
      * @throws ResourceNotFoundException Playground not found
      * @throws ResourceNotFoundException Comment not found
      */
-    @DeleteMapping("/playgrounds/{playgroundId}/reportPlaygrounds/{reportPlaygroundId}")
-    public ResponseEntity deleteReportPlayground(@PathVariable("playgroundId") int playgroundId, @PathVariable("reportPlaygroundId") int reportPlaygroundId) throws ResourceNotFoundException {
-        Playground playground = playgroundService.getPlayground(playgroundId);
+    @DeleteMapping("/reportPlaygrounds/{reportPlaygroundId}")
+    public ResponseEntity deleteReportPlayground(@PathVariable("reportPlaygroundId") int reportPlaygroundId) throws ResourceNotFoundException {
 
-        if (playground == null) {
-            throw new ResourceNotFoundException("Playground with id " + playgroundId + " not found");
-        }
-
-        ReportPlayground currentReportPlayground = reportPlaygroundService.getReportPlaygroundByPlayground(playground, reportPlaygroundId);
+        ReportPlayground currentReportPlayground = reportPlaygroundService.getReportPlayground(reportPlaygroundId);
 
         if (currentReportPlayground == null) {
             throw new ResourceNotFoundException("ReportPlayground with id " + reportPlaygroundId + " not found for this playground");

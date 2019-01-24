@@ -2,6 +2,7 @@ import 'package:Playground/entities/User.dart';
 import 'package:Playground/services/AuthService.dart';
 import 'package:Playground/services/SessionManager.dart';
 import 'package:Playground/widgets/menu/SettingsMenuLink.dart';
+import 'package:Playground/widgets/user/UserAvatarCircle.dart';
 import 'package:flutter/material.dart';
 
 ///
@@ -57,20 +58,7 @@ class ProfilePageState extends State<ProfilePage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
 
-                        new Container(
-                          decoration: new BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(width: 4, color: Theme.of(context).primaryColor),
-                              image: DecorationImage(
-                                fit: BoxFit.cover,
-                                image: new NetworkImage(
-                                  "https://proxy.duckduckgo.com/iu/?u=https%3A%2F%2Fyt3.ggpht.com%2F-Zbx5nbYMCM8%2FAAAAAAAAAAI%2FAAAAAAAAAAA%2FYZ4Lebmnjz0%2Fs900-c-k-no-rj-c0xffffff%2Fphoto.jpg&f=1",
-                                ),
-                              )
-                          ),
-                          width: 100,
-                          height: 100,
-                        ),
+                        new UserAvatarCircle(user: user, size: 100),
 
                         new Text(
                           (user.username != null) ? "@ " + user.username : "",
@@ -90,9 +78,6 @@ class ProfilePageState extends State<ProfilePage> {
               new SettingsMenuLink(label: "Modifier mon profil", icon: Icons.person, onTap: () {
                 Navigator.of(context).pushNamed("/profileUpdate");
               }),
-              new Divider(),
-
-              new SettingsMenuLink(label: "Paramètres", icon: Icons.settings, onTap: () { /* TODO */ }),
               new Divider(),
 
               new SettingsMenuLink(label: "Mes Playgrounds favoris", icon: Icons.favorite, onTap: () {

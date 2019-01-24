@@ -37,8 +37,19 @@ public class Playground {
     private String city;
     private String address;
 
-    public Playground() {
+    public Playground(String name, boolean isPrivate, boolean covered, double latitude, double longitude, String surface, String description, String city, String address) {
+        this.name = name;
+        this.isPrivate = isPrivate;
+        this.covered = covered;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.surface = surface;
+        this.description = description;
+        this.city = city;
+        this.address = address;
     }
+
+    public Playground() {}
 
     public int getId() {
         return id;

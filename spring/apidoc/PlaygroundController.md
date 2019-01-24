@@ -12,6 +12,10 @@ Back to [README.md](../README.md)
 - [[POST] /api/playgrounds/\{id\}/image](#8)
 - [PATCH] /api/playgrounds/{id}/playing
 - [GET] /api/signalement/playgrounds
+- [PUT] /api/playgrounds/{idPlayground}/player/{idUser}/add (#9)
+- [PUT] /api/playgrounds/{idPlayground}/player/{idUser}/remove (#10)
+- [GET] /api/playgrounds/{idPlayground}/players (#11)
+
 
 ## [GET] /api/playgrounds {#1}
 
@@ -123,6 +127,50 @@ Upload image for given playground
 
 - *\{id\} :* Int
 - *\{file\} :* MultipartFile (file to be sent)
+
+### Response (HTTP)
+
+- *200 Ok* 
+
+___
+
+## [PUT] /api/playgrounds/{idPlayground}/player/{idUser}/add {#9}
+
+Add a user playing on the playground
+
+### Parameters
+
+- *\{idPlayground\} :* Int
+- *\{idUser\} :* Int
+
+### Response (HTTP)
+
+- *200 Ok* 
+
+___
+
+## [PUT] /api/playgrounds/{idPlayground}/player/{idUser}/remove {#10}
+
+Remove the user playing on the playground
+
+### Parameters
+
+- *\{idPlayground\} :* Int
+- *\{idUser\} :* Int
+
+### Response (HTTP)
+
+- *200 Ok* 
+
+___
+
+## [GET] /api/playgrounds/{idPlayground}/players {#11}
+
+Get all the users playing on the selected playground
+
+### Parameters
+
+- *\{idPlayground\} :* Int
 
 ### Response (HTTP)
 

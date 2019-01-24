@@ -6,7 +6,7 @@ Back to [README.md](../README.md)
 - [[GET] /api/playgrounds/\{playgroundId\}/comments/\{commentId\}](#2)
 - [[POST] /api/playgrounds/\{playgroundId\}/comments](#3)
 - [[PUT] /api/playgrounds/\{playgroundId\}/comments/\{commentId\}](#4)
-- [[DELETE] /api/playgrounds/\{playgroundId\}/comments/\{commentId\}](#5)
+- [[DELETE] /api/comments/\{commentId\}](#5)
 - [[PUT] /api/playgrounds/\{playgroundId\}/comments/archived/\{commentId\}](#6)
 - [[GET] /api/playgrounds/\{playgroundId\}/comments](#7)
 
@@ -75,7 +75,7 @@ Update a comment
 
 ___
 
-## [DELETE] /api/playgrounds/\{playgroundId\}/comments/\{commentId\} {#5}
+## [DELETE] /api/comments/\{commentId\} {#5}
 
 Delete a comment
 

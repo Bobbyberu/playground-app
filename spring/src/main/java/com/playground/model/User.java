@@ -1,5 +1,6 @@
 package com.playground.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,9 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Set;
 import java.util.*;
 
 @Entity
@@ -44,6 +42,8 @@ public class User implements UserDetails {
     private boolean enabled;
     private boolean archived;
     private boolean banned;
+    @ManyToOne
+    private Sport playing;
 
     public User() {
     }
@@ -101,6 +101,7 @@ public class User implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<Role> liste = new ArrayList<>();
         if (this.role.getName().equals("ROLE_ADMIN")) {
@@ -110,6 +111,7 @@ public class User implements UserDetails {
         return liste;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
@@ -142,6 +144,7 @@ public class User implements UserDetails {
         this.favouriteSports = favouriteSports;
     }
 
+    @JsonIgnore
     public Set<Playground> getFavouritePlaygrounds() {
         return favouritePlaygrounds;
     }
@@ -188,5 +191,13 @@ public class User implements UserDetails {
 
     public void setBanned(boolean banned) {
         this.banned = banned;
+    }
+
+    public Sport getPlaying() {
+        return playing;
+    }
+
+    public void setPlaying(Sport playing) {
+        this.playing = playing;
     }
 }

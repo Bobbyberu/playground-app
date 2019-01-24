@@ -48,7 +48,7 @@ class AuthService {
       if(headers.containsKey("authorization")) {
         var token =  headers["authorization"];
         TokenManager.getInstance().setToken(token);
-        SessionManager.getInstance().loadUser(token);
+        await SessionManager.getInstance().loadUser(token);
       }
     }).catchError((error) {
       _controller.printError(error);
@@ -67,7 +67,7 @@ class AuthService {
 
     await _controller.postUser(newUser).then((response) async {
       print(response.statusCode);
-      res = response.statusCode == 200;
+      res = response.statusCode == 201;
     }).catchError((error){
       _controller.printError(error);
     });

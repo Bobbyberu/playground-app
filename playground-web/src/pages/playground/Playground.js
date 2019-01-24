@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -26,10 +27,10 @@ import ReportPlaygroundModal from './components/ReportPlaygroundModal';
 import StarRating from './components/StarRating';
 import Timetable from './components/Timetable';
 
-import './playground.css';
 import defaultPlayground from '../../assets/img/default_playground.png';
-import FavoriteIcon from '@material-ui/icons/Star';
-import FavoriteIconEmpty from '@material-ui/icons/StarBorder';
+import Delete from '@material-ui/icons/Delete';
+import Favorite from '@material-ui/icons/Favorite';
+import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 import Flag from '@material-ui/icons/Flag';
 import grey from '@material-ui/core/colors/grey';
 import green from '@material-ui/core/colors/green';
@@ -64,7 +65,7 @@ const styles = theme => ({
   topIcon: {
     fontSize: 50
   },
-  report: {
+  topRightIcon: {
     top: 0,
     right: 0,
     position: 'absolute',
@@ -143,28 +144,51 @@ class Playground extends Component {
       loading: true,
       playground: 0,
       favorited: false,
-      loggedIn: false
+      loggedIn: false,
+      // if we should be redirected or not
+      redirect: false
     });
 
-    this.api = new PlaygroundAPI();
-    this.auth = new AuthService();
+    this.toggleFavorite = this.toggleFavorite.bind(this);
   }
 
-  componentDidMount() {
-    this.api.getPlaygroundById(this.props.id)
+  async componentDidMount() {
+    await PlaygroundAPI.getPlaygroundById(this.props.id)
       .then(response => {
         this.setState({
           playground: response,
-          loggedIn: this.auth.loggedIn()
+          loggedIn: AuthService.loggedIn()
         });
       })
       .catch(err => console.log(err));
+
+    if (AuthService.isUser()) {
+      let user = AuthService.getUser();
+
+      PlaygroundAPI.isFavorite(user.id, this.state.playground.id)
+        .then(response => {
+          this.setState({
+            favorited: response
+          });
+        })
+        .catch(err => console.log(err));
+    }
   }
 
-  toggleFavorite = () => {
+  async toggleFavorite() {
     this.setState({
       favorited: !this.state.favorited
     });
+
+    let user = AuthService.getUser();
+
+    PlaygroundAPI.updateFavorite(user.id, this.state.playground.id)
+      .catch(err => {
+        console.log(err);
+        this.setState({
+          favorited: !this.state.favorited
+        });
+      });
   }
 
   toggleReportPlayground = () => {
@@ -173,16 +197,36 @@ class Playground extends Component {
     this.props.dispatch(action);
   }
 
+  deletePlayground = () => {
+    let confirm = window.confirm("Voulez-vous vraiment supprimer ce playground ?");
+    if (confirm) {
+      PlaygroundAPI.deletePlayground(this.state.playground.id)
+        .then(() => {
+          this.setState({
+            redirect: true
+          });
+        })
+        .catch(err => console.log(err));
+    }
+  }
+
   displayFavoriteIcon = (classes) => {
     if (this.state.favorited) {
-      return <FavoriteIcon className={classes.topIcon} />;
+      return <Favorite className={classes.topIcon} />;
     } else {
-      return <FavoriteIconEmpty className={classes.topIcon} />;
+      return <FavoriteBorder className={classes.topIcon} />;
     }
   }
 
   render() {
-    if (this.state.playground === 0) {
+    if (this.state.redirect) {
+      // redirection to home page
+      return (
+        <React.Fragment>
+          <Redirect to="/" />
+        </React.Fragment>
+      );
+    } else if (this.state.playground === 0) {
       return (<div>Loading mon petit pote</div>)
     } else if (!this.state.playground) {
       return (
@@ -192,9 +236,8 @@ class Playground extends Component {
       );
     } else {
 
-      const { classes, reportedComment } = this.props;
+      const { classes } = this.props;
 
-      let playgroundImg = this.state.playground.image ? this.state.playground.image : defaultPlayground;
       return (
         <MuiThemeProvider theme={theme}>
           <Navbar searchbar={false} />
@@ -204,7 +247,7 @@ class Playground extends Component {
               <CardMedia
                 component="img"
                 className={classes.media}
-                image={playgroundImg}
+                image={PlaygroundAPI.getPlaygroundImage(this.state.playground.id)}
                 title={this.state.playground.description}
               />
               {/* Informations sur le playground */}
@@ -216,19 +259,29 @@ class Playground extends Component {
                     </Typography>
 
                     {/** available only if authenticated */}
-                    {this.state.loggedIn &&
+                    {AuthService.isUser() &&
                       <React.Fragment>
                         {/* Favorite a card */}
                         <CardActions className={classes.favorite} title="Ajouter ce playground à vos favoris">
-                          <IconButton color="primary" className={classes.favorite} aria-label="Ajouter aux favoris" onClick={this.toggleFavorite}>
+                          <IconButton color="primary" className={classes.favorite} onClick={this.toggleFavorite}>
                             {this.displayFavoriteIcon(classes)}
                           </IconButton>
                         </CardActions>
 
                         {/* Report a playground */}
-                        <CardActions className={classes.report} title="Signaler un playground">
-                          <IconButton color="primary" aria-label="Ajouter aux favoris" onClick={this.toggleReportPlayground}>
+                        <CardActions className={classes.topRightIcon} title="Signaler un playground">
+                          <IconButton color="primary" onClick={this.toggleReportPlayground}>
                             <Flag className={classes.topIcon} />
+                          </IconButton>
+                        </CardActions>
+                      </React.Fragment>
+                    }
+                    {AuthService.isAdmin() &&
+                      <React.Fragment>
+                        {/* Report a playground */}
+                        <CardActions className={classes.topRightIcon} title="Supprimer un playground">
+                          <IconButton color="primary" onClick={this.deletePlayground}>
+                            <Delete className={classes.topIcon} />
                           </IconButton>
                         </CardActions>
                       </React.Fragment>
@@ -264,7 +317,7 @@ class Playground extends Component {
                 {this.state.playground.timetable &&
                   <div id="timetable-section">
                     <Divider className={classes.divider} variant="fullWidth" />
-                    <div className={classes.sectionTitle}><h5>⏰ Horaires</h5></div>
+                    <div className={classes.sectionTitle}><h5><span aria-label="clock" role="img">⏰</span> Horaires</h5></div>
                     <div className={classes.timetable}>
                       <Timetable timetable={this.state.playground.timetable} />
                     </div>

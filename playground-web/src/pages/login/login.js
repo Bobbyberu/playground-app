@@ -12,6 +12,7 @@ import MailOutline from '@material-ui/icons/MailOutline';
 import VpnKey from '@material-ui/icons/VpnKey';
 
 import AuthService from '../../services/auth';
+import PlaygroundAPI from '../../services/playground-api';
 import './login.css';
 
 const styles = ({
@@ -69,21 +70,30 @@ class Login extends Component {
     }
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.authService = new AuthService();
   }
 
-  handleSubmit(event) {
+  async handleSubmit(event) {
     event.preventDefault();
+    let loginSuccess = false;
 
-    this.authService.login(this.state.mail, this.state.password)
-      .then(() => {
-        this.setState({
-          redirect: true
-        });
-      })
+    await AuthService.login(this.state.mail, this.state.password)
+      .then(() => loginSuccess = true)
       .catch(err => {
         console.log(err);
       });
+
+    if (loginSuccess) {
+      await PlaygroundAPI.getUser(this.state.mail)
+        .then(response => {
+          AuthService.setUser(response);
+          this.setState({
+            redirect: true
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   }
 
   handleInputChange(event) {
@@ -98,7 +108,7 @@ class Login extends Component {
 
   render() {
     const content = () => {
-      if (this.authService.loggedIn()) {
+      if (AuthService.loggedIn()) {
         return this.redirect()
       } else {
         return this.state.redirect ? this.redirect() : this.renderForm(this.props);
@@ -145,8 +155,8 @@ class Login extends Component {
                 placeholder="Email"
                 value={this.state.mail}
                 variant="outlined"
-                validators={['required']}
-                errorMessages={['Champ obligatoire']}
+                validators={['required', 'isEmail']}
+                errorMessages={['Champ obligatoire', 'L\' adresse mail n\'est pas valide']}
               />
             </div>
 

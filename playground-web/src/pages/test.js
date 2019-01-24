@@ -9,8 +9,6 @@ export default class Test extends React.Component {
             selectedFile: null,
             selectedFilePlayground: null,
         })
-
-        this.api = new PlaygroundAPI();
     }
 
     handleSelectedFile = event => {
@@ -25,10 +23,8 @@ export default class Test extends React.Component {
 
         let data = new FormData();
         data.append('file', this.state.selectedFile, this.state.selectedFile.name);
-        //let data = { 'file': this.state.selectedFile, 'type': 'user' }
 
-        //console.log(data.get("file"));
-        this.api.uploadImageUser(data);
+        PlaygroundAPI.uploadImageUser(data);
     }
 
     handleSelectedFilePlayground = event => {
@@ -44,7 +40,7 @@ export default class Test extends React.Component {
         let data = new FormData();
         data.append('file', this.state.selectedFilePlayground, this.state.selectedFilePlayground.name);
 
-        this.api.uploadImagePlayground(1, data);
+        PlaygroundAPI.uploadImagePlayground(1, data);
     }
 
     render() {
@@ -75,8 +71,8 @@ export default class Test extends React.Component {
                     </form>
                 </div>
                 <div>
-                    <img crossOrigin="true" src={this.api.getUserImage()} />
-                    <img crossOrigin="true" src={this.api.getPlaygroundImage(1)} />
+                    <img crossOrigin="true" src={PlaygroundAPI.getUserImage()} />
+                    <img crossOrigin="true" src={PlaygroundAPI.getPlaygroundImage(2)} />
                 </div>
             </React.Fragment>
         );

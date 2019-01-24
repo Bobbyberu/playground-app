@@ -88,6 +88,10 @@ class PlaygroundDialog {
     _customDialog(context, title, body, onOk, Icons.check_circle_outline, Theme.of(context).primaryColor);
   }
 
+  static showInfoDialog(BuildContext context, String title, String body, VoidCallback onOk) {
+    _customDialog(context, title, body, onOk, Icons.info_outline, Colors.blue[600]);
+  }
+
   static showWarningDialog(BuildContext context, String title, String body, VoidCallback onOk) {
     _customDialog(context, title, body, onOk, Icons.warning, Colors.orange[600]);
   }

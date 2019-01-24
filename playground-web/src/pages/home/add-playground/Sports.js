@@ -7,6 +7,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import PlaygroundAPI from '../../../services/playground-api';
+import { connect } from 'react-redux';
 
 // Override de certains éléments de la card 
 const theme = createMuiTheme({
@@ -30,20 +31,27 @@ class Sports extends React.Component {
         super(props)
         // On garde dans un state les cases cochées
         this.state = {
-            checked: [0],
+            checked: this.props.sports,
             sports: []
         }
-        this.api = new PlaygroundAPI();
     }
 
     componentDidMount() {
+        // On desactive le champ suivant car l'utilisateur doit renseigner au moins un sport
+        const action = { type: 'HANDLE_REQUIREDFIELDS', value: true }
+        this.props.dispatch(action)
         // Récupérer la liste des sports après que le composant ait été retranscrit dans le DOM
-        this.api.getAllSports()
+        PlaygroundAPI.getAllSports()
             .then((response) => {
                 this.setState({
                     sports: response
                 });
             });
+    }
+
+    componentWillUnmount() {
+        const action = { type: 'SET_SPORTS', value: this.state.checked };
+        this.props.dispatch(action);
     }
 
     // Methode qui gère le changement d'état sur une checkbox
@@ -62,6 +70,15 @@ class Sports extends React.Component {
             newChecked.push(value);
         } else {
             newChecked.splice(currentIndex, 1);
+        }
+
+        // On active le champ suivant si un sport a été renseigné
+        if (newChecked.length > 0){
+            const action = { type: 'HANDLE_REQUIREDFIELDS', value: false };
+            this.props.dispatch(action);
+        }else {
+            const action = { type: 'HANDLE_REQUIREDFIELDS', value: true };
+            this.props.dispatch(action);
         }
 
         // On met à jour le state avec le nouveau state créé
@@ -106,4 +123,13 @@ Sports.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Sports);
+
+// mapping du state global dans les props du composant Sports
+const mapStateToProps = (state) => {
+    return {
+        sports: state.addPlayground.sports
+    }
+}
+
+// mapStateToProps pour abonner le composant aux changements du store Redux
+export default connect(mapStateToProps)(withStyles(styles)(Sports));

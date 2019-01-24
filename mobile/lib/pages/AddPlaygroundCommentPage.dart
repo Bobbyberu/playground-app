@@ -28,6 +28,8 @@ class AddPlaygroundCommentState extends State<AddPlaygroundCommentPage> {
   CommentService commentService = new CommentService();
   Comment newComment;
 
+  bool _isLoading = false;
+
   @override
   void initState() {
     newComment = Comment.getDefault();
@@ -38,6 +40,10 @@ class AddPlaygroundCommentState extends State<AddPlaygroundCommentPage> {
   }
 
   void validateForm() async {
+    setState(() {
+      _isLoading = true;
+    });
+
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
@@ -117,10 +123,16 @@ class AddPlaygroundCommentState extends State<AddPlaygroundCommentPage> {
                       children: <Widget>[
                         new Padding(
                           padding: EdgeInsets.all(12),
-                          child: new PlaygroundButton(
-                              "Envoyer",
-                              validateForm
-                          )
+                          child:
+                          (_isLoading) ?
+                            CircularProgressIndicator(
+                                valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor)
+                            )
+                              :
+                            new PlaygroundButton(
+                                "Envoyer",
+                                validateForm
+                            )
                         )
                         
 

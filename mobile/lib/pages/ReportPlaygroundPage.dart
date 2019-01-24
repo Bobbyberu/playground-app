@@ -33,6 +33,8 @@ class SignalPlaygroundPageState extends State<SignalPlaygroundPage> {
   final ReportPlaygroundService signalPlaygroundService = new ReportPlaygroundService();
   ReportPlayground newSignal;
 
+  bool _isLoading;
+
   static const Map<SignalPlaygroundMotives, String> motives = {
     SignalPlaygroundMotives.CLOSED_PLAYGROUND : "Playground condamné",
     SignalPlaygroundMotives.FALSE_ADDRESS : "Fausse adresse renseignée",
@@ -49,6 +51,7 @@ class SignalPlaygroundPageState extends State<SignalPlaygroundPage> {
     newSignal.playground = widget.signaledPlayground;
     User me = SessionManager.getInstance().getUser();
     newSignal.author = me;
+    _isLoading = false;
 
     motiveItems = new List();
     motives.forEach((key,value) {
@@ -64,6 +67,9 @@ class SignalPlaygroundPageState extends State<SignalPlaygroundPage> {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
+      setState(() {
+        _isLoading = true;
+      });
       bool success = await signalPlaygroundService.saveSignalPlayground(newSignal);
 
       if(success) {
@@ -74,6 +80,9 @@ class SignalPlaygroundPageState extends State<SignalPlaygroundPage> {
             () {Navigator.pop(context);Navigator.pop(context);}
         );
       } else {
+        setState(() {
+          _isLoading = false;
+        });
         PlaygroundDialog.showErrorDialog(
             context,
             "Envoi de votre signalement",
@@ -149,7 +158,11 @@ class SignalPlaygroundPageState extends State<SignalPlaygroundPage> {
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children : [
-                        new PlaygroundButton(
+                        (_isLoading) ?
+                          new CircularProgressIndicator(
+                            valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                          )
+                        : new PlaygroundButton(
                           "Envoyer",
                           validateForm
                         )

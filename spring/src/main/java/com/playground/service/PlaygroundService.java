@@ -1,6 +1,8 @@
 package com.playground.service;
 
 import com.playground.model.Playground;
+import com.playground.model.Sport;
+import com.playground.model.User;
 import com.playground.repository.PlaygroundRepository;
 import com.playground.service.interfaces.IPlaygroundService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Class PlaygroundService
@@ -18,14 +21,17 @@ public class PlaygroundService implements IPlaygroundService {
     /** PlaygroundRepository playgroundRepository */
     private final PlaygroundRepository playgroundRepository;
 
+    private final UserService userService;
+
     /**
      * PlaygroundService Constructor
      *
      * @param playgroundRepository PlaygroundRepository
      */
     @Autowired
-    public PlaygroundService(PlaygroundRepository playgroundRepository) {
+    public PlaygroundService(PlaygroundRepository playgroundRepository, UserService userService) {
         this.playgroundRepository = playgroundRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -50,6 +56,33 @@ public class PlaygroundService implements IPlaygroundService {
     public Playground updatePlayground(int id, Playground playground) {
         playground.setId(id);
         return playgroundRepository.save(playground);
+    }
+
+    @Override
+    public Playground addPlayerToPlayground(Playground playground, User user, Sport sport) {
+        Set<User> players = playground.getPlayers();
+        user.setPlaying(sport);
+        userService.updateUser(user.getId(), user);
+        players.add(user);
+        playground.setPlayers(players);
+        return playgroundRepository.save(playground);
+    }
+
+    @Override
+    public Playground removePlayerFromPlayground(Playground playground, User user) {
+        Set<User> players = playground.getPlayers();
+        user.setPlaying(null);
+        userService.updateUser(user.getId(), user);
+        players.remove(user);
+        playground.setPlayers(players);
+        return playgroundRepository.save(playground);
+    }
+
+    @Override
+    public List<User> getPlayersOnPlayground(Playground playground) {
+        List<User> list = new ArrayList<>();
+        list.addAll(playground.getPlayers());
+        return list;
     }
 
     @Override

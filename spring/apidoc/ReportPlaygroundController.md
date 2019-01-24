@@ -6,7 +6,7 @@ Back to [README.md](../README.md)
 - [[GET] /api/playgrounds/\{playgroundId\}/reportPlaygrounds/\{reportPlaygroundId\}](#2)
 - [[POST] /api/playgrounds/\{playgroundId\}/reportPlaygrounds](#3)
 - [[PUT] /api/playgrounds/\{playgroundId\}/reportPlaygrounds/\{reportPlaygroundId\}](#4)
-- [[DELETE] /api/playgrounds/\{playgroundId\}/reportPlaygrounds/\{reportPlaygroundId\}](#5)
+- [[DELETE] /api/reportPlaygrounds/\{reportPlaygroundId\}](#5)
 
 ___
 
@@ -73,13 +73,12 @@ Update a reportPlayground
 
 ___
 
-## [DELETE] /api/playgrounds/\{playgroundId\}/reportPlaygrounds/\{reportPlaygroundId\} {#5}
+## [DELETE] /api/reportPlaygrounds/\{reportPlaygroundId\} {#5}
 
 Delete a reportPlayground
 
 ### Parameters
 
-- *\{playgroundId\} :* integer
 - *\{reportPlaygroundId\} :* integer
 
 ### Response (HTTP)

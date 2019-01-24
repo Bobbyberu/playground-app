@@ -16,7 +16,6 @@ import java.util.List;
  * Class ReportCommentController
  */
 @RestController
-@RequestMapping("/reportComments")
 public class ReportCommentController {
 
     /** ReportCommentService reportCommentService */
@@ -126,7 +125,6 @@ public class ReportCommentController {
     /**
      * [DELETE] Delete a report comment
      *
-     * @param commentId commentId
      * @param reportCommentId int
      *
      * @return ResponseEntity
@@ -134,15 +132,9 @@ public class ReportCommentController {
      * @throws ResourceNotFoundException Comment not found
      * @throws ResourceNotFoundException Comment not found
      */
-    @DeleteMapping("/comments/{commentId}/reportComments/{reportCommentId}")
-    public ResponseEntity deleteReportComment(@PathVariable("commentId") int commentId, @PathVariable("reportCommentId") int reportCommentId) throws ResourceNotFoundException {
-        Comment comment = commentService.getComment(commentId);
-
-        if (comment == null) {
-            throw new ResourceNotFoundException("Comment with id " + commentId + " not found");
-        }
-
-        ReportComment currentReportComment = reportCommentService.getReportCommentByComment(comment, reportCommentId);
+    @DeleteMapping("/reportComments/{reportCommentId}")
+    public ResponseEntity deleteReportComment(@PathVariable("reportCommentId") int reportCommentId) throws ResourceNotFoundException {
+        ReportComment currentReportComment = reportCommentService.getReportComment(reportCommentId);
 
         if (currentReportComment == null) {
             throw new ResourceNotFoundException("ReportComment with id " + reportCommentId + " not found for this comment");
