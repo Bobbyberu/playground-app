@@ -1,13 +1,7 @@
 package com.playground.controllers;
 
-import com.playground.model.Comment;
-import com.playground.model.Playground;
-import com.playground.model.Sport;
-import com.playground.model.User;
-import com.playground.service.CommentService;
-import com.playground.service.PlaygroundService;
-import com.playground.service.SportService;
-import com.playground.service.UserService;
+import com.playground.model.*;
+import com.playground.service.*;
 import com.playground.storage.StorageService;
 import com.playground.utils.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +37,10 @@ public class PlaygroundController {
 
     private final CommentService commentService;
 
+    private final ReportCommentService reportCommentService;
+
+    private final ReportPlaygroundService reportPlaygroundService;
+
     /**
      * PlaygroundController Constructor
      *
@@ -50,12 +48,16 @@ public class PlaygroundController {
      */
     @Autowired
     public PlaygroundController(PlaygroundService playgroundService, StorageService storageService,
-                                UserService userService, SportService sportService, CommentService commentService) {
+                                UserService userService, SportService sportService, CommentService commentService,
+                                ReportCommentService reportCommentService,
+                                ReportPlaygroundService reportPlaygroundService) {
         this.playgroundService = playgroundService;
         this.storageService = storageService;
         this.userService = userService;
         this.sportService = sportService;
         this.commentService = commentService;
+        this.reportCommentService = reportCommentService;
+        this.reportPlaygroundService = reportPlaygroundService;
     }
 
     /**
@@ -201,7 +203,7 @@ public class PlaygroundController {
     }
 
     /**
-     * [DELETE] Delete a playground
+     * [DELETE] Delete a playground and linked entities (comments, comment reports and playground reports)
      *
      * @param id int
      *
@@ -218,9 +220,21 @@ public class PlaygroundController {
         }
 
         List<Comment> comments = commentService.getCommentsByPlayground(currentPlayground);
+        List<ReportComment> commentReports;
 
         for (Comment comment : comments) {
+            commentReports = reportCommentService.getReportCommentsByComment(comment);
+            for (ReportComment reportComment : commentReports) {
+                reportCommentService.deleteReportComment(reportComment);
+            }
             commentService.deleteComment(comment);
+        }
+
+        List<ReportPlayground> playgroundReports = reportPlaygroundService
+                .getReportPlaygroundsByPlayground(currentPlayground);
+
+        for (ReportPlayground reportPlayground : playgroundReports) {
+            reportPlaygroundService.deleteReportPlayground(reportPlayground);
         }
 
         playgroundService.deletePlayground(currentPlayground);
