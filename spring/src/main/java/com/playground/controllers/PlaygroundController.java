@@ -262,14 +262,14 @@ public class PlaygroundController {
 
             // if playground has no image yet
             if(imageName != null) {
-                file = storageService.loadPlaygroundAsResource(imageName);
+                file = storageService.loadPlaygroundAsResource(imageName,false);
 
                 // in case file is not found or does not exist
                 if(file == null) {
-                    file = storageService.loadPlaygroundAsResource("default_playground");
+                    file = storageService.loadPlaygroundAsResource("default_playground", true);
                 }
             }else {
-                file = storageService.loadPlaygroundAsResource("default_playground");
+                file = storageService.loadPlaygroundAsResource("default_playground", true);
             }
 
             InputStream is = new FileInputStream(file.getFile());

@@ -45,7 +45,7 @@ class User {
         id: json['id'] as int,
         username: json['username'] as String,
         mail: json['mail'] as String,
-        birthDate: DateTime.parse(json['birthDate'] as String),
+        birthDate: (json['birthDate'] != null) ?  DateTime.parse(json['birthDate'] as String) : null,
         password: json['password'] as String,
         city: json['city'] as String,
         enabled: json['enabled'] as bool,

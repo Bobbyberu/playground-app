@@ -316,14 +316,14 @@ public class UserController {
 
             // if playground has no image yet
             if (filename != null) {
-                file = storageService.loadUserAsResource(filename);
+                file = storageService.loadUserAsResource(filename, false);
 
                 // in case file is not found or does not exist
                 if (file == null) {
-                    file = storageService.loadUserAsResource("default_avatar");
+                    file = storageService.loadUserAsResource("default_avatar", true);
                 }
             } else {
-                file = storageService.loadUserAsResource("default_avatar");
+                file = storageService.loadUserAsResource("default_avatar", true);
             }
 
             InputStream is = new FileInputStream(file.getFile());

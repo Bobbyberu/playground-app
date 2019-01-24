@@ -22,13 +22,13 @@ public interface StorageService {
 
     Stream<Path> loadAllUser();
 
-    Path loadPlayground(String filename);
+    Path loadPlayground(String filename, boolean defaultImg);
 
-    Path loadUser(String filename);
+    Path loadUser(String filename, boolean defaultImg);
 
-    Resource loadPlaygroundAsResource(String filename);
+    Resource loadPlaygroundAsResource(String filename, boolean defaultImg);
 
-    Resource loadUserAsResource(String filename);
+    Resource loadUserAsResource(String filename, boolean defaultImg);
 
     void deleteAll();
 
