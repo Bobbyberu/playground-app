@@ -22,9 +22,6 @@ const styles = theme => ({
 class PersonalInfos extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            password: '*********',
-        };
     }
 
     displayMailDialog = () => {
@@ -33,18 +30,11 @@ class PersonalInfos extends React.Component {
         this.props.dispatch(action)
     }
 
-    displayPasswordDialog = () => {
-        // Action à envoyer au store
-        const action = { type: "TOGGLE_PASSWORD_DIALOG", value: true }
-        this.props.dispatch(action)
-    }
-
     render() {
         const { classes } = this.props;
 
         return (
             <React.Fragment>
-                <PasswordDialog />
                 <MailDialog userId={this.props.userId} mail={this.props.mail}/>
                 <div>
                     <List>
@@ -55,17 +45,6 @@ class PersonalInfos extends React.Component {
                             />
                             <ListItemSecondaryAction>
                                 <IconButton aria-label="Modifier" onClick={this.displayMailDialog}>
-                                    <EditIcon />
-                                </IconButton>
-                            </ListItemSecondaryAction>
-                        </ListItem>
-                        <ListItem className={classes.item}>
-                            <ListItemText
-                                primary={'Mot de passe'}
-                                secondary={this.state.password}
-                            />
-                            <ListItemSecondaryAction >
-                                <IconButton aria-label="Modifier" onClick={this.displayPasswordDialog}>
                                     <EditIcon />
                                 </IconButton>
                             </ListItemSecondaryAction>

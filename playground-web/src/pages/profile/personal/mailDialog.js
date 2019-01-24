@@ -120,7 +120,6 @@ class MailDialog extends React.Component {
     }
 
     render() {
-        console.log(this.state.redirect)
         return this.state.redirect ? this.handleRedirect() : this.renderDialog(this.props);
     }
 }
