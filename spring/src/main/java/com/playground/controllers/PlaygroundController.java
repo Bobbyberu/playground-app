@@ -1,8 +1,10 @@
 package com.playground.controllers;
 
+import com.playground.model.Comment;
 import com.playground.model.Playground;
 import com.playground.model.Sport;
 import com.playground.model.User;
+import com.playground.service.CommentService;
 import com.playground.service.PlaygroundService;
 import com.playground.service.SportService;
 import com.playground.service.UserService;
@@ -39,6 +41,8 @@ public class PlaygroundController {
 
     private final SportService sportService;
 
+    private final CommentService commentService;
+
     /**
      * PlaygroundController Constructor
      *
@@ -46,11 +50,12 @@ public class PlaygroundController {
      */
     @Autowired
     public PlaygroundController(PlaygroundService playgroundService, StorageService storageService,
-                                UserService userService, SportService sportService) {
+                                UserService userService, SportService sportService, CommentService commentService) {
         this.playgroundService = playgroundService;
         this.storageService = storageService;
         this.userService = userService;
         this.sportService = sportService;
+        this.commentService = commentService;
     }
 
     /**
@@ -210,6 +215,12 @@ public class PlaygroundController {
 
         if (currentPlayground == null) {
             throw new ResourceNotFoundException("Playground with id " + id + " not found");
+        }
+
+        List<Comment> comments = commentService.getCommentsByPlayground(currentPlayground);
+
+        for (Comment comment : comments) {
+            commentService.deleteComment(comment);
         }
 
         playgroundService.deletePlayground(currentPlayground);

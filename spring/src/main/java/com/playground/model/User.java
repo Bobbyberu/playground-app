@@ -111,6 +111,7 @@ public class User implements UserDetails {
         return liste;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
@@ -143,6 +144,7 @@ public class User implements UserDetails {
         this.favouriteSports = favouriteSports;
     }
 
+    @JsonIgnore
     public Set<Playground> getFavouritePlaygrounds() {
         return favouritePlaygrounds;
     }

@@ -1,6 +1,7 @@
 package com.playground.controllers;
 
 import com.playground.model.Playground;
+import com.playground.service.CommentService;
 import com.playground.service.PlaygroundService;
 import com.playground.service.SportService;
 import com.playground.service.UserService;
@@ -46,6 +47,9 @@ public class PlaygroundControllerTest {
 
     @MockBean
     private SportService sportService;
+
+    @MockBean
+    private CommentService commentService;
 
     private Playground mockPlayground = new Playground("name", false, false, 0, 0, "surface", "description", "city", "address");
 
