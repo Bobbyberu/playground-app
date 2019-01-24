@@ -16,8 +16,7 @@ class ModalPlayground extends React.Component {
         this.state = {
             value: '',
         }
-        this.api = new PlaygroundAPI();
-        this.auth = new AuthService();
+        this.handleAdding = this.handleAdding.bind(this);
     }
 
     // gérer le changement de valeur des champs
@@ -33,10 +32,10 @@ class ModalPlayground extends React.Component {
         this.props.dispatch(action)
     };
 
-    handleAdding = () => {
+    async handleAdding() {
         // On transforme la liste de sport avec un format json
         let sportList = [];
-        this.props.properties.sports.map((sport) => (sportList.push({"id" : sport})));
+        this.props.properties.sports.map((sport) => (sportList.push({ "id": sport })));
         // Récupération des propriétés du playground en cours d'ajout
         let playground = {
             'name': this.props.properties.name,
@@ -47,13 +46,19 @@ class ModalPlayground extends React.Component {
             'surface': this.props.properties.surface,
             'description': this.props.properties.description,
             'averageMark': this.props.properties.averageMark,
-            'image': this.props.properties.image,
+            'imageName': null,
             'players': this.props.properties.players,
             'sports': sportList,
             'city': this.props.properties.city,
             'address': this.props.properties.street + " " + this.props.properties.cp + " " + this.props.properties.city
         };
-        this.api.postPlayground(playground);
+        // On récupère l'id du terrain ajouté
+        let idPlayground = await PlaygroundAPI.postPlayground(playground);
+        // On associe l'image au terrain
+        await PlaygroundAPI.uploadImagePlayground(idPlayground, this.props.properties.image);
+        // On ferme la fenêtre d'ajout
+        const action = { type: 'TOGGLE_ADD_PLAYGROUND', value: false };
+        await this.props.dispatch(action);
     }
 
     render() {
@@ -75,7 +80,7 @@ class ModalPlayground extends React.Component {
                         </Button>
                         {/* Condition un peu sale pour désactiver le bouton tant qu'on est pas à la dernière étape
                             Il faudrait définir les étapes du stepper (pour accéder à steps.length) dans un reducer si on a le time */}
-                        <Button onClick={this.handleAdding} color="primary" disabled={this.props.step !== 5}>
+                        <Button onClick={this.handleAdding} color="primary" disabled={this.props.properties.step !== 5 || !this.props.properties.name}>
                             Ajouter le terrain
                         </Button>
                     </DialogActions>
@@ -88,13 +93,8 @@ class ModalPlayground extends React.Component {
 // mapping du state global dans les props du composant Home
 const mapStateToProps = (state) => {
     return {
-<<<<<<< HEAD
-        open: state.toggleModal.open,
-        step: state.addPlayground.step,
+        open: state.toggleModal.openAddPlayground,
         properties: state.addPlayground
-=======
-        open: state.toggleModal.openAddPlayground
->>>>>>> develop
     }
 }
 

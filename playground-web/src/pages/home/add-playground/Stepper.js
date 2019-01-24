@@ -144,7 +144,7 @@ class StepperModal extends React.Component {
 										Précédent
                    					 </Button>
 									{/* Affichage du boutton 'finish' si on est sur la dernière étape */}
-									<Button variant="contained" color="primary" onClick={this.handleNext} className={classes.Button}>
+									<Button  color="primary" onClick={this.handleNext} className={classes.Button} disabled={this.props.requiredFields}>
 										{this.props.step === steps.length - 1 ? 'Valider' : 'Suivant'}
 									</Button>
 								</div>
@@ -164,6 +164,7 @@ StepperModal.propTypes = {
 const mapStateToProps = state => ({
 	step: state.addPlayground.step,
 	name: state.addPlayground.name,
+	requiredFields: state.addPlayground.requiredFields
 });
 
 // La fonction mapStateToProps permet d'abonner le composant aux changements du store Redux

@@ -16,6 +16,7 @@ const initialState = {
     sports: [],
     surface: null,
     step: 0,
+    requiredFields: true,
 }
 
 function addPlayground(state = initialState, action) {
@@ -37,6 +38,8 @@ function addPlayground(state = initialState, action) {
                 street: action.value[0],
                 cp: action.value[1],
                 city: action.value[2],
+                latitude: action.value[3],
+                longitude: action.value[4],
             }
             return nextState || state
 
@@ -77,6 +80,22 @@ function addPlayground(state = initialState, action) {
             // Réinitialiser tous les champs
             nextState = { ...initialState }
             return nextState
+
+        case 'SET_IMG':
+            // Ajout de l'image associée au terrain
+            nextState = {
+                ...state,
+                image: action.value
+            }
+            return nextState || state
+
+        case 'HANDLE_REQUIREDFIELDS':
+            // On gère ici les champs obligatoires pour les étapes de l'ajout d'un terrain
+            nextState = {
+                ...state,
+                requiredFields: action.value
+            }
+            return nextState || state
 
         default:
             return state

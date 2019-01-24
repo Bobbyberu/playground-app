@@ -72,7 +72,7 @@ export default class Test extends React.Component {
                 </div>
                 <div>
                     <img crossOrigin="true" src={PlaygroundAPI.getUserImage()} />
-                    <img crossOrigin="true" src={PlaygroundAPI.getPlaygroundImage(1)} />
+                    <img crossOrigin="true" src={PlaygroundAPI.getPlaygroundImage(2)} />
                 </div>
             </React.Fragment>
         );

@@ -37,6 +37,9 @@ class Sports extends React.Component {
     }
 
     componentDidMount() {
+        // On desactive le champ suivant car l'utilisateur doit renseigner au moins un sport
+        const action = { type: 'HANDLE_REQUIREDFIELDS', value: true }
+        this.props.dispatch(action)
         // Récupérer la liste des sports après que le composant ait été retranscrit dans le DOM
         PlaygroundAPI.getAllSports()
             .then((response) => {
@@ -47,9 +50,9 @@ class Sports extends React.Component {
     }
 
     componentWillUnmount() {
-		const action = { type: 'SET_SPORTS', value: this.state.checked };
-		this.props.dispatch(action);
-	}
+        const action = { type: 'SET_SPORTS', value: this.state.checked };
+        this.props.dispatch(action);
+    }
 
     // Methode qui gère le changement d'état sur une checkbox
     handleToggle = value => () => {
@@ -67,6 +70,15 @@ class Sports extends React.Component {
             newChecked.push(value);
         } else {
             newChecked.splice(currentIndex, 1);
+        }
+
+        // On active le champ suivant si un sport a été renseigné
+        if (newChecked.length > 0){
+            const action = { type: 'HANDLE_REQUIREDFIELDS', value: false };
+            this.props.dispatch(action);
+        }else {
+            const action = { type: 'HANDLE_REQUIREDFIELDS', value: true };
+            this.props.dispatch(action);
         }
 
         // On met à jour le state avec le nouveau state créé
@@ -114,9 +126,9 @@ Sports.propTypes = {
 
 // mapping du state global dans les props du composant Sports
 const mapStateToProps = (state) => {
-	return {
-		sports: state.addPlayground.sports
-	}
+    return {
+        sports: state.addPlayground.sports
+    }
 }
 
 // mapStateToProps pour abonner le composant aux changements du store Redux

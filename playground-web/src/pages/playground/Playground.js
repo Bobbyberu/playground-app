@@ -215,7 +215,6 @@ class Playground extends Component {
 
       const { classes, reportedComment } = this.props;
 
-      let playgroundImg = this.state.playground.image ? this.state.playground.image : defaultPlayground;
       return (
         <MuiThemeProvider theme={theme}>
           <Navbar searchbar={false} />
@@ -225,7 +224,7 @@ class Playground extends Component {
               <CardMedia
                 component="img"
                 className={classes.media}
-                image={playgroundImg}
+                image={PlaygroundAPI.getPlaygroundImage(this.state.playground.id)}
                 title={this.state.playground.description}
               />
               {/* Informations sur le playground */}

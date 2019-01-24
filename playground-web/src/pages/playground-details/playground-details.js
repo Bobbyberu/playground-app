@@ -161,8 +161,7 @@ class PlaygroundDetails extends React.Component {
 
   render() {
     const { classes } = this.props;
-    let playgroundImg = this.props.playground.image ? this.props.playground.image : defaultPlayground;
-
+    
     return (
       <MuiThemeProvider theme={theme}>
         <div className="global">
@@ -170,7 +169,7 @@ class PlaygroundDetails extends React.Component {
             {/* Image associée au playground */}
             <CardMedia
               className={classes.media}
-              image={playgroundImg}
+              image={PlaygroundAPI.getPlaygroundImage(this.props.playground.id)}
               title="Photo du playground"
             />
             {/* Informations sur le playground */}

@@ -17,10 +17,6 @@ function toggleModal(state = initialState, action) {
                 ...state,
                 openAddPlayground: action.value
             }
-<<<<<<< HEAD
-            // Return nextState si sa valeur n'est pas à undefined sinon return state (principe d'immuable)
-            return nextState || state
-=======
             return nextState || state;
 
         case 'TOGGLE_REPORT_PLAYGROUND':
@@ -46,7 +42,6 @@ function toggleModal(state = initialState, action) {
                 reportedComment: action.value.comment,
             }
             return nextState || state;
->>>>>>> develop
         default:
             return state;
     }

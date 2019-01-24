@@ -27,8 +27,14 @@ class API {
   }
 
   getAllSports() {
-    return axios.get('/sports.json')
-      .then(response => response.data.result);
+    return axios({
+      method: 'get',
+      url: api + 'sports/',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => response.data);
   }
 
   getPlaygroundById(id) {
@@ -60,7 +66,7 @@ class API {
   }
 
   postPlayground(playground) {
-    let token = authService.getToken();
+    let token = AuthService.getToken();
     return axios({
       method: 'post',
       url: api + 'playgrounds',
@@ -70,9 +76,10 @@ class API {
         'Content-Type': 'application/json'
       }
     })
+      .then(response => response.data.id)
       .catch(err => console.log(err));
   }
-}
+
   getAllComments(playgroundId) {
     return axios({
       method: 'get',
