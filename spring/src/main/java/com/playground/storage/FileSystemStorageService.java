@@ -23,10 +23,16 @@ public class FileSystemStorageService implements StorageService {
     private final Path rootLocationPlayground;
     private final Path rootLocationUser;
 
+    private final Path rootDefaultPlaygroundLocation;
+    private final Path rootDefaultUserLocation;
+
     @Autowired
     public FileSystemStorageService(StorageProperties properties) {
         this.rootLocationPlayground = Paths.get(properties.getLocationPlayground());
         this.rootLocationUser = Paths.get(properties.getLocationUser());
+
+        this.rootDefaultPlaygroundLocation = Paths.get(getClass().getClassLoader().getResource("img/default_playground").getPath());
+        this.rootDefaultUserLocation = Paths.get(getClass().getClassLoader().getResource("img/default_avatar").getPath());
     }
 
     @Override
@@ -100,19 +106,25 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public Path loadPlayground(String filename) {
-        return rootLocationPlayground.resolve(filename);
+    public Path loadPlayground(String filename, boolean defaultImg) {
+        if(defaultImg)
+            return  rootDefaultPlaygroundLocation;
+        else
+            return rootLocationPlayground.resolve(filename);
     }
 
     @Override
-    public Path loadUser(String filename) {
-        return rootLocationUser.resolve(filename);
+    public Path loadUser(String filename, boolean defaultImg) {
+        if(defaultImg)
+            return rootDefaultUserLocation;
+        else
+            return rootLocationUser.resolve(filename);
     }
 
     @Override
-    public Resource loadPlaygroundAsResource(String filename) {
+    public Resource loadPlaygroundAsResource(String filename, boolean defaultImg) {
         try {
-            Path file = loadPlayground(filename);
+            Path file = loadPlayground(filename, defaultImg);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable()) {
                 return resource;
@@ -128,9 +140,9 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public Resource loadUserAsResource(String filename) {
+    public Resource loadUserAsResource(String filename, boolean defaultImg) {
         try {
-            Path file = loadUser(filename);
+            Path file = loadUser(filename, defaultImg);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable()) {
                 return resource;
