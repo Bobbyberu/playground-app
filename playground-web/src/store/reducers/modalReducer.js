@@ -3,7 +3,9 @@ const initialState = {
     openAddComment: false,
     openReportPlayground: false,
     openReportComment: false,
-    reportedComment: null
+    reportedComment: null,
+    openPasswordDialog: false,
+    openMailDialog: false,
 };
 
 function toggleModal(state = initialState, action) {
@@ -42,6 +44,23 @@ function toggleModal(state = initialState, action) {
                 reportedComment: action.value.comment,
             }
             return nextState || state;
+        
+        case 'TOGGLE_PASSWORD_DIALOG':
+            // handle modal to change password
+            nextState = {
+                ...state,
+                openPasswordDialog: action.value,
+            }
+            return nextState || state;
+
+        case 'TOGGLE_MAIL_DIALOG':
+            // handle modal to change mail
+            nextState = {
+                ...state,
+                openMailDialog: action.value,
+            }
+            return nextState || state;
+
         default:
             return state;
     }

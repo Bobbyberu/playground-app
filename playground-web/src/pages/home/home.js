@@ -8,6 +8,7 @@ import ButtonAdd from "./add-playground/button-add";
 import ModalPlayground from "./add-playground/modal-playground";
 import NavBar from "../../common-components/nav-bar/nav-bar";
 import PlaygroundAPI from '../../services/playground-api';
+import AuthService from '../../services/auth';
 import PlaygroundDetails from '../playground-details/playground-details';
 import SnackbarContentWrapper from '../../common-components/snackbar/SnackbarContentWrapper';
 
@@ -124,7 +125,7 @@ class Home extends Component {
                         />
                         {this.renderPlaygrounds()}
                     </Map>
-                    <ButtonAdd />
+                    {AuthService.isUser() && <ButtonAdd />}
                     <ModalPlayground />
                     <Snackbar
                         anchorOrigin={{

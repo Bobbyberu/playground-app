@@ -41,7 +41,7 @@ public interface IUserService {
      *
      * @return User
      */
-    User getUserByMail(String username);
+    public User getUserByMail(String mail);
 
     /**
      * Create a user and return it

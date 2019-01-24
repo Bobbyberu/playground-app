@@ -51,8 +51,21 @@ class API {
       });
   }
 
-  getUser() {
-    let mail = AuthService.decodeToken().sub;
+  getUserById(id) {
+    return axios({
+      method: 'get',
+      url: api + 'users/' + id,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': AuthService.getToken()
+      }
+    })
+      .then(response => response.data)
+      .catch(err => console.log(err));
+  }
+
+
+  getUser(mail) {
     return axios({
       method: 'get',
       url: api + 'users/mail/' + mail,
@@ -63,6 +76,31 @@ class API {
     })
       .then(response => response.data)
       .catch(err => console.log(err));
+  }
+
+  getUserByMail(mail) {
+    return axios({
+      method: 'get',
+      url: api + 'users/mail/' + mail,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': AuthService.getToken()
+      }
+    })
+      .then(response => response.data)
+      .catch(err => console.log(err));
+  }
+
+  updateUser(user) {
+    return axios({
+      method: 'put',
+      url: api + 'users/' + user.id,
+      data: user,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': AuthService.getToken()
+      }
+    })
   }
 
   postPlayground(playground) {
