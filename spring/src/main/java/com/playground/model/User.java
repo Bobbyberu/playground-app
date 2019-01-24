@@ -111,7 +111,6 @@ public class User implements UserDetails {
         return liste;
     }
 
-    @JsonIgnore
     public String getPassword() {
         return password;
     }
