@@ -1,7 +1,7 @@
 package com.playground.service;
 
-import com.playground.model.User;
-import com.playground.model.VerificationToken;
+import com.playground.model.entity.User;
+import com.playground.model.entity.VerificationToken;
 import com.playground.repository.RoleRepository;
 import com.playground.repository.UserRepository;
 import com.playground.repository.VerificationTokenRepository;

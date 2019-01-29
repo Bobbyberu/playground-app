@@ -1,6 +1,6 @@
 package com.playground.service;
 
-import com.playground.model.Role;
+import com.playground.model.entity.Role;
 import com.playground.repository.RoleRepository;
 import com.playground.service.interfaces.IRoleService;
 import org.springframework.beans.factory.annotation.Autowired;

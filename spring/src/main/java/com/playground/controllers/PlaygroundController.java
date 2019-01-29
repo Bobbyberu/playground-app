@@ -1,6 +1,10 @@
 package com.playground.controllers;
 
-import com.playground.model.*;
+import com.playground.model.entity.Comment;
+import com.playground.model.entity.Playground;
+import com.playground.model.entity.ReportPlayground;
+import com.playground.model.entity.Sport;
+import com.playground.model.entity.User;
 import com.playground.service.*;
 import com.playground.storage.StorageService;
 import com.playground.utils.ResourceNotFoundException;
@@ -18,7 +22,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Class PlaygroundController

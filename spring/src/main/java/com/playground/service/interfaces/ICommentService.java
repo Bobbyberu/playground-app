@@ -1,7 +1,8 @@
 package com.playground.service.interfaces;
 
-import com.playground.model.Comment;
-import com.playground.model.Playground;
+import com.playground.model.entity.Comment;
+import com.playground.model.entity.Playground;
+import com.playground.model.response.CommentDto;
 
 import java.util.List;
 
@@ -36,16 +37,6 @@ public interface ICommentService {
     Comment getComment(int id);
 
     /**
-     * Return a comment of a playground
-     *
-     * @param playground Playground
-     * @param id int
-     *
-     * @return Comment
-     */
-    Comment getCommentByPlayground(Playground playground, int id);
-
-    /**
      * Create a comment, update average mark on playground and return it
      *
      * @param playground Playground
@@ -53,7 +44,7 @@ public interface ICommentService {
      *
      * @return Comment
      */
-    Comment createComment(Playground playground, Comment comment);
+    CommentDto createComment(Playground playground, Comment comment);
 
     /**
      * Update a comment and return it

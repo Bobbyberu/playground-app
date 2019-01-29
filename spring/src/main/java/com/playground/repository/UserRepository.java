@@ -1,11 +1,9 @@
 package com.playground.repository;
 
-import com.playground.model.User;
-import org.springframework.data.jpa.repository.Query;
+import com.playground.model.entity.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository

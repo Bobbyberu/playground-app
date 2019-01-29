@@ -1,8 +1,8 @@
 package com.playground.service;
 
-import com.playground.model.Playground;
-import com.playground.model.Sport;
-import com.playground.model.User;
+import com.playground.model.entity.Playground;
+import com.playground.model.entity.Sport;
+import com.playground.model.entity.User;
 import com.playground.repository.PlaygroundRepository;
 import com.playground.service.interfaces.IPlaygroundService;
 import org.springframework.beans.factory.annotation.Autowired;

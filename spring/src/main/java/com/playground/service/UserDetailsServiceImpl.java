@@ -1,6 +1,6 @@
 package com.playground.service;
 
-import com.playground.model.User;
+import com.playground.model.entity.User;
 import com.playground.repository.UserRepository;
 import com.playground.utils.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

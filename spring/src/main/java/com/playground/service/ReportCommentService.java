@@ -1,7 +1,7 @@
 package com.playground.service;
 
-import com.playground.model.Comment;
-import com.playground.model.ReportComment;
+import com.playground.model.entity.Comment;
+import com.playground.model.entity.ReportComment;
 import com.playground.repository.ReportCommentRepository;
 import com.playground.service.interfaces.IReportCommentService;
 import org.springframework.beans.factory.annotation.Autowired;

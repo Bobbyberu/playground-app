@@ -1,15 +1,15 @@
 package com.playground.service;
 
-import com.playground.model.Comment;
-import com.playground.model.Playground;
-import com.playground.model.ReportComment;
+import com.playground.model.entity.Comment;
+import com.playground.model.entity.Playground;
+import com.playground.model.entity.ReportComment;
+import com.playground.model.response.CommentDto;
 import com.playground.repository.CommentRepository;
 import com.playground.repository.PlaygroundRepository;
 import com.playground.service.interfaces.ICommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,12 +59,7 @@ public class CommentService implements ICommentService {
     }
 
     @Override
-    public Comment getCommentByPlayground(Playground playground, int id) {
-        return commentRepository.getOneByPlayground(playground, id);
-    }
-
-    @Override
-    public Comment createComment(Playground playground, Comment comment) {
+    public CommentDto createComment(Playground playground, Comment comment) {
 
         comment.setPlayground(playground);
         List<Comment> list = commentRepository.getCommentsByPlayground(playground);
@@ -75,7 +70,7 @@ public class CommentService implements ICommentService {
         playground.setAverageMark(Math.floor((sum + comment.getMark()) / (list.size()+1) * 100) / 100);
         playgroundRepository.save(playground);
 
-        return commentRepository.save(comment);
+        return new CommentDto(commentRepository.save(comment));
     }
 
     @Override

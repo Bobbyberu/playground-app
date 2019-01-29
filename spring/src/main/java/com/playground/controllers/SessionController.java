@@ -1,6 +1,6 @@
 package com.playground.controllers;
 
-import com.playground.model.Session;
+import com.playground.model.entity.Session;
 import com.playground.service.SessionService;
 import com.playground.utils.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

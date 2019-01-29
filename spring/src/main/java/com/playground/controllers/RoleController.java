@@ -1,6 +1,6 @@
 package com.playground.controllers;
 
-import com.playground.model.Role;
+import com.playground.model.entity.Role;
 import com.playground.service.RoleService;
 import com.playground.utils.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

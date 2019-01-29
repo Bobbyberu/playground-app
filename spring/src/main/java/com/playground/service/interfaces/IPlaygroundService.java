@@ -1,8 +1,8 @@
 package com.playground.service.interfaces;
 
-import com.playground.model.Playground;
-import com.playground.model.Sport;
-import com.playground.model.User;
+import com.playground.model.entity.Playground;
+import com.playground.model.entity.Sport;
+import com.playground.model.entity.User;
 
 import java.util.List;
 

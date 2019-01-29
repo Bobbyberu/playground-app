@@ -1,6 +1,7 @@
-package com.playground.model;
+package com.playground.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +20,7 @@ import java.util.*;
 @Entity
 @Table(name = "user")
 @EntityListeners(AuditingEntityListener.class)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User implements UserDetails {
 
     @Id
@@ -67,17 +69,17 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return !archived;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !enabled;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return !banned;
     }
 
     public void setUsername(String username) {

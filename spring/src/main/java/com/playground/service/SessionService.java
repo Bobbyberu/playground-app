@@ -1,6 +1,6 @@
 package com.playground.service;
 
-import com.playground.model.Session;
+import com.playground.model.entity.Session;
 import com.playground.repository.SessionRepository;
 import com.playground.service.interfaces.ISessionService;
 import org.springframework.beans.factory.annotation.Autowired;

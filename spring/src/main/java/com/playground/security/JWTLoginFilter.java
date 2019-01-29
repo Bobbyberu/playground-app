@@ -1,6 +1,6 @@
 package com.playground.security;
 
-import com.playground.model.User;
+import com.playground.model.entity.User;
 import com.playground.service.TokenAuthenticationService;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;

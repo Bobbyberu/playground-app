@@ -1,6 +1,6 @@
 package com.playground.repository;
 
-import com.playground.model.Role;
+import com.playground.model.entity.Role;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

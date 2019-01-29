@@ -1,7 +1,7 @@
 package com.playground.controllers;
 
-import com.playground.model.Playground;
-import com.playground.model.User;
+import com.playground.model.entity.Playground;
+import com.playground.model.entity.User;
 import com.playground.service.PlaygroundService;
 import com.playground.service.TokenAuthenticationService;
 import com.playground.service.UserService;

@@ -1,7 +1,7 @@
 package com.playground.service.interfaces;
 
-import com.playground.model.Comment;
-import com.playground.model.ReportComment;
+import com.playground.model.entity.Comment;
+import com.playground.model.entity.ReportComment;
 
 import java.util.List;
 

@@ -1,7 +1,8 @@
 package com.playground.controllers;
 
-import com.playground.model.Comment;
-import com.playground.model.Playground;
+import com.playground.model.entity.Comment;
+import com.playground.model.entity.Playground;
+import com.playground.model.response.CommentDto;
 import com.playground.service.CommentService;
 import com.playground.service.PlaygroundService;
 import com.playground.utils.ResourceNotFoundException;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Class CommentController
@@ -18,16 +20,14 @@ import java.util.List;
 @RestController
 public class CommentController {
 
-    /** CommentService commentService */
     private final CommentService commentService;
 
-    /** PlaygroundService playgroundService */
     private final PlaygroundService playgroundService;
 
     /**
      * CommentController Constructor
      *
-     * @param commentService CommentService
+     * @param commentService    CommentService
      * @param playgroundService PlaygroundService
      */
     @Autowired
@@ -42,48 +42,42 @@ public class CommentController {
      * @return ResponseEntity
      */
     @GetMapping(value = "/comments", produces = "application/json")
-    public ResponseEntity<List<Comment>> getComments() {
-        return new ResponseEntity<>(commentService.getComments(), HttpStatus.OK);
+    public ResponseEntity<List<CommentDto>> getComments() {
+
+        List<CommentDto> comments = commentService.getComments()
+                .stream().map(c -> new CommentDto(c))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(comments, HttpStatus.OK);
     }
 
     /**
      * [GET] Return one comment by id
      *
-     * @param playgroundId int
-     * @param commentId int
-     *
+     * @param id int
      * @return ResponseEntity
-     *
      * @throws ResourceNotFoundException Playground not found
      * @throws ResourceNotFoundException Comment not found
      */
-    @GetMapping(value = "/playgrounds/{playgroundId}/comments/{commentId}", produces = "application/json")
-    public ResponseEntity<Comment> getComment(@PathVariable("playgroundId") int playgroundId, @PathVariable("commentId") int commentId) throws ResourceNotFoundException {
+    @GetMapping(value = "/comments/{id}", produces = "application/json")
+    public ResponseEntity<CommentDto> getComment(@PathVariable("id") int id) throws ResourceNotFoundException {
 
-        Playground playground = playgroundService.getPlayground(playgroundId);
+        Comment comment = commentService.getComment(id);
+        if (comment == null)
+            throw new ResourceNotFoundException("Comment with id " + id + " not found for this playground");
 
-        if (playground == null) {
-            throw new ResourceNotFoundException("Playground with id " + playgroundId + " not found");
-        }
-
-        Comment comment = commentService.getCommentByPlayground(playground, commentId);
-        if (comment == null) throw new ResourceNotFoundException("Comment with id " + commentId + " not found for this playground");
-
-        return new ResponseEntity<>(comment, HttpStatus.OK);
+        return new ResponseEntity<>(new CommentDto(comment), HttpStatus.OK);
     }
 
     /**
      * [POST] Create a comment and return it
      *
      * @param playgroundId int
-     * @param comment Comment
-     *
+     * @param comment      Comment
      * @return ResponseEntity
-     *
      * @throws ResourceNotFoundException Playground not found
      */
     @PostMapping(value = "/playgrounds/{playgroundId}/comments", consumes = "application/json")
-    public ResponseEntity<Comment> createComment(@PathVariable("playgroundId") int playgroundId, @RequestBody Comment comment) throws ResourceNotFoundException {
+    public ResponseEntity<CommentDto> createComment(@PathVariable("playgroundId") int playgroundId, @RequestBody Comment comment) throws ResourceNotFoundException {
         Playground playground = playgroundService.getPlayground(playgroundId);
 
         if (playground == null) {
@@ -96,50 +90,40 @@ public class CommentController {
     /**
      * [PUT] Update a comment and return it
      *
-     * @param playgroundId int
-     * @param commentId int
-     * @param comment Comment
-     *
+     * @param id int
+     * @param comment   Comment
      * @return ResponseEntity
-     *
      * @throws ResourceNotFoundException Playground not found
      * @throws ResourceNotFoundException Comment not found
      */
-    @PutMapping("/playgrounds/{playgroundId}/comments/{commentId}")
-    public ResponseEntity<Comment> updateComment(@PathVariable("playgroundId") int playgroundId, @PathVariable("commentId") int commentId, @RequestBody Comment comment) throws ResourceNotFoundException {
+    @PutMapping("/comments/{id}")
+    public ResponseEntity<CommentDto> updateComment(@PathVariable("id") int id, @RequestBody Comment comment) throws ResourceNotFoundException {
 
-        Playground playground = playgroundService.getPlayground(playgroundId);
-
-        if (playground == null) {
-            throw new ResourceNotFoundException("Playground with id " + playgroundId + " not found");
-        }
-
-        Comment currentComment = commentService.getCommentByPlayground(playground, commentId);
+        Comment currentComment = commentService.getComment(id);
 
         if (currentComment == null) {
-            throw new ResourceNotFoundException("Comment with id " + commentId + " not found for this playground");
+            throw new ResourceNotFoundException("Comment with id " + id + " not found for this playground");
         }
 
-        return new ResponseEntity<>(commentService.updateComment(commentId, comment), HttpStatus.OK);
+        return new ResponseEntity<>(new CommentDto(commentService.updateComment(id, comment)),
+                HttpStatus.OK);
     }
 
     /**
      * [DELETE] Delete a comment
      *
-     * @param commentId int
-     *
+     * @param id int
      * @return ResponseEntity
-     *
      * @throws ResourceNotFoundException Playground not found
      * @throws ResourceNotFoundException Comment not found
      */
-    @DeleteMapping("/comments/{commentId}")
-    public ResponseEntity deleteComment(@PathVariable("commentId") int commentId) throws ResourceNotFoundException {
+    @DeleteMapping("/comments/{id}")
+    public ResponseEntity deleteComment(@PathVariable("id") int id) throws ResourceNotFoundException {
 
-        Comment currentComment = commentService.getComment(commentId);
+        Comment currentComment = commentService.getComment(id);
 
         if (currentComment == null) {
-            throw new ResourceNotFoundException("Comment with id " + commentId + " not found for this playground");
+            throw new ResourceNotFoundException("Comment with id " + id + " not found for this playground");
         }
 
         commentService.deleteComment(currentComment);
@@ -150,48 +134,39 @@ public class CommentController {
     /**
      * [PUT] Archived a comment
      *
-     * @param playgroundId playgroundId
-     * @param commentId int
-     *
+     * @param id    int
      * @return ResponseEntity
-     *
      * @throws ResourceNotFoundException Comment not found
      */
-    @PutMapping("/playgrounds/{playgroundId}/comments/archived/{commentId}")
-    public ResponseEntity<Comment> archivedComment(@PathVariable("playgroundId") int playgroundId, @PathVariable("commentId") int commentId) throws ResourceNotFoundException {
-        Playground playground = playgroundService.getPlayground(playgroundId);
-
-        if (playground == null) {
-            throw new ResourceNotFoundException("Playground with id " + playgroundId + " not found");
-        }
-
-        Comment currentComment = commentService.getCommentByPlayground(playground, commentId);
+    @PutMapping("/comments/archived/{id}")
+    public ResponseEntity<CommentDto> archivedComment(@PathVariable("id") int id) throws ResourceNotFoundException {
+        Comment currentComment = commentService.getComment(id);
 
         if (currentComment == null) {
-            throw new ResourceNotFoundException("Comment with id " + commentId + " not found for this playground");
+            throw new ResourceNotFoundException("Comment with id " + id + " not found for this playground");
         }
 
-        return new ResponseEntity<>(commentService.archivedComment(currentComment), HttpStatus.OK);
+        return new ResponseEntity<>(new CommentDto(commentService.archivedComment(currentComment)), HttpStatus.OK);
     }
 
     /**
      * [GET] Return all comments of a playground
      *
      * @param playgroundId int
-     *
      * @return ResponseEntity
-     *
      * @throws ResourceNotFoundException Playground not found
      */
     @GetMapping(value = "/playgrounds/{playgroundId}/comments", produces = "application/json")
-    public ResponseEntity<List<Comment>> getCommentsByPlaygroundId(@PathVariable(value = "playgroundId") int playgroundId) throws ResourceNotFoundException {
+    public ResponseEntity<List<CommentDto>> getCommentsByPlaygroundId(@PathVariable(value = "playgroundId") int playgroundId) throws ResourceNotFoundException {
         Playground playground = playgroundService.getPlayground(playgroundId);
 
         if (playground == null) {
             throw new ResourceNotFoundException("Playground with id " + playgroundId + " not found");
         }
 
-        List<Comment> listComments = commentService.getCommentsByPlayground(playground);
+        List<CommentDto> listComments = commentService.getCommentsByPlayground(playground)
+                .stream().map(c -> new CommentDto(c))
+                .collect(Collectors.toList());
 
         return new ResponseEntity<>(listComments, HttpStatus.OK);
     }
