@@ -1,6 +1,6 @@
 package com.playground.service;
 
-import com.playground.model.Sport;
+import com.playground.model.entity.Sport;
 import com.playground.repository.SportRepository;
 import com.playground.service.interfaces.ISportService;
 import org.springframework.beans.factory.annotation.Autowired;

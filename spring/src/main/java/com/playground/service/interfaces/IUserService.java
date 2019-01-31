@@ -1,6 +1,6 @@
 package com.playground.service.interfaces;
 
-import com.playground.model.User;
+import com.playground.model.entity.User;
 
 import java.util.List;
 

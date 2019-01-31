@@ -1,6 +1,6 @@
 package com.playground.service.interfaces;
 
-import com.playground.model.Sport;
+import com.playground.model.entity.Sport;
 
 import java.util.List;
 

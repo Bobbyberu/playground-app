@@ -3,11 +3,11 @@
 Back to [README.md](../README.md)
 
 - [[GET] /api/comments](#1)
-- [[GET] /api/playgrounds/\{playgroundId\}/comments/\{commentId\}](#2)
-- [[POST] /api/playgrounds/\{playgroundId\}/comments](#3)
-- [[PUT] /api/playgrounds/\{playgroundId\}/comments/\{commentId\}](#4)
-- [[DELETE] /api/comments/\{commentId\}](#5)
-- [[PUT] /api/playgrounds/\{playgroundId\}/comments/archived/\{commentId\}](#6)
+- [[GET] /api/comments/\{id\}](#2)
+- [[POST] /api/comments](#3)
+- [[PUT] /api/comments/\{id\}](#4)
+- [[DELETE] /api/comments/\{id\}](#5)
+- [[PUT] /api/comments/archived/\{id\}](#6)
 - [[GET] /api/playgrounds/\{playgroundId\}/comments](#7)
 
 ___
@@ -26,13 +26,12 @@ Get all comments
 
 ___
 
-## [GET] /api/playgrounds/\{playgroundId\}/comments/\{commentId\} {#2}
+## [GET] /api/comments/\{id\} {#2}
 
 Get a comment
 
 ### Parameters
 
-- *\{playgroundId\} :* integer
 - *\{commentId\} :* integer
 
 ### Response (HTTP)
@@ -42,13 +41,12 @@ Get a comment
 
 ___
 
-## [POST] /api/playgrounds/\{playgroundId\}/comments {#3}
+## [POST] /api/comments {#3}
 
 Create a comment
 
 ### Parameters
 
-- *\{playgroundId\} :* integer
 - *json* : object Comment
 
 ### Response (HTTP)
@@ -58,14 +56,13 @@ Create a comment
 
 ___
 
-## [PUT] /api/playgrounds/\{playgroundId\}/comments/\{commentId\} {#4}
+## [PUT] /api/comments/\{id\} {#4}
 
 Update a comment
 
 ### Parameters
 
-- *\{playgroundId\} :* integer
-- *\{commentId\} :* integer
+- *\{id\} :* integer
 - *json :* object Comment
 
 ### Response (HTTP)
@@ -75,14 +72,13 @@ Update a comment
 
 ___
 
-## [DELETE] /api/comments/\{commentId\} {#5}
+## [DELETE] /api/comments/\{id\} {#5}
 
 Delete a comment
 
 ### Parameters
 
-- *\{playgroundId\} :* integer
-- *\{commentId\} :* integer
+- *\{id\} :* integer
 
 ### Response (HTTP)
 
@@ -91,14 +87,13 @@ Delete a comment
   
 ___
 
-## [PUT] /api/playgrounds/\{playgroundId\}/comments/archived/\{\} {#6}
+## [PUT] /api/comments/archived/\{id\} {#6}
 
 Archived a comment
 
 ### Parameters
 
-- *\{playgroundId\} :* integer
-- *\{commentId\} :* integer
+- *\{id\} :* integer
 
 ### Response (HTTP)
 

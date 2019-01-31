@@ -1,6 +1,6 @@
 package com.playground.service.interfaces;
 
-import com.playground.model.Role;
+import com.playground.model.entity.Role;
 
 import java.util.List;
 

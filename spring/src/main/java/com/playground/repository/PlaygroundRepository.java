@@ -1,6 +1,6 @@
 package com.playground.repository;
 
-import com.playground.model.Playground;
+import com.playground.model.entity.Playground;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

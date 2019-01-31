@@ -1,7 +1,7 @@
 package com.playground.service;
 
-import com.playground.model.Playground;
-import com.playground.model.ReportPlayground;
+import com.playground.model.entity.Playground;
+import com.playground.model.entity.ReportPlayground;
 import com.playground.repository.ReportPlaygroundRepository;
 import com.playground.service.interfaces.IReportPlaygroundService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package com.playground.repository;
 
-import com.playground.model.Comment;
-import com.playground.model.ReportComment;
+import com.playground.model.entity.Comment;
+import com.playground.model.entity.ReportComment;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

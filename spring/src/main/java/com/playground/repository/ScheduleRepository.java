@@ -1,6 +1,6 @@
 package com.playground.repository;
 
-import com.playground.model.Schedule;
+import com.playground.model.entity.Schedule;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

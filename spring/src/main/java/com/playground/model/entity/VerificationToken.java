@@ -1,4 +1,4 @@
-package com.playground.model;
+package com.playground.model.entity;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 

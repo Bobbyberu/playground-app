@@ -1,8 +1,7 @@
 package com.playground.controllers;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.playground.model.Playground;
-import com.playground.model.ReportPlayground;
+import com.playground.model.entity.Playground;
+import com.playground.model.entity.ReportPlayground;
 import com.playground.service.PlaygroundService;
 import com.playground.service.ReportPlaygroundService;
 import com.playground.utils.ResourceNotFoundException;
@@ -11,10 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Class ReportPlaygroundController

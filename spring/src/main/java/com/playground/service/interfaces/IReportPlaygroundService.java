@@ -1,7 +1,7 @@
 package com.playground.service.interfaces;
 
-import com.playground.model.Playground;
-import com.playground.model.ReportPlayground;
+import com.playground.model.entity.Playground;
+import com.playground.model.entity.ReportPlayground;
 
 import java.util.List;
 

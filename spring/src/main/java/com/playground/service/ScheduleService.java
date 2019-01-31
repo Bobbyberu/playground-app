@@ -1,6 +1,6 @@
 package com.playground.service;
 
-import com.playground.model.Schedule;
+import com.playground.model.entity.Schedule;
 import com.playground.repository.ScheduleRepository;
 import com.playground.service.interfaces.IScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;

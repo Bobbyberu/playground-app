@@ -1,6 +1,6 @@
 package com.playground.service.interfaces;
 
-import com.playground.model.Session;
+import com.playground.model.entity.Session;
 
 import java.util.List;
 

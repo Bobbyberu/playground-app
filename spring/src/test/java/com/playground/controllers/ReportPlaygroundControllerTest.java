@@ -1,7 +1,7 @@
 package com.playground.controllers;
 
-import com.playground.model.ReportPlayground;
-import com.playground.model.Playground;
+import com.playground.model.entity.ReportPlayground;
+import com.playground.model.entity.Playground;
 import com.playground.service.ReportPlaygroundService;
 import com.playground.service.PlaygroundService;
 import org.junit.Test;

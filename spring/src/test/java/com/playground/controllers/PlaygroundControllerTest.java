@@ -1,13 +1,12 @@
 package com.playground.controllers;
 
-import com.playground.model.Playground;
-import com.playground.model.Sport;
-import com.playground.model.User;
+import com.playground.model.entity.Playground;
+import com.playground.model.entity.Sport;
+import com.playground.model.entity.User;
 import com.playground.service.*;
 import com.playground.storage.StorageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;

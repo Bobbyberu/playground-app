@@ -1,6 +1,6 @@
 package com.playground.service.interfaces;
 
-import com.playground.model.Schedule;
+import com.playground.model.entity.Schedule;
 
 import java.util.List;
 

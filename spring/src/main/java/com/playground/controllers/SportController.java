@@ -1,6 +1,6 @@
 package com.playground.controllers;
 
-import com.playground.model.Sport;
+import com.playground.model.entity.Sport;
 import com.playground.service.SportService;
 import com.playground.utils.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

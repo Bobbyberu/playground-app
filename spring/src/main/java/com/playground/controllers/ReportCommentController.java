@@ -1,7 +1,7 @@
 package com.playground.controllers;
 
-import com.playground.model.Comment;
-import com.playground.model.ReportComment;
+import com.playground.model.entity.Comment;
+import com.playground.model.entity.ReportComment;
 import com.playground.service.CommentService;
 import com.playground.service.ReportCommentService;
 import com.playground.utils.ResourceNotFoundException;
