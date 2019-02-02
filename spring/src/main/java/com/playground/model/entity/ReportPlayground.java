@@ -13,10 +13,13 @@ public class ReportPlayground {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+
     @ManyToOne
     private User author;
+
     @ManyToOne
     private Playground playground;
+
     private String description;
 
     public ReportPlayground(User author, Playground playground, String description) {

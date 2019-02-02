@@ -3,9 +3,9 @@
 Back to [README.md](../README.md)
 
 - [[GET] /api/reportPlaygrounds](#1)
-- [[GET] /api/playgrounds/\{playgroundId\}/reportPlaygrounds/\{reportPlaygroundId\}](#2)
+- [[GET] /api/reportPlaygrounds/\{reportPlaygroundId\}](#2)
 - [[POST] /api/playgrounds/\{playgroundId\}/reportPlaygrounds](#3)
-- [[PUT] /api/playgrounds/\{playgroundId\}/reportPlaygrounds/\{reportPlaygroundId\}](#4)
+- [[PUT] /api/reportPlaygrounds/\{reportPlaygroundId\}](#4)
 - [[DELETE] /api/reportPlaygrounds/\{reportPlaygroundId\}](#5)
 
 ___
@@ -24,13 +24,12 @@ Get all reportPlaygrounds
 
 ___
 
-## [GET] /api/playgrounds/\{playgroundId\}/reportPlaygrounds/\{reportPlaygroundId\} {#2}
+## [GET] /api/reportPlaygrounds/\{reportPlaygroundId\} {#2}
 
 Get a reportPlayground
 
 ### Parameters
 
-- *\{playgroundId\} :* integer
 - *\{reportPlaygroundId\} :* integer
 
 ### Response (HTTP)
@@ -56,13 +55,12 @@ Create a reportPlayground
 
 ___
 
-## [PUT] /api/playgrounds/\{playgroundId\}/reportPlaygrounds/\{reportPlaygroundId\} {#4}
+## [PUT] /api/reportPlaygrounds/\{reportPlaygroundId\} {#4}
 
 Update a reportPlayground
 
 ### Parameters
 
-- *\{playgroundId\} :* integer
 - *\{reportPlaygroundId\} :* integer
 - *json :* object ReportPlayground
 

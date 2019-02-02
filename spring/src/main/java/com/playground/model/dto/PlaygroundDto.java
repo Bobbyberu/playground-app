@@ -64,6 +64,12 @@ public class PlaygroundDto {
         this.longitude = longitude;
     }
 
+    // create summary of playground to use in report
+    public PlaygroundDto(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     // to get favourites playgrounds
     public PlaygroundDto(int id, double latitude, double longitude, String name, String address) {
         this.id = id;

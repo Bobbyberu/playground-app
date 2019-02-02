@@ -48,11 +48,6 @@ public class ReportPlaygroundService implements IReportPlaygroundService {
     }
 
     @Override
-    public ReportPlayground getReportPlaygroundByPlayground(Playground playground, int id) {
-        return reportPlaygroundRepository.getOneByPlayground(playground, id);
-    }
-
-    @Override
     public ReportPlayground createReportPlayground(Playground playground, ReportPlayground reportPlayground) {
         reportPlayground.setPlayground(playground);
 

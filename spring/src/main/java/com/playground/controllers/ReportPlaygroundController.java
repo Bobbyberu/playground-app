@@ -1,5 +1,6 @@
 package com.playground.controllers;
 
+import com.playground.model.dto.ReportPlaygroundDto;
 import com.playground.model.entity.Playground;
 import com.playground.model.entity.ReportPlayground;
 import com.playground.service.PlaygroundService;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Class ReportPlaygroundController
@@ -42,14 +44,17 @@ public class ReportPlaygroundController {
      * @return ResponseEntity
      */
     @GetMapping(value = "/reportPlaygrounds", produces = "application/json")
-    public ResponseEntity<List<ReportPlayground>> getReportPlaygrounds() {
-        return new ResponseEntity<>(reportPlaygroundService.getReportPlaygrounds(), HttpStatus.OK);
+    public ResponseEntity<List<ReportPlaygroundDto>> getReportPlaygrounds() {
+        List<ReportPlaygroundDto> reportedPlaygrounds = reportPlaygroundService.getReportPlaygrounds().stream()
+                .map(rp -> new ReportPlaygroundDto(rp))
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(reportedPlaygrounds, HttpStatus.OK);
     }
 
     /**
      * [GET] Return one report playground by id
      *
-     * @param playgroundId int
      * @param reportPlaygroundId int
      *
      * @return ResponseEntity
@@ -57,18 +62,17 @@ public class ReportPlaygroundController {
      * @throws ResourceNotFoundException Playground not found
      * @throws ResourceNotFoundException ReportPlayground not found
      */
-    @GetMapping(value = "/playgrounds/{playgroundId}/reportPlaygrounds/{reportPlaygroundId}", produces = "application/json")
-    public ResponseEntity<ReportPlayground> getReportPlayground(@PathVariable("playgroundId") int playgroundId, @PathVariable("reportPlaygroundId") int reportPlaygroundId) throws ResourceNotFoundException {
-        Playground playground = playgroundService.getPlayground(playgroundId);
+    @GetMapping(value = "/reportPlaygrounds/{reportPlaygroundId}", produces = "application/json")
+    public ResponseEntity<ReportPlaygroundDto> getReportPlayground(
+            @PathVariable("reportPlaygroundId") int reportPlaygroundId) throws ResourceNotFoundException {
 
-        if (playground == null) {
-            throw new ResourceNotFoundException("Playground with id " + playgroundId + " not found");
+        ReportPlayground reportPlayground = reportPlaygroundService.getReportPlayground(reportPlaygroundId);
+
+        if (reportPlayground == null) {
+            throw new ResourceNotFoundException("ReportPlayground with id " + reportPlaygroundId + " not found for this playground");
         }
 
-        ReportPlayground reportPlayground = reportPlaygroundService.getReportPlaygroundByPlayground(playground, reportPlaygroundId);
-        if (reportPlayground == null) throw new ResourceNotFoundException("ReportPlayground with id " + reportPlaygroundId + " not found for this playground");
-
-        return new ResponseEntity<>(reportPlayground, HttpStatus.OK);
+        return new ResponseEntity<>(new ReportPlaygroundDto(reportPlayground), HttpStatus.OK);
     }
 
     /**
@@ -82,20 +86,21 @@ public class ReportPlaygroundController {
      * @throws ResourceNotFoundException Playground not found
      */
     @PostMapping(value = "/playgrounds/{playgroundId}/reportPlaygrounds", consumes = "application/json")
-    public ResponseEntity<ReportPlayground> createReportPlayground(@PathVariable("playgroundId") int playgroundId, @RequestBody ReportPlayground reportPlayground) throws ResourceNotFoundException {
+    public ResponseEntity<ReportPlaygroundDto> createReportPlayground(
+            @PathVariable("playgroundId") int playgroundId, @RequestBody ReportPlayground reportPlayground) throws ResourceNotFoundException {
         Playground playground = playgroundService.getPlayground(playgroundId);
 
         if (playground == null) {
             throw new ResourceNotFoundException("Playground with id " + playgroundId + " not found");
         }
 
-        return new ResponseEntity<>(reportPlaygroundService.createReportPlayground(playground, reportPlayground), HttpStatus.CREATED);
+        return new ResponseEntity<>(
+                new ReportPlaygroundDto(reportPlaygroundService.createReportPlayground(playground, reportPlayground)), HttpStatus.CREATED);
     }
 
     /**
      * [PUT] Update a report playground and return it
      *
-     * @param playgroundId int
      * @param reportPlaygroundId int
      * @param reportPlayground ReportPlayground
      *
@@ -104,22 +109,18 @@ public class ReportPlaygroundController {
      * @throws ResourceNotFoundException Playground not found
      * @throws ResourceNotFoundException ReportPlayground not found
      */
-    @PutMapping("/playgrounds/{playgroundId}/reportPlaygrounds/{reportPlaygroundId}")
-    public ResponseEntity<ReportPlayground> updateReportPlayground(@PathVariable("playgroundId") int playgroundId, @PathVariable("reportPlaygroundId") int reportPlaygroundId, @RequestBody ReportPlayground reportPlayground) throws ResourceNotFoundException {
+    @PutMapping("/reportPlaygrounds/{reportPlaygroundId}")
+    public ResponseEntity<ReportPlaygroundDto> updateReportPlayground(@PathVariable("reportPlaygroundId") int reportPlaygroundId,
+            @RequestBody ReportPlayground reportPlayground) throws ResourceNotFoundException {
 
-        Playground playground = playgroundService.getPlayground(playgroundId);
-
-        if (playground == null) {
-            throw new ResourceNotFoundException("Playground with id " + playgroundId + " not found");
-        }
-
-        ReportPlayground currentReportPlayground = reportPlaygroundService.getReportPlaygroundByPlayground(playground, reportPlaygroundId);
+        ReportPlayground currentReportPlayground = reportPlaygroundService.getReportPlayground(reportPlaygroundId);
 
         if (currentReportPlayground == null) {
             throw new ResourceNotFoundException("ReportPlayground with id " + reportPlaygroundId + " not found for this playground");
         }
 
-        return new ResponseEntity<>(reportPlaygroundService.updateReportPlayground(reportPlaygroundId, reportPlayground), HttpStatus.OK);
+        return new ResponseEntity<>(
+                new ReportPlaygroundDto(reportPlaygroundService.updateReportPlayground(reportPlaygroundId, reportPlayground)), HttpStatus.OK);
     }
 
     /**
