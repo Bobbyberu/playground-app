@@ -26,24 +26,38 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+
     @Column(unique=true)
     private String username;
+
     private String mail;
+
     private Date birthDate;
+
     private String password;
+
     private String avatarName;
+
     @ManyToMany
     private Set<User> friends;
+
     @ManyToMany
     private Set<Sport> favouriteSports;
+
     @ManyToMany
     private Set<Playground> favouritePlaygrounds;
+
     private String city;
+
     @ManyToOne
     private Role role;
+
     private boolean enabled;
+
     private boolean archived;
+
     private boolean banned;
+
     @ManyToOne
     private Sport playing;
 
