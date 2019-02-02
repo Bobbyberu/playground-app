@@ -1,4 +1,4 @@
-package com.playground.model.response;
+package com.playground.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.playground.model.entity.Playground;

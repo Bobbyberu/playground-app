@@ -5,7 +5,7 @@ import com.playground.model.entity.Playground;
 import com.playground.model.entity.ReportPlayground;
 import com.playground.model.entity.Sport;
 import com.playground.model.entity.User;
-import com.playground.model.response.PlaygroundDto;
+import com.playground.model.dto.PlaygroundDto;
 import com.playground.service.*;
 import com.playground.storage.StorageService;
 import com.playground.utils.ResourceNotFoundException;

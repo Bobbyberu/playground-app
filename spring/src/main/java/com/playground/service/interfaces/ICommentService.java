@@ -2,7 +2,6 @@ package com.playground.service.interfaces;
 
 import com.playground.model.entity.Comment;
 import com.playground.model.entity.Playground;
-import com.playground.model.response.CommentDto;
 
 import java.util.List;
 
