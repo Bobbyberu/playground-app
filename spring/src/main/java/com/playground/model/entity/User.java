@@ -69,17 +69,17 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return !archived;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return !enabled;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return !banned;
+        return true;
     }
 
     public void setUsername(String username) {

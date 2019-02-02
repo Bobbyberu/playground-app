@@ -5,6 +5,7 @@ import com.playground.model.entity.Playground;
 import com.playground.model.entity.ReportPlayground;
 import com.playground.model.entity.Sport;
 import com.playground.model.entity.User;
+import com.playground.model.response.PlaygroundDto;
 import com.playground.service.*;
 import com.playground.storage.StorageService;
 import com.playground.utils.ResourceNotFoundException;
@@ -22,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Class PlaygroundController
@@ -65,8 +67,11 @@ public class PlaygroundController {
      * @return ResponseEntity
      */
     @GetMapping(produces = "application/json")
-    public ResponseEntity<List<Playground>> getPlaygrounds() {
-        return new ResponseEntity<>(playgroundService.getPlaygrounds(),HttpStatus.OK);
+    public ResponseEntity<List<PlaygroundDto>> getPlaygrounds() {
+        List<PlaygroundDto> playgrounds = playgroundService.getPlaygrounds().stream()
+                .map(p -> new PlaygroundDto(p.getId(), p.getLatitude(), p.getLongitude()))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(playgrounds,HttpStatus.OK);
     }
 
     /**
@@ -79,14 +84,14 @@ public class PlaygroundController {
      * @throws ResourceNotFoundException Playground not found
      */
     @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<Playground> getPlaygroundsById(@PathVariable("id") int id) throws ResourceNotFoundException {
+    public ResponseEntity<PlaygroundDto> getPlaygroundsById(@PathVariable("id") int id) throws ResourceNotFoundException {
         Playground playground = playgroundService.getPlayground(id);
 
         if (playground == null) {
             throw new ResourceNotFoundException("Playground with id " + id + " not found");
         }
 
-        return new ResponseEntity<>(playground, HttpStatus.OK);
+        return new ResponseEntity<>(new PlaygroundDto(playground), HttpStatus.OK);
     }
 
     /**
@@ -97,8 +102,8 @@ public class PlaygroundController {
      * @return ResponseEntity<Playground>
      */
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<Playground> createPlayground(@RequestBody Playground playground) {
-        return new ResponseEntity<>(playgroundService.createPlayground(playground), HttpStatus.CREATED);
+    public ResponseEntity<PlaygroundDto> createPlayground(@RequestBody Playground playground) {
+        return new ResponseEntity<>(new PlaygroundDto(playgroundService.createPlayground(playground)), HttpStatus.CREATED);
     }
 
     /**
@@ -112,14 +117,14 @@ public class PlaygroundController {
      * @throws ResourceNotFoundException Playground not found
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Playground> updatePlayground(@PathVariable(value = "id") int id, @RequestBody Playground playground) throws ResourceNotFoundException {
+    public ResponseEntity<PlaygroundDto> updatePlayground(@PathVariable(value = "id") int id, @RequestBody Playground playground) throws ResourceNotFoundException {
         Playground currentPlayground = playgroundService.getPlayground(id);
 
         if (currentPlayground == null) {
             throw new ResourceNotFoundException("Playground with id " + id + " not found");
         }
 
-        return new ResponseEntity<>(playgroundService.updatePlayground(id, playground), HttpStatus.OK);
+        return new ResponseEntity<>(new PlaygroundDto(playgroundService.updatePlayground(id, playground)), HttpStatus.OK);
     }
 
     /**
@@ -133,7 +138,7 @@ public class PlaygroundController {
      * @throws ResourceNotFoundException Playground not found
      */
     @PutMapping("/{idPlayground}/player/{idUser}/sport/{idSport}/add")
-    public ResponseEntity<Playground> addPlayerToPlayground(@PathVariable(value = "idPlayground") int idPlayground,
+    public ResponseEntity<PlaygroundDto> addPlayerToPlayground(@PathVariable(value = "idPlayground") int idPlayground,
                                                             @PathVariable(value = "idUser") int idUser,
                                                             @PathVariable(value = "idSport") int idSport) throws ResourceNotFoundException {
         Playground currentPlayground = playgroundService.getPlayground(idPlayground);
@@ -151,10 +156,11 @@ public class PlaygroundController {
             throw new ResourceNotFoundException("Sport with id " + idSport + " not found");
         }
         else if (!currentPlayground.getSports().contains(sport)) {
-            return new ResponseEntity<>(currentPlayground,HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(new PlaygroundDto(currentPlayground),HttpStatus.FORBIDDEN);
         }
 
-        return new ResponseEntity<>(playgroundService.addPlayerToPlayground(currentPlayground, user, sport), HttpStatus.OK);
+        return new ResponseEntity<>(new PlaygroundDto(playgroundService.addPlayerToPlayground(currentPlayground, user, sport)),
+                HttpStatus.OK);
     }
 
     /**
@@ -168,7 +174,7 @@ public class PlaygroundController {
      * @throws ResourceNotFoundException Playground not found
      */
     @PutMapping("/{idPlayground}/player/{idUser}/remove")
-    public ResponseEntity<Playground> removePlayerFromPlayground(@PathVariable(value = "idPlayground") int idPlayground, @PathVariable(value = "idUser") int idUser) throws ResourceNotFoundException {
+    public ResponseEntity<PlaygroundDto> removePlayerFromPlayground(@PathVariable(value = "idPlayground") int idPlayground, @PathVariable(value = "idUser") int idUser) throws ResourceNotFoundException {
         Playground playground = playgroundService.getPlayground(idPlayground);
         if (playground == null) {
             throw new ResourceNotFoundException("Playground with id " + idPlayground + " not found");
@@ -179,7 +185,8 @@ public class PlaygroundController {
             throw new ResourceNotFoundException("User with id " + idUser + " not found");
         }
 
-        return new ResponseEntity<>(playgroundService.removePlayerFromPlayground(playground, user), HttpStatus.OK);
+        return new ResponseEntity<>(new PlaygroundDto(playgroundService.removePlayerFromPlayground(playground, user)),
+                HttpStatus.OK);
     }
 
     /**
@@ -244,8 +251,12 @@ public class PlaygroundController {
      * @return ResponseEntity
      */
     @GetMapping(value = "/search/{keyword}", produces = "application/json")
-    public ResponseEntity<List<Playground>> search(@PathVariable("keyword") String keyword) {
-        return new ResponseEntity<>(playgroundService.searchPlaygroundByKeyword(keyword), HttpStatus.OK);
+    public ResponseEntity<List<PlaygroundDto>> search(@PathVariable("keyword") String keyword) {
+        List<PlaygroundDto> playgrounds = playgroundService.searchPlaygroundByKeyword(keyword)
+                .stream()
+                .map(p -> new PlaygroundDto(p))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(playgrounds, HttpStatus.OK);
     }
 
     /**

@@ -44,7 +44,7 @@ public interface ICommentService {
      *
      * @return Comment
      */
-    CommentDto createComment(Playground playground, Comment comment);
+    Comment createComment(Playground playground, Comment comment);
 
     /**
      * Update a comment and return it

@@ -84,7 +84,7 @@ public class CommentController {
             throw new ResourceNotFoundException("Playground with id " + playgroundId + " not found");
         }
 
-        return new ResponseEntity<>(commentService.createComment(playground, comment), HttpStatus.CREATED);
+        return new ResponseEntity<>(new CommentDto(commentService.createComment(playground, comment)), HttpStatus.CREATED);
     }
 
     /**
