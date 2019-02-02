@@ -1,5 +1,6 @@
 package com.playground.controllers;
 
+import com.playground.model.dto.ReportCommentDto;
 import com.playground.model.entity.Comment;
 import com.playground.model.entity.ReportComment;
 import com.playground.service.CommentService;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Class ReportCommentController
@@ -42,14 +44,16 @@ public class ReportCommentController {
      * @return ResponseEntity
      */
     @GetMapping(value = "/reportComments", produces = "application/json")
-    public ResponseEntity<List<ReportComment>> getReportComments() {
-        return new ResponseEntity<>(reportCommentService.getReportComments(), HttpStatus.OK);
+    public ResponseEntity<List<ReportCommentDto>> getReportComments() {
+        List<ReportCommentDto> commentsReported = reportCommentService.getReportComments().stream()
+                .map(cr -> new ReportCommentDto(cr))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(commentsReported, HttpStatus.OK);
     }
 
     /**
      * [GET] Return one report comment by id
      *
-     * @param commentId int
      * @param reportCommentId int
      *
      * @return ResponseEntity
@@ -57,18 +61,13 @@ public class ReportCommentController {
      * @throws ResourceNotFoundException Comment not found
      * @throws ResourceNotFoundException ReportComment not found
      */
-    @GetMapping(value = "/comments/{commentId}/reportComments/{reportCommentId}", produces = "application/json")
-    public ResponseEntity<ReportComment> getReportComment(@PathVariable("commentId") int commentId, @PathVariable("reportCommentId") int reportCommentId) throws ResourceNotFoundException {
-        Comment comment = commentService.getComment(commentId);
+    @GetMapping(value = "/reportComments/{reportCommentId}", produces = "application/json")
+    public ResponseEntity<ReportCommentDto> getReportComment(@PathVariable("reportCommentId") int reportCommentId) throws ResourceNotFoundException {
 
-        if (comment == null) {
-            throw new ResourceNotFoundException("Comment with id " + commentId + " not found");
-        }
-
-        ReportComment reportComment = reportCommentService.getReportCommentByComment(comment, reportCommentId);
+        ReportComment reportComment = reportCommentService.getReportComment(reportCommentId);
         if (reportComment == null) throw new ResourceNotFoundException("ReportComment with id " + reportCommentId + " not found for this comment");
 
-        return new ResponseEntity<>(reportComment, HttpStatus.OK);
+        return new ResponseEntity<>(new ReportCommentDto(reportComment), HttpStatus.OK);
     }
 
     /**
@@ -82,14 +81,15 @@ public class ReportCommentController {
      * @throws ResourceNotFoundException Comment not found
      */
     @PostMapping(value = "/comments/{commentId}/reportComments", consumes = "application/json")
-    public ResponseEntity<ReportComment> createReportComment(@PathVariable("commentId") int commentId, @RequestBody ReportComment reportComment) throws ResourceNotFoundException {
+    public ResponseEntity<ReportCommentDto> createReportComment(@PathVariable("commentId") int commentId, @RequestBody ReportComment reportComment) throws ResourceNotFoundException {
         Comment comment = commentService.getComment(commentId);
 
         if (comment == null) {
             throw new ResourceNotFoundException("Comment with id " + commentId + " not found");
         }
 
-        return new ResponseEntity<>(reportCommentService.createReportComment(comment, reportComment), HttpStatus.CREATED);
+        return new ResponseEntity<>(
+                new ReportCommentDto(reportCommentService.createReportComment(comment, reportComment)),HttpStatus.CREATED);
     }
 
     /**
@@ -104,8 +104,8 @@ public class ReportCommentController {
      * @throws ResourceNotFoundException Comment not found
      * @throws ResourceNotFoundException ReportComment not found
      */
-    @PutMapping("/comments/{commentId}/reportComments/{reportCommentId}")
-    public ResponseEntity<ReportComment> updateReportComment(@PathVariable("commentId") int commentId, @PathVariable("reportCommentId") int reportCommentId, @RequestBody ReportComment reportComment) throws ResourceNotFoundException {
+    @PutMapping("/reportComments/{reportCommentId}")
+    public ResponseEntity<ReportCommentDto> updateReportComment(@PathVariable("commentId") int commentId, @PathVariable("reportCommentId") int reportCommentId, @RequestBody ReportComment reportComment) throws ResourceNotFoundException {
 
         Comment comment = commentService.getComment(commentId);
 
@@ -113,13 +113,14 @@ public class ReportCommentController {
             throw new ResourceNotFoundException("Comment with id " + commentId + " not found");
         }
 
-        ReportComment currentReportComment = reportCommentService.getReportCommentByComment(comment, reportCommentId);
+        ReportComment currentReportComment = reportCommentService.getReportComment(reportCommentId);
 
         if (currentReportComment == null) {
             throw new ResourceNotFoundException("ReportComment with id " + reportCommentId + " not found for this comment");
         }
 
-        return new ResponseEntity<>(reportCommentService.updateReportComment(reportCommentId, reportComment), HttpStatus.OK);
+        return new ResponseEntity<>(
+                new ReportCommentDto(reportCommentService.updateReportComment(reportCommentId, reportComment)), HttpStatus.OK);
     }
 
     /**

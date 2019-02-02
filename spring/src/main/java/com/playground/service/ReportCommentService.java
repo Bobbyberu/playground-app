@@ -48,11 +48,6 @@ public class ReportCommentService implements IReportCommentService {
     }
 
     @Override
-    public ReportComment getReportCommentByComment(Comment comment, int id) {
-        return reportCommentRepository.getOneByComment(comment, id);
-    }
-
-    @Override
     public ReportComment createReportComment(Comment comment, ReportComment reportComment) {
         reportComment.setComment(comment);
 

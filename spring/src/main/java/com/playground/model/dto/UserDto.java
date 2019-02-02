@@ -42,4 +42,10 @@ public class UserDto {
         this.archived = user.isArchived();
         this.banned = user.isBanned();
     }
+
+    // create summary of user for Report object
+    public UserDto(int id, String username) {
+        this.id = id;
+        this.username = username;
+    }
 }

@@ -18,7 +18,7 @@ public class CommentDto {
     private int playgroundId;
 
     @Getter
-    private User author;
+    private UserDto author;
 
     @Getter
     private double mark;
@@ -29,8 +29,14 @@ public class CommentDto {
         this.playgroundId = comment.getPlayground().getId();
         this.mark = comment.getMark();
 
-        this.author = new User();
-        this.author.setId(comment.getAuthor().getId());
-        this.author.setUsername(comment.getAuthor().getUsername());
+        this.author = new UserDto(comment.getAuthor().getId(), comment.getAuthor().getUsername());
+    }
+
+    // create summary of comment for ReportCommentDto
+    public CommentDto(int id, int playgroundId, String comment, User author) {
+        this.id = id;
+        this.playgroundId = playgroundId;
+        this.comment = comment;
+        this.author = new UserDto(author.getId(), author.getUsername());
     }
 }

@@ -36,16 +36,6 @@ public interface IReportCommentService {
     ReportComment getReportComment(int id);
 
     /**
-     * Return a report comment of one comment
-     *
-     * @param comment Comment
-     * @param id int
-     *
-     * @return ReportComment
-     */
-    ReportComment getReportCommentByComment(Comment comment, int id);
-
-    /**
      * Create a report comment and return it
      *
      * @param comment Comment
