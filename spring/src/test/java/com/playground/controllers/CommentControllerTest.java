@@ -126,11 +126,11 @@ public class CommentControllerTest {
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-        MockHttpServletResponse response = result.getResponse();
+        MockHttpServletResponse dto = result.getResponse();
 
         System.out.println(result.getResolvedException().getMessage());
 
-        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+        assertEquals(HttpStatus.NOT_FOUND.value(), dto.getStatus());
         assertEquals("Comment with id "+ id +" not found for this playground", result.getResolvedException().getMessage());
     }*/
 
@@ -167,11 +167,11 @@ public class CommentControllerTest {
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-        MockHttpServletResponse response = result.getResponse();
+        MockHttpServletResponse dto = result.getResponse();
 
-        System.out.println(response.getContentAsString());
+        System.out.println(dto.getContentAsString());
 
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        assertEquals(HttpStatus.CREATED.value(), dto.getStatus());
 
         String expected = "{\"id\":0,\"playground\":{\"id\":0,\"name\":null,\"covered\":false,\"latitude\":0.0,\"longitude\":0.0,\"surface\":null,\"description\":null,\"averageMark\":0.0,\"imageName\":null,\"players\":null,\"sports\":null,\"city\":null,\"address\":null,\"private\":false},\"author\":null,\"archived\":false,\"comment\":\"comment\",\"mark\":1.0}";
 

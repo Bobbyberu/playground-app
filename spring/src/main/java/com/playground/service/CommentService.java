@@ -3,7 +3,6 @@ package com.playground.service;
 import com.playground.model.entity.Comment;
 import com.playground.model.entity.Playground;
 import com.playground.model.entity.ReportComment;
-import com.playground.model.response.CommentDto;
 import com.playground.repository.CommentRepository;
 import com.playground.repository.PlaygroundRepository;
 import com.playground.service.interfaces.ICommentService;
@@ -59,7 +58,7 @@ public class CommentService implements ICommentService {
     }
 
     @Override
-    public CommentDto createComment(Playground playground, Comment comment) {
+    public Comment createComment(Playground playground, Comment comment) {
 
         comment.setPlayground(playground);
         List<Comment> list = commentRepository.getCommentsByPlayground(playground);
@@ -70,7 +69,7 @@ public class CommentService implements ICommentService {
         playground.setAverageMark(Math.floor((sum + comment.getMark()) / (list.size()+1) * 100) / 100);
         playgroundRepository.save(playground);
 
-        return new CommentDto(commentRepository.save(comment));
+        return commentRepository.save(comment);
     }
 
     @Override

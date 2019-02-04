@@ -2,7 +2,7 @@ package com.playground.controllers;
 
 import com.playground.model.entity.Comment;
 import com.playground.model.entity.Playground;
-import com.playground.model.response.CommentDto;
+import com.playground.model.dto.CommentDto;
 import com.playground.service.CommentService;
 import com.playground.service.PlaygroundService;
 import com.playground.utils.ResourceNotFoundException;
@@ -84,7 +84,7 @@ public class CommentController {
             throw new ResourceNotFoundException("Playground with id " + playgroundId + " not found");
         }
 
-        return new ResponseEntity<>(commentService.createComment(playground, comment), HttpStatus.CREATED);
+        return new ResponseEntity<>(new CommentDto(commentService.createComment(playground, comment)), HttpStatus.CREATED);
     }
 
     /**
