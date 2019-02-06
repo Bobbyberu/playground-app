@@ -53,9 +53,12 @@ class Home extends Component {
             location: undefined,
             zoom: 15,
             playgrounds: [],
-            snackbarOpen: false
+            snackbarOpen: false,
+            showPopup: false,
+            currentPlayground: {}
         }
         this.renderPlaygrounds = this.renderPlaygrounds.bind(this);
+        this.setCurrentPlayground = this.setCurrentPlayground.bind(this);
     }
 
     componentDidMount() {
@@ -82,16 +85,30 @@ class Home extends Component {
             });
     }
 
+    async setCurrentPlayground(id) {
+        PlaygroundAPI.getPlaygroundById(id)
+            .then(response => {
+                this.setState({
+                    currentPlayground: response,
+                    showPopup: true
+                })
+            })
+            .catch(err => console.log(err));
+
+    }
+
     renderPlaygrounds() {
         let playgrounds = this.state.playgrounds;
         return (
             <div>
                 {playgrounds.map(playground => (
                     <Marker key={playground.id} position={[playground.latitude, playground.longitude]} icon={playgroundMarkerIcon}>
-                        <Popup>
-                            <PlaygroundDetails
-                                playground={playground}
-                            />
+                        <Popup onOpen={() => this.setCurrentPlayground(playground.id)}>
+                            {this.state.showPopup &&
+                                <PlaygroundDetails
+                                    playground={this.state.currentPlayground}
+                                />
+                            }
                         </Popup>
                     </Marker>
                 ))}
