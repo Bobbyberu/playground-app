@@ -47,5 +47,9 @@
 	<string>Accès à l'appareil photo pour envoyer des photos de playground</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string></string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Accès à la localisation pour afficher les playgrounds proches de vous</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Accès à la localisation pour afficher les playgrounds proches de vous</string>
 </dict>
 </plist>

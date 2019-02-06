@@ -262,7 +262,7 @@ CREATE TABLE `user` (
 
 INSERT INTO `user` (`id`, `archived`, `banned`, `birth_date`, `city`, `enabled`, `mail`, `password`, `username`, `avatar_id`, `role_id`, `avatar_name`, `playing_id`) VALUES
 (120, b'0', b'0', '1990-02-15 00:00:00', NULL, b'1', 'test@test.fr', '$2a$10$4t98qTkK1HNXGK7qgeFXgulOmrXqK4xvy8sDYYURBOCsBv5NkKQ3y', 'test', NULL, 1, NULL, NULL),
-(120, b'0', b'0', '1990-02-15 00:00:00', NULL, b'1', 'admin@test.fr', '$2a$10$4t98qTkK1HNXGK7qgeFXgulOmrXqK4xvy8sDYYURBOCsBv5NkKQ3y', 'admin', NULL, 2, NULL, NULL);
+(121, b'0', b'0', '1990-02-15 00:00:00', NULL, b'1', 'admin@test.fr', '$2a$10$4t98qTkK1HNXGK7qgeFXgulOmrXqK4xvy8sDYYURBOCsBv5NkKQ3y', 'admin', NULL, 2, NULL, NULL);
 
 -- --------------------------------------------------------
 
