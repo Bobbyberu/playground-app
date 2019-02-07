@@ -55,7 +55,6 @@ class MainPageState extends State<MainPage> {
   void initLocation() async {
     await LocationService.getLocation().then((response) {
       setState(() {
-        print(response);
         currentCoords = response;
       });
     });
