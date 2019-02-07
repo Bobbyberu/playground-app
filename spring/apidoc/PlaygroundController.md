@@ -190,6 +190,7 @@ Get playground schedule
 ### Response (HTTP)
 
 - *200 Ok* 
+- CompleteSchedule
 
 ___
 

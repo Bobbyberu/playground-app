@@ -2,7 +2,6 @@ package com.playground.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.playground.model.entity.Playground;
-import com.playground.model.entity.User;
 import lombok.Getter;
 
 import java.util.Set;
@@ -30,7 +29,7 @@ public class PlaygroundDto {
 
     private Double averageMark;
 
-    private Set<User> players;
+    private Set<UserDto> players;
 
     private Set<SportDto> sports;
 
@@ -51,7 +50,11 @@ public class PlaygroundDto {
 
         this.surface = playground.getSurface();
         this.averageMark = playground.getAverageMark();
-        this.players = playground.getPlayers();
+
+        Set<UserDto> players = playground.getPlayers().stream()
+                .map(p -> new UserDto(p.getId(), p.getUsername()))
+                .collect(Collectors.toSet());
+        this.players = players;
 
         Set<SportDto> sports = playground.getSports().stream()
                 .map(s -> new SportDto(s))
