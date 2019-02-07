@@ -323,7 +323,7 @@ public class PlaygroundController {
         String filename = "playground" + playgroundId;
 
         Playground playground = playgroundService.getPlayground(playgroundId);
-        playground.setImage(filename);
+        playground.setImageName(filename);
         playgroundService.updatePlayground(playgroundId, playground);
 
         storageService.storePlayground(file, filename);
