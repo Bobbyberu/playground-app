@@ -60,7 +60,7 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
                                             Authentication authResult) {
         // Write Authorization to Headers of Response.
         User user = (User) authResult.getPrincipal();
-        tokenAuthenticationService.addAuthentication(response, user.getMail());
+        tokenAuthenticationService.addAuthentication(response, user);
     }
 
 }

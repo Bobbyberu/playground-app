@@ -171,7 +171,7 @@ class PlaygroundDetails extends React.Component {
 
   render() {
     const { classes } = this.props;
-    
+
     return (
       <MuiThemeProvider theme={theme}>
         <div className="global">

@@ -64,9 +64,9 @@ public class ReportCommentControllerTest {
     @Test
     public void testGetReportCommentWithExistingCommentAndExistingIdExpectOk() throws Exception {
         Mockito.when(commentService.getComment(Mockito.anyInt())).thenReturn(mockComment);
-        Mockito.when(reportCommentService.getReportCommentByComment(Mockito.any(Comment.class),Mockito.anyInt())).thenReturn(mockReportComment);
+        Mockito.when(reportCommentService.getReportComment(Mockito.anyInt())).thenReturn(mockReportComment);
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/comments/0/reportComments/0").accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/reportComments/0").accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
@@ -84,9 +84,9 @@ public class ReportCommentControllerTest {
         int id = 2;
 
         Mockito.when(commentService.getComment(Mockito.anyInt())).thenReturn(mockComment);
-        Mockito.when(reportCommentService.getReportCommentByComment(Mockito.any(Comment.class),Mockito.anyInt())).thenReturn(null);
+        Mockito.when(reportCommentService.getReportComment(Mockito.anyInt())).thenReturn(null);
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/comments/0/reportComments/" + id).accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/reportComments/" + id).accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
@@ -146,10 +146,10 @@ public class ReportCommentControllerTest {
     @Test
     public void testDeleteReportCommentWithExistingCommentAndExistingIdExpectNoContent() throws Exception {
         Mockito.when(commentService.getComment(Mockito.anyInt())).thenReturn(mockComment);
-        Mockito.when(reportCommentService.getReportCommentByComment(Mockito.any(Comment.class),Mockito.anyInt())).thenReturn(mockReportComment);
+        Mockito.when(reportCommentService.getReportComment(Mockito.anyInt())).thenReturn(mockReportComment);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .delete("/comments/0/reportComments/0")
+                .delete("/reportComments/0")
                 .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
@@ -180,10 +180,10 @@ public class ReportCommentControllerTest {
         int id = 2;
 
         Mockito.when(commentService.getComment(Mockito.anyInt())).thenReturn(mockComment);
-        Mockito.when(reportCommentService.getReportCommentByComment(Mockito.any(Comment.class),Mockito.anyInt())).thenReturn(null);
+        Mockito.when(reportCommentService.getReportComment(Mockito.anyInt())).thenReturn(null);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .delete("/comments/0/reportComments/" + id)
+                .delete("/reportComments/" + id)
                 .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();

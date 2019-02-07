@@ -1,5 +1,7 @@
 package com.playground.controllers;
 
+import com.playground.model.dto.PlaygroundDto;
+import com.playground.model.dto.UserDto;
 import com.playground.model.entity.Playground;
 import com.playground.model.entity.User;
 import com.playground.service.PlaygroundService;
@@ -24,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Class PlaygroundController
@@ -43,9 +46,9 @@ public class UserController {
     /**
      * UserController Constructor
      *
-     * @param userService       UserService
-     * @param playgroundService PlaygroundService
-     * @param storageService StorageService
+     * @param userService                UserService
+     * @param playgroundService          PlaygroundService
+     * @param storageService             StorageService
      * @param tokenAuthenticationService TokenAuthenticationService
      */
     @Autowired
@@ -63,8 +66,12 @@ public class UserController {
      * @return ResponseEntity
      */
     @GetMapping(produces = "application/json")
-    public ResponseEntity<List<User>> getUsers() {
-        return new ResponseEntity<>(userService.getUsers(), HttpStatus.OK);
+    public ResponseEntity<List<UserDto>> getUsers() {
+        List<UserDto> users = userService.getUsers().stream()
+                .map(u -> new UserDto(u))
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
 
@@ -82,20 +89,18 @@ public class UserController {
      * [GET] Return an user by his username
      *
      * @param username String
-     *
      * @return ResponseEntity
-     *
      * @throws ResourceNotFoundException User not found
      */
     @GetMapping(value = "/username/{username}", produces = "application/json")
-    public ResponseEntity<User> getUserByUsername(@PathVariable(value = "username") String username) throws ResourceNotFoundException {
+    public ResponseEntity<UserDto> getUserByUsername(@PathVariable(value = "username") String username) throws ResourceNotFoundException {
         User user = userService.getUserByUsername(username);
 
         if (user == null) {
             throw new ResourceNotFoundException("User with username " + username + " not found");
         }
 
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(new UserDto(user), HttpStatus.OK);
     }
 
 
@@ -103,19 +108,18 @@ public class UserController {
      * [GET] Return an user by his mail
      *
      * @param mail String
-     *
      * @return ResponseEntity
      * @throws ResourceNotFoundException User not found
      */
     @GetMapping(value = "/mail/{mail}", produces = "application/json")
-    public ResponseEntity<User> getUserByMail(@PathVariable(value = "mail") String mail) throws ResourceNotFoundException {
+    public ResponseEntity<UserDto> getUserByMail(@PathVariable(value = "mail") String mail) throws ResourceNotFoundException {
         User user = userService.getUserByMail(mail);
 
         if (user == null) {
             throw new ResourceNotFoundException("User with mail " + mail + " not found");
         }
 
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(new UserDto(user), HttpStatus.OK);
     }
 
 
@@ -127,14 +131,18 @@ public class UserController {
      * @throws ResourceNotFoundException User not found
      */
     @GetMapping(value = "/{id}/favouritePlaygrounds/")
-    public ResponseEntity<Set<Playground>> getFavouritePlaygrounds(@PathVariable("id") int id) throws ResourceNotFoundException {
+    public ResponseEntity<Set<PlaygroundDto>> getFavouritePlaygrounds(@PathVariable("id") int id) throws ResourceNotFoundException {
         User user = userService.getUser(id);
 
         if (user == null) {
             throw new ResourceNotFoundException("User with id " + id + " not found");
         }
 
-        return new ResponseEntity<>(user.getFavouritePlaygrounds(), HttpStatus.OK);
+        Set<PlaygroundDto> favouritePlaygrounds = user.getFavouritePlaygrounds().stream()
+                .map(fp -> new PlaygroundDto(fp.getId(), fp.getLatitude(), fp.getLongitude(), fp.getName(), fp.getAddress()))
+                .collect(Collectors.toSet());
+
+        return new ResponseEntity<>(favouritePlaygrounds, HttpStatus.OK);
     }
 
     /**
@@ -173,14 +181,14 @@ public class UserController {
      * @throws ResourceNotFoundException User not found
      */
     @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<User> getUserById(@PathVariable("id") int id) throws ResourceNotFoundException {
+    public ResponseEntity<UserDto> getUserById(@PathVariable("id") int id) throws ResourceNotFoundException {
         User user = userService.getUser(id);
 
         if (user == null) {
             throw new ResourceNotFoundException("User with id " + id + " not found");
         }
 
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(new UserDto(user), HttpStatus.OK);
     }
 
     /**
@@ -190,8 +198,8 @@ public class UserController {
      * @return ResponseEntity
      */
     @PostMapping("/signup")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return new ResponseEntity<>(userService.signup(user), HttpStatus.CREATED);
+    public ResponseEntity<UserDto> createUser(@RequestBody User user) {
+        return new ResponseEntity<>(new UserDto(userService.signup(user)), HttpStatus.CREATED);
     }
 
     /**
@@ -241,9 +249,9 @@ public class UserController {
      * @throws ResourceNotFoundException User not found
      */
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable("id") int id, @RequestBody User user, @RequestHeader("Authorization") String authorization) throws ResourceNotFoundException {
+    public ResponseEntity<UserDto> updateUser(@PathVariable("id") int id, @RequestBody User user, @RequestHeader("Authorization") String authorization) throws ResourceNotFoundException {
 
-        User currentUser = tokenAuthenticationService.getUser(authorization.replace("Bearer ",""));
+        User currentUser = tokenAuthenticationService.getUser(authorization.replace("Bearer ", ""));
 
         User userToUpdate = userService.getUser(id);
 
@@ -252,10 +260,10 @@ public class UserController {
         }
 
         if (currentUser.getId() != userToUpdate.getId()) {
-            return new ResponseEntity<>(user, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(new UserDto(user), HttpStatus.FORBIDDEN);
         }
 
-        return new ResponseEntity<>(userService.updateUserProfile(id, currentUser, user), HttpStatus.OK);
+        return new ResponseEntity<>(new UserDto(userService.updateUserProfile(id, currentUser, user)), HttpStatus.OK);
     }
 
     /**
@@ -266,7 +274,7 @@ public class UserController {
      * @throws ResourceNotFoundException User not found
      */
     @PutMapping("/ban/{id}")
-    public ResponseEntity<User> banUser(@PathVariable("id") int id) throws ResourceNotFoundException {
+    public ResponseEntity<UserDto> banUser(@PathVariable("id") int id) throws ResourceNotFoundException {
 
         User currentUser = userService.getUser(id);
 
@@ -276,7 +284,7 @@ public class UserController {
 
         User user = userService.banUser(currentUser);
 
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(new UserDto(user), HttpStatus.OK);
     }
 
     /**

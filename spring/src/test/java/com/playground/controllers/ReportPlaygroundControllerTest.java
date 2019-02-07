@@ -64,7 +64,7 @@ public class ReportPlaygroundControllerTest {
     @Test
     public void testGetReportPlaygroundWithExistingPlaygroundAndExistingIdExpectOk() throws Exception {
         Mockito.when(playgroundService.getPlayground(Mockito.anyInt())).thenReturn(mockPlayground);
-        Mockito.when(reportPlaygroundService.getReportPlaygroundByPlayground(Mockito.any(Playground.class),Mockito.anyInt())).thenReturn(mockReportPlayground);
+        Mockito.when(reportPlaygroundService.getReportPlayground(Mockito.anyInt())).thenReturn(mockReportPlayground);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/playgrounds/0/reportPlaygrounds/0").accept(MediaType.APPLICATION_JSON);
 
@@ -84,7 +84,7 @@ public class ReportPlaygroundControllerTest {
         int id = 2;
 
         Mockito.when(playgroundService.getPlayground(Mockito.anyInt())).thenReturn(mockPlayground);
-        Mockito.when(reportPlaygroundService.getReportPlaygroundByPlayground(Mockito.any(Playground.class),Mockito.anyInt())).thenReturn(null);
+        Mockito.when(reportPlaygroundService.getReportPlayground(Mockito.anyInt())).thenReturn(null);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/playgrounds/0/reportPlaygrounds/" + id).accept(MediaType.APPLICATION_JSON);
 
@@ -146,7 +146,7 @@ public class ReportPlaygroundControllerTest {
     @Test
     public void testDeleteReportPlaygroundWithExistingPlaygroundAndExistingIdExpectNoContent() throws Exception {
         Mockito.when(playgroundService.getPlayground(Mockito.anyInt())).thenReturn(mockPlayground);
-        Mockito.when(reportPlaygroundService.getReportPlaygroundByPlayground(Mockito.any(Playground.class),Mockito.anyInt())).thenReturn(mockReportPlayground);
+        Mockito.when(reportPlaygroundService.getReportPlayground(Mockito.anyInt())).thenReturn(mockReportPlayground);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .delete("/playgrounds/0/reportPlaygrounds/0")
@@ -180,7 +180,7 @@ public class ReportPlaygroundControllerTest {
         int id = 2;
 
         Mockito.when(playgroundService.getPlayground(Mockito.anyInt())).thenReturn(mockPlayground);
-        Mockito.when(reportPlaygroundService.getReportPlaygroundByPlayground(Mockito.any(Playground.class),Mockito.anyInt())).thenReturn(null);
+        Mockito.when(reportPlaygroundService.getReportPlayground(Mockito.anyInt())).thenReturn(null);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .delete("/playgrounds/0/reportPlaygrounds/" + id)

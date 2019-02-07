@@ -42,12 +42,12 @@ class Authentication {
 
     isUser() {
         return AuthService.loggedIn() &&
-            AuthService.getUser().role === 'ROLE_USER';
+            AuthService.getRole() === 'ROLE_USER';
     }
 
     isAdmin() {
         return AuthService.loggedIn() &&
-            AuthService.getUser().role === 'ROLE_ADMIN';
+            AuthService.getRole() === 'ROLE_ADMIN';
     }
 
     isTokenExpired(token) {
@@ -79,12 +79,16 @@ class Authentication {
         return JSON.parse(sessionStorage.getItem('user'));
     }
 
+    getRole() {
+        return this.decodeToken().role;
+    }
+
     setToken(token) {
         sessionStorage.setItem('token', token);
     }
 
     setUser(user) {
-        let newUser = { "id": user.id, "username": user.username, "mail": user.mail, "role": user.role.name }
+        let newUser = { "id": user.id, "username": user.username, "mail": user.mail }
         sessionStorage.setItem('user', JSON.stringify(newUser));
     }
 

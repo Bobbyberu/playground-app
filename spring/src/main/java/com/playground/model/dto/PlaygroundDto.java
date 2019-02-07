@@ -38,6 +38,7 @@ public class PlaygroundDto {
 
     private String address;
 
+    // to get playground detail
     public PlaygroundDto(Playground playground) {
         this.id = playground.getId();
         this.name = playground.getName();
@@ -56,9 +57,25 @@ public class PlaygroundDto {
         this.address = playground.getAddress();
     }
 
+    // to display icon in map
     public PlaygroundDto(int id, double latitude, double longitude) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    // create summary of playground to use in report
+    public PlaygroundDto(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    // to get favourites playgrounds
+    public PlaygroundDto(int id, double latitude, double longitude, String name, String address) {
+        this.id = id;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.name = name;
+        this.address = address;
     }
 }

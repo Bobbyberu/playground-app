@@ -36,16 +36,6 @@ public interface IReportPlaygroundService {
     ReportPlayground getReportPlayground(int id);
 
     /**
-     * Return a report playground of one playground
-     *
-     * @param playground Playground
-     * @param id int
-     *
-     * @return ReportPlayground
-     */
-    ReportPlayground getReportPlaygroundByPlayground(Playground playground, int id);
-
-    /**
      * Create a report playground and return it
      *
      * @param playground Playground
