@@ -2,11 +2,11 @@ package com.playground.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.playground.model.entity.Playground;
-import com.playground.model.entity.Sport;
 import com.playground.model.entity.User;
 import lombok.Getter;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
@@ -32,7 +32,7 @@ public class PlaygroundDto {
 
     private Set<User> players;
 
-    private Set<Sport> sports;
+    private Set<SportDto> sports;
 
     private String city;
 
@@ -42,6 +42,7 @@ public class PlaygroundDto {
     public PlaygroundDto(Playground playground) {
         this.id = playground.getId();
         this.name = playground.getName();
+        this.description = playground.getDescription();
         this.isPrivate = playground.isPrivate();
         this.covered = playground.isCovered();
 
@@ -51,7 +52,11 @@ public class PlaygroundDto {
         this.surface = playground.getSurface();
         this.averageMark = playground.getAverageMark();
         this.players = playground.getPlayers();
-        this.sports = playground.getSports();
+
+        Set<SportDto> sports = playground.getSports().stream()
+                .map(s -> new SportDto(s))
+                .collect(Collectors.toSet());
+        this.sports = sports;
 
         this.city = playground.getCity();
         this.address = playground.getAddress();

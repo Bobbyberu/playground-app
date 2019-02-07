@@ -1,7 +1,6 @@
 package com.playground.model.dto;
 
 import com.playground.model.entity.Session;
-import com.playground.model.entity.Sport;
 import lombok.Getter;
 
 import java.util.Date;
@@ -21,7 +20,7 @@ public class SessionDto {
 
     private boolean isPrivate;
 
-    private Sport sport;
+    private SportDto sport;
 
     private Set<UserDto> participants;
 
@@ -35,7 +34,7 @@ public class SessionDto {
         this.creator = new UserDto(session.getCreator().getId(), session.getCreator().getUsername());
         this.playgroundId = session.getPlayground().getId();
         this.isPrivate = session.isPrivate();
-        this.sport = session.getSport();
+        this.sport = new SportDto(session.getSport());
         this.maxPlayers = session.getMaxPLayers();
         this.date = session.getDate();
 
