@@ -1,6 +1,7 @@
 
 import 'package:Playground/entities/Playground.dart';
 import 'package:Playground/pages/PlaygroundDetails.dart';
+import 'package:Playground/services/LocationService.dart';
 import 'package:Playground/widgets/dialog/PlaygroundDialog.dart';
 import 'package:Playground/widgets/map/PlaygroundMarker.dart';
 import 'package:Playground/widgets/playground/PlaygroundCard.dart';
@@ -32,11 +33,13 @@ class MainPageState extends State<MainPage> {
   PlaygroundService _playgroundService = new PlaygroundService();
   List<Playground> results;
   bool searching;
+  LatLng currentCoords;
 
   @override
   void initState() {
     searching = false;
     results = new List<Playground>();
+    initLocation();
     loadPlaygroundsNearMe();
     super.initState();
   }
@@ -45,6 +48,14 @@ class MainPageState extends State<MainPage> {
     _playgroundService.getPlaygroundsNearMe().then((response){
       setState(() {
         results = response;
+      });
+    });
+  }
+
+  void initLocation() async {
+    await LocationService.getLocation().then((response) {
+      setState(() {
+        currentCoords = response;
       });
     });
   }
@@ -184,6 +195,7 @@ class MainPageState extends State<MainPage> {
             fit: StackFit.loose,
             children: <Widget>[
 
+              (currentCoords != null) ?
               new Positioned(
                 top: 0,
                 left: 0,
@@ -191,7 +203,7 @@ class MainPageState extends State<MainPage> {
                 width: MediaQuery.of(context).size.width,
                 child: new FlutterMap(
                     options: new MapOptions(
-                      center: new LatLng(45.764045, 4.835675),
+                      center: currentCoords,
                       zoom: 13.0,
                     ),
                     layers: [
@@ -204,7 +216,7 @@ class MainPageState extends State<MainPage> {
                       )
                     ]
                 ),
-              ),
+              ) : new Container(),
 
               new Align(
                 alignment: Alignment.bottomRight,

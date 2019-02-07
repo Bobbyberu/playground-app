@@ -6,12 +6,15 @@ import 'package:Playground/entities/Sport.dart';
 import 'package:Playground/services/LocationService.dart';
 import 'package:Playground/services/PlaygroundService.dart';
 import 'package:Playground/widgets/dialog/PlaygroundDialog.dart';
+import 'package:Playground/widgets/inputs/AddressFieldAutocomplete.dart';
 import 'package:Playground/widgets/inputs/PlaygroundCheckbox.dart';
 import 'package:Playground/widgets/inputs/PlaygroundSportSelection.dart';
+import 'package:Playground/widgets/map/AddressDisplay.dart';
 import 'package:Playground/widgets/style/PlaygorundTextFieldStyle.dart';
 import 'package:Playground/widgets/style/PlaygroundLabelStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:latlong/latlong.dart';
 
 class AddPlaygroundPage extends StatefulWidget {
 
@@ -35,12 +38,32 @@ class AddPlaygroundPageState extends State<AddPlaygroundPage> {
 
   bool _isLoading;
 
+  List<Address> _addressPredictions;
+
   @override
   void initState() {
     super.initState();
     _isLoading = false;
     currentStep = 0;
     realStep = 0;
+    
+    loadAddressPredictions();
+  }
+  
+  void loadAddressPredictions() async {
+    await LocationService.getLocation().then((responseCoords) async {
+      if(responseCoords != null) {
+        await LocationService.getAddressOfCoord(responseCoords).then((responseAddress){
+          setState(() {
+            if(responseAddress != null) {
+              if(_addressPredictions == null) _addressPredictions = new List();
+
+              _addressPredictions.add(new Address(responseCoords, responseAddress));
+            }
+          });
+        });
+      }
+    });
   }
 
 
@@ -176,6 +199,8 @@ class AddPlaygroundPageState extends State<AddPlaygroundPage> {
   }
 
   Step getAddressStep() {
+    TextEditingController _addressTextController = new TextEditingController(text: newPlayground.address);
+
     return Step(
         title: new Icon(Icons.add_location, color: Colors.grey, size: 16),
         isActive: currentStep >= 1,
@@ -188,19 +213,40 @@ class AddPlaygroundPageState extends State<AddPlaygroundPage> {
                     padding: EdgeInsets.only(bottom: 12),
                     child: new Text("Où se situe votre Playground ?", style: PlaygroundFormTitleStyle.getStyle(context))
                 ),
+
+                (_addressPredictions != null && _addressPredictions.isNotEmpty) ?
                 new Padding(
                     padding: EdgeInsets.all(12),
-                    child: new TextFormField(
-                        initialValue: newPlayground.address,
-                        style: PlaygroundTextFieldStyle.getStyle(context),
-                        decoration: PlaygroundTextFieldStyle.getDecoration(context, "24 Rue du plaisir"),
-                        validator : (value) {
-                          if(value.isEmpty) return "Le champ Adresse est obligatoire";
-                        },
-                        onSaved: (value) {
-                          newPlayground.address = value.trim();
-                        },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Suggestions : "),
+                        Column(
+                            children: _addressPredictions.map((address) =>
+                                InkWell(
+                                  child: Padding(padding: EdgeInsets.only(top:8, left: 8), child: AddressDisplay(address:address)),
+                                  onTap: () {
+                                    setState(() {
+                                      newPlayground.address = address.address;
+                                      newPlayground.latitude = address.coords.latitude;
+                                      newPlayground.longitude = address.coords.longitude;
+                                      _addressTextController.text = address.address;
+                                    });
+                                  },
+                                )
+                            ).toList()
+                        )
+                      ]
                     )
+                ) : new Container(),
+
+                new Padding(
+                    padding: EdgeInsets.all(12),
+                    child: AddressFieldAutocomplete(controller: _addressTextController, onTap: (address) {
+                      newPlayground.address = address.address;
+                      newPlayground.latitude = address.coords.latitude;
+                      newPlayground.longitude = address.coords.longitude;
+                    },)
                 ),
 
               ],
@@ -250,7 +296,7 @@ class AddPlaygroundPageState extends State<AddPlaygroundPage> {
         title: new Icon(Icons.terrain, color: Colors.grey, size: 16),
         isActive: currentStep >= 2,
         content: new Form(
-            key: _addressKey,
+            key: _sportsKey,
             child: new Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[

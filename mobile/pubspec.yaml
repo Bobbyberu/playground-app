@@ -24,6 +24,8 @@ dependencies:
   path_provider:
   flutter_secure_storage: ^3.1.2
   corsac_jwt: 0.1.2
+  location: ^1.4.1
+  autocomplete_textfield: ^1.6.4
 
 
   # The following adds the Cupertino Icons font to your application.
