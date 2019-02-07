@@ -31,36 +31,6 @@ public class ScheduleController {
     }
 
     /**
-     * [GET] Return all schedules
-     *
-     * @return ResponseEntity
-     */
-    @GetMapping(produces = "application/json")
-    public ResponseEntity<List<Schedule>> getSchedules() {
-        return new ResponseEntity<>(scheduleService.getSchedules(), HttpStatus.OK);
-    }
-
-    /**
-     * [GET] Return one schedule by id
-     *
-     * @param id int
-     *
-     * @return ResponseEntity
-     *
-     * @throws ResourceNotFoundException Schedule not found
-     */
-    @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<Schedule> getSchedule(@PathVariable("id") int id) throws ResourceNotFoundException {
-        Schedule schedule = scheduleService.getSchedule(id);
-
-        if (schedule == null) {
-            throw new ResourceNotFoundException("Schedule with id " + id + " not found");
-        }
-
-        return new ResponseEntity<>(schedule, HttpStatus.OK);
-    }
-
-    /**
      * [POST] Create a schedule and return it
      *
      * @param schedule Schedule

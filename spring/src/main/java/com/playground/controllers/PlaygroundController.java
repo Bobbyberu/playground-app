@@ -1,8 +1,11 @@
 package com.playground.controllers;
 
+import com.playground.model.dto.CompleteScheduleDto;
+import com.playground.model.dto.DayScheduleDto;
 import com.playground.model.entity.Comment;
 import com.playground.model.entity.Playground;
 import com.playground.model.entity.ReportPlayground;
+import com.playground.model.entity.Schedule;
 import com.playground.model.entity.Sport;
 import com.playground.model.entity.User;
 import com.playground.model.dto.PlaygroundDto;
@@ -44,6 +47,8 @@ public class PlaygroundController {
 
     private final ReportPlaygroundService reportPlaygroundService;
 
+    private final ScheduleService scheduleService;
+
     /**
      * PlaygroundController Constructor
      *
@@ -52,13 +57,14 @@ public class PlaygroundController {
     @Autowired
     public PlaygroundController(PlaygroundService playgroundService, StorageService storageService,
                                 UserService userService, SportService sportService, CommentService commentService,
-                                ReportPlaygroundService reportPlaygroundService) {
+                                ReportPlaygroundService reportPlaygroundService, ScheduleService scheduleService) {
         this.playgroundService = playgroundService;
         this.storageService = storageService;
         this.userService = userService;
         this.sportService = sportService;
         this.commentService = commentService;
         this.reportPlaygroundService = reportPlaygroundService;
+        this.scheduleService = scheduleService;
     }
 
     /**
@@ -323,5 +329,21 @@ public class PlaygroundController {
         storageService.storePlayground(file, filename);
 
         return ResponseEntity.ok(true);
+    }
+
+    @GetMapping("/{id}/schedule")
+    public ResponseEntity<CompleteScheduleDto> getPlaygroundCompleteSchedule(@PathVariable int id) {
+        Playground playground = playgroundService.getPlayground(id);
+
+        if (playground == null) {
+            throw new ResourceNotFoundException("Playground with id " + id + " not found");
+        }
+
+        List<DayScheduleDto> days = scheduleService.getPlaygroundSchedule(playground).stream()
+                .map(s -> new DayScheduleDto(s.getDay(), s.getOpening(), s.getClosure()))
+                .collect(Collectors.toList());
+        CompleteScheduleDto playgroundSchedule = new CompleteScheduleDto(playground.getId(), days);
+
+        return new ResponseEntity<>(playgroundSchedule, HttpStatus.OK);
     }
 }

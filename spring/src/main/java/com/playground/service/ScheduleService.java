@@ -1,5 +1,6 @@
 package com.playground.service;
 
+import com.playground.model.entity.Playground;
 import com.playground.model.entity.Schedule;
 import com.playground.repository.ScheduleRepository;
 import com.playground.service.interfaces.IScheduleService;
@@ -29,17 +30,14 @@ public class ScheduleService implements IScheduleService {
     }
 
     @Override
-    public List<Schedule> getSchedules() {
-        List<Schedule> schedules = new ArrayList<>();
-        scheduleRepository.findAll().forEach(schedules::add);
-
-        return schedules;
-    }
-
-    @Override
     public Schedule getSchedule(int id) {
         return scheduleRepository.findById(id).orElse(null);
 }
+
+    @Override
+    public List<Schedule> getPlaygroundSchedule(Playground playground) {
+        return scheduleRepository.findByPlayground(playground);
+    }
 
     @Override
     public Schedule createSchedule(Schedule schedule) {
