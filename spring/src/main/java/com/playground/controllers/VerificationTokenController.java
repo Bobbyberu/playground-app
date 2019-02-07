@@ -1,5 +1,6 @@
 package com.playground.controllers;
 
+import com.playground.model.dto.UserDto;
 import com.playground.model.entity.Role;
 import com.playground.model.entity.User;
 import com.playground.model.entity.VerificationToken;
@@ -29,13 +30,14 @@ public class VerificationTokenController {
     private VerificationTokenRepository verificationTokenRepository;
 
     @GetMapping(value = "/{token}")
-    public ResponseEntity<User> verify(@PathVariable(value = "token") String token) {
-        VerificationToken verificationToken = verificationTokenRepository.findByToken(token).orElseThrow(() -> new ResourceNotFoundException("Token not found"));
+    public ResponseEntity<UserDto> verify(@PathVariable(value = "token") String token) {
+        VerificationToken verificationToken = verificationTokenRepository.findByToken(token)
+                .orElseThrow(() -> new ResourceNotFoundException("Token not found"));
         Role role = roleRepository.findByName("ROLE_USER").get();
         User user = userRepository.findById(verificationToken.getUser().getId()).get();
         user.setRole(role);
         user = userRepository.save(user);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(new UserDto(user.getId(), user.getUsername()), HttpStatus.OK);
     }
 
 }

@@ -14,7 +14,7 @@ public class Sport {
     private int id;
 
     private String name;
-    
+
     private String symbol;
 
     public Sport(String name, String symbol) {
