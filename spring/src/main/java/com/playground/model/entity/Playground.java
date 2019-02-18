@@ -51,7 +51,11 @@ public class Playground {
     private String city;
     private String address;
 
-    public Playground(String name, boolean isPrivate, boolean covered, double latitude, double longitude, String surface, String description, String city, String address) {
+    @OneToMany
+    private Set<Schedule> schedules;
+
+    public Playground(String name, boolean isPrivate, boolean covered, double latitude, double longitude, String surface,
+                      String description, String city, String address) {
         this.name = name;
         this.isPrivate = isPrivate;
         this.covered = covered;

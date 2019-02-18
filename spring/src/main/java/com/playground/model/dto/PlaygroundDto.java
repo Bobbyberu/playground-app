@@ -37,6 +37,8 @@ public class PlaygroundDto {
 
     private String address;
 
+    private CompleteScheduleDto schedules;
+
     // to get playground detail
     public PlaygroundDto(Playground playground) {
         this.id = playground.getId();
@@ -51,18 +53,21 @@ public class PlaygroundDto {
         this.surface = playground.getSurface();
         this.averageMark = playground.getAverageMark();
 
-        Set<UserDto> players = playground.getPlayers().stream()
-                .map(p -> new UserDto(p.getId(), p.getUsername()))
-                .collect(Collectors.toSet());
-        this.players = players;
-
-        Set<SportDto> sports = playground.getSports().stream()
-                .map(s -> new SportDto(s))
-                .collect(Collectors.toSet());
-        this.sports = sports;
+        if(playground.getSports() != null) {
+            Set<SportDto> sports = playground.getSports().stream()
+                    .map(s -> new SportDto(s))
+                    .collect(Collectors.toSet());
+            this.sports = sports;
+        }
 
         this.city = playground.getCity();
         this.address = playground.getAddress();
+
+        if(playground.getSchedules() != null) {
+            Set<DayScheduleDto> daySchedules = playground.getSchedules().stream()
+                    .map(s -> new DayScheduleDto(s)).collect(Collectors.toSet());
+            this.schedules = new CompleteScheduleDto(playground.getId(), daySchedules);
+        }
     }
 
     // to display icon in map

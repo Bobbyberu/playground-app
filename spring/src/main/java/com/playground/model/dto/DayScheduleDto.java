@@ -1,11 +1,16 @@
 package com.playground.model.dto;
 
+import com.playground.model.entity.Schedule;
 import lombok.Getter;
 
 import java.time.DayOfWeek;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 @Getter
 public class DayScheduleDto {
+
+    private final static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm", Locale.FRANCE);
 
     private DayOfWeek day;
 
@@ -13,10 +18,12 @@ public class DayScheduleDto {
 
     private String closure;
 
-    public DayScheduleDto(DayOfWeek day, String opening, String closure) {
-        this.day = day;
-        this.opening = opening;
-        this.closure = closure;
+    public DayScheduleDto(Schedule schedule) {
+        this.day = schedule.getDay();
+
+        this.opening = FORMATTER.format(schedule.getOpening());
+
+        this.closure = FORMATTER.format(schedule.getClosure());
     }
 
 }

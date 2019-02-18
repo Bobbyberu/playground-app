@@ -4,6 +4,7 @@ import com.playground.model.entity.Playground;
 import com.playground.model.entity.Sport;
 import com.playground.model.entity.User;
 import com.playground.repository.PlaygroundRepository;
+import com.playground.repository.ScheduleRepository;
 import com.playground.service.interfaces.IPlaygroundService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,9 @@ import java.util.Set;
 @Service
 public class PlaygroundService implements IPlaygroundService {
 
-    /** PlaygroundRepository playgroundRepository */
     private final PlaygroundRepository playgroundRepository;
+
+    private final ScheduleRepository scheduleRepository;
 
     private final UserService userService;
 
@@ -29,8 +31,9 @@ public class PlaygroundService implements IPlaygroundService {
      * @param playgroundRepository PlaygroundRepository
      */
     @Autowired
-    public PlaygroundService(PlaygroundRepository playgroundRepository, UserService userService) {
+    public PlaygroundService(PlaygroundRepository playgroundRepository, ScheduleRepository scheduleRepository, UserService userService) {
         this.playgroundRepository = playgroundRepository;
+        this.scheduleRepository = scheduleRepository;
         this.userService = userService;
     }
 

@@ -1,12 +1,19 @@
 package com.playground.model.entity;
 
+import com.playground.model.wrapper.ScheduleWrapper;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.time.DayOfWeek;
-import java.util.Date;
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -22,12 +29,17 @@ public class Schedule {
     @ManyToOne
     private Playground playground;
 
-    private String opening;
+    private LocalTime opening;
 
-    private String closure;
+    private LocalTime closure;
 
     private DayOfWeek day;
 
-    public Schedule() {
+    public Schedule(ScheduleWrapper scheduleWrapper) {
+        this.opening = LocalTime.of(scheduleWrapper.getOpeningHour(), scheduleWrapper.getOpeningMinute());
+        this.closure = LocalTime.of(scheduleWrapper.getClosureHour(), scheduleWrapper.getClosureMinute());
+        this.day = scheduleWrapper.getDay();
     }
+
+    public Schedule() {}
 }
