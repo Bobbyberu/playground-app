@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -36,7 +37,12 @@ public class ScheduleService implements IScheduleService {
 
     @Override
     public List<Schedule> getPlaygroundSchedule(Playground playground) {
-        return scheduleRepository.findByPlayground(playground);
+        List<Schedule> schedules = scheduleRepository.findByPlayground(playground);
+        schedules.sort((o1, o2) -> {
+            if (o1.getDay().getValue() == o2.getDay().getValue()) return 0;
+            return o1.getDay().compareTo(o2.getDay());
+        });
+        return schedules;
     }
 
     @Override
