@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -310,14 +311,18 @@ public class UserController {
     /**
      * [GET] get image for corresponding user
      *
-     * @param userMail
+     * @param userMail user mail or id
      * @return image
      */
     @GetMapping(value = "{userMail}/image", produces = "image/png")
     @ResponseBody
     public ResponseEntity<byte[]> getUserImage(@PathVariable String userMail) {
         try {
-            User user = userService.getUserByMail(userMail);
+            User user;
+            if(org.apache.commons.lang3.StringUtils.isNumeric(userMail))
+                user = userService.getUserById(Integer.parseInt(userMail));
+            else
+                user = userService.getUserByMail(userMail);
             String filename = user.getAvatarName();
 
             Resource file;

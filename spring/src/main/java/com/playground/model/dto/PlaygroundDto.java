@@ -5,6 +5,7 @@ import com.playground.model.entity.Playground;
 import com.playground.model.entity.Sport;
 import com.playground.model.entity.User;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Set;
 
@@ -44,6 +45,7 @@ public class PlaygroundDto {
         this.name = playground.getName();
         this.isPrivate = playground.isPrivate();
         this.covered = playground.isCovered();
+        this.description = playground.getDescription();
 
         this.latitude = playground.getLatitude();
         this.longitude = playground.getLongitude();

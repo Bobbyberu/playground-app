@@ -110,6 +110,9 @@ class SignalCommentPageState extends State<SignalCommentPage> {
                       decoration: PlaygroundTextFieldStyle.getDecoration(context, "Expliquer les raisons de votre signalement"),
                       maxLines: 3,
                       keyboardType: TextInputType.multiline,
+                      validator: (value) {
+                        if(value.isEmpty) return "Vous devez préciser la raison de votre signalement";
+                      },
                       onSaved: (value) {
                         signal.description = value.trim();
                       },

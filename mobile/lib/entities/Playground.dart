@@ -60,7 +60,6 @@ class Playground {
     );
   }
 
-  //factory Playground.fromJson(Map<String, dynamic> json) => _$PlaygroundFromJson(json);
   factory Playground.fromJson(Map<String, dynamic> json) {
     return Playground(
         id: json['id'] as int,
@@ -70,16 +69,17 @@ class Playground {
         address: json['address'] as String,
         latitude: (json['latitude'] as num).toDouble(),
         longitude: (json['longitude'] as num).toDouble(),
-        averageMark: (json['averageMark'] as num).toDouble(),
+        averageMark: (json.containsKey('averageMark')) ? (json['averageMark'] as num).toDouble() : null,
         covered: json['covered'] as bool,
         imgPath: json['imgPath'] as String,
         description: json['description'] as String,
-        sports: (json['sports'] as List)
+        sports: (json.containsKey('sports')) ? (json['sports'] as List)
             .map((e) => Sport.fromJson(e as Map<String, dynamic>))
-            .toSet(),
-        players: (json['players'] as List)
+            .toSet() : null,
+        players: (json.containsKey('sports')) ? (json['players'] as List)
             .map((e) => User.fromJson(e as Map<String, dynamic>))
-            .toSet());
+            .toSet() : null
+    );
   }
   Map<String, dynamic> toJson() => _$PlaygroundToJson(this);
 

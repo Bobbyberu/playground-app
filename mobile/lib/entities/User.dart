@@ -62,7 +62,7 @@ class User {
     'id': this.id,
     'username': this.username,
     'mail': this.mail,
-    'birthDate': this.birthDate.toIso8601String(),
+    'birthDate': (this.birthDate != null) ? this.birthDate.toIso8601String() : null,
     'password': this.password,
     'city': this.city,
     'enabled': this.enabled,
