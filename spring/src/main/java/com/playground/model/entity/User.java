@@ -2,6 +2,8 @@ package com.playground.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +20,8 @@ import javax.persistence.Table;
 import java.util.*;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "user")
 @EntityListeners(AuditingEntityListener.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -27,7 +31,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @Column(unique=true)
+    @Column(unique = true)
     private String username;
 
     private String mail;
@@ -69,18 +73,6 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -96,26 +88,6 @@ public class User implements UserDetails {
         return true;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getMail() {
-        return mail;
-    }
-
-    public void setMail(String mail) {
-        this.mail = mail;
-    }
-
-    public Date getBirthDate() {
-        return birthDate;
-    }
-
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
-    }
-
     @Override
     @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -125,94 +97,5 @@ public class User implements UserDetails {
         }
         liste.add(this.role);
         return liste;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getAvatarName() {
-        return avatarName;
-    }
-
-    public void setAvatarName(String avatarName) {
-        this.avatarName = avatarName;
-    }
-
-    public Set<User> getFriends() {
-        return friends;
-    }
-
-    public void setFriends(Set<User> friends) {
-        this.friends = friends;
-    }
-
-    public Set<Sport> getFavouriteSports() {
-        return favouriteSports;
-    }
-
-    public void setFavouriteSports(Set<Sport> favouriteSports) {
-        this.favouriteSports = favouriteSports;
-    }
-
-    @JsonIgnore
-    public Set<Playground> getFavouritePlaygrounds() {
-        return favouritePlaygrounds;
-    }
-
-    public void setFavouritePlaygrounds(Set<Playground> favouritePlaygrounds) {
-        this.favouritePlaygrounds = favouritePlaygrounds;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public boolean isArchived() {
-        return archived;
-    }
-
-    public void setArchived(boolean archived) {
-        this.archived = archived;
-    }
-
-    public boolean isBanned() {
-        return banned;
-    }
-
-    public void setBanned(boolean banned) {
-        this.banned = banned;
-    }
-
-    public Sport getPlaying() {
-        return playing;
-    }
-
-    public void setPlaying(Sport playing) {
-        this.playing = playing;
     }
 }

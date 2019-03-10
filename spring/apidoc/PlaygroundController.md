@@ -15,6 +15,7 @@ Back to [README.md](../README.md)
 - [PUT] /api/playgrounds/{idPlayground}/player/{idUser}/add (#9)
 - [PUT] /api/playgrounds/{idPlayground}/player/{idUser}/remove (#10)
 - [GET] /api/playgrounds/{idPlayground}/players (#11)
+- [GET] /api/playgrounds/{id}/schedule (#12)
 
 
 ## [GET] /api/playgrounds {#1}
@@ -175,6 +176,21 @@ Get all the users playing on the selected playground
 ### Response (HTTP)
 
 - *200 Ok* 
+
+___
+
+## [GET] /api/playgrounds/{id}/schedule {#11}
+
+Get playground schedule
+
+### Parameters
+
+- *\{id\} :* Int
+
+### Response (HTTP)
+
+- *200 Ok* 
+- CompleteSchedule
 
 ___
 

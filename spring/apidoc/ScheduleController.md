@@ -2,42 +2,12 @@
 
 Back to [README.md](../README.md)
 
-- [[GET] /api/schedules](#1)
-- [[GET] /api/schedules/\{id\}](#2)
-- [[POST] /api/schedules](#3)
-- [[PUT] /api/schedules/\{id\}](#4)
-- [[DELETE] /api/schedules/\{id\}](#5)
+- [[POST] /api/schedules](#1)
+- [[PUT] /api/schedules/\{id\}](#2)
+- [[DELETE] /api/schedules/\{id\}](#3)
 
 ___
 
-### [GET] /api/schedules {#1}
-
-Get all schedules
-
-### Parameters
-
-- *No parameter*
-
-### Response (HTTP)
-
-- *200 OK* Schedule[ ]
-
-___
-
-## [GET] /api/schedules/\{id\} {#2}
-
-Get a schedule
-
-### Parameters
-
-- *\{id\} :* integer
-
-### Response (HTTP)
-
-- *200 Ok :* Schedule
-- *404 Not found :* ResourceNotFoundException
-
-___
 
 ## [POST] /api/schedules {#3}
 

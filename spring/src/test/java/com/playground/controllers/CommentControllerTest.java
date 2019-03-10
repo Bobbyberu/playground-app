@@ -44,7 +44,7 @@ public class CommentControllerTest {
 
     private Comment mockComment = new Comment(mockPlayground, null, "comment", 5.0);
 
-    /*@Test
+    @Test
     public void testGetCommentsExpectOk() throws Exception {
         Mockito.when(commentService.getComments()).thenReturn(Arrays.asList(mockComment));
 
@@ -59,7 +59,7 @@ public class CommentControllerTest {
         String expected = "[{\"id\":0,\"playground\":{\"id\":0,\"name\":null,\"covered\":false,\"latitude\":0.0,\"longitude\":0.0,\"surface\":null,\"description\":null,\"averageMark\":0.0,\"imageName\":null,\"players\":null,\"sports\":null,\"city\":null,\"address\":null,\"private\":false},\"author\":null,\"archived\":false,\"comment\":\"comment\",\"mark\":5.0}]";
 
         JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
-    }*/
+    }
 
     @Test
     public void testGetCommentsByPlaygroundWithExistingPlaygroundExpectOk() throws Exception {
@@ -97,10 +97,10 @@ public class CommentControllerTest {
         assertEquals("Playground with id "+ id +" not found", result.getResolvedException().getMessage());
     }
 
-    /*@Test
+    @Test
     public void testGetCommentWithExistingPlaygroundAndExistingIdExpectOk() throws Exception {
         Mockito.when(playgroundService.getPlayground(Mockito.anyInt())).thenReturn(mockPlayground);
-        Mockito.when(commentService.getCommentByPlayground(Mockito.any(Playground.class),Mockito.anyInt())).thenReturn(mockComment);
+        Mockito.when(commentService.getComment(Mockito.anyInt())).thenReturn(mockComment);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/playgrounds/0/comments/0").accept(MediaType.APPLICATION_JSON);
 
@@ -120,7 +120,7 @@ public class CommentControllerTest {
         int id = 2;
 
         Mockito.when(playgroundService.getPlayground(Mockito.anyInt())).thenReturn(mockPlayground);
-        Mockito.when(commentService.getCommentByPlayground(Mockito.any(Playground.class),Mockito.anyInt())).thenReturn(null);
+        Mockito.when(commentService.getComment(Mockito.anyInt())).thenReturn(null);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/playgrounds/0/comments/" + id).accept(MediaType.APPLICATION_JSON);
 
@@ -132,7 +132,7 @@ public class CommentControllerTest {
 
         assertEquals(HttpStatus.NOT_FOUND.value(), dto.getStatus());
         assertEquals("Comment with id "+ id +" not found for this playground", result.getResolvedException().getMessage());
-    }*/
+    }
 
     @Test
     public void testGetCommentWithNonExistingPlaygroundExpectNoFound() throws Exception {
@@ -152,7 +152,7 @@ public class CommentControllerTest {
         assertEquals("Playground with id "+ id +" not found", result.getResolvedException().getMessage());
     }
 
-    /*@Test
+    @Test
     public void testCreateCommentExpectCreated() throws Exception {
         Comment mockComment = new Comment(mockPlayground, null, "comment", 1.0);
 
@@ -176,7 +176,7 @@ public class CommentControllerTest {
         String expected = "{\"id\":0,\"playground\":{\"id\":0,\"name\":null,\"covered\":false,\"latitude\":0.0,\"longitude\":0.0,\"surface\":null,\"description\":null,\"averageMark\":0.0,\"imageName\":null,\"players\":null,\"sports\":null,\"city\":null,\"address\":null,\"private\":false},\"author\":null,\"archived\":false,\"comment\":\"comment\",\"mark\":1.0}";
 
         JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
-    }*/
+    }
 
 
     @Test
