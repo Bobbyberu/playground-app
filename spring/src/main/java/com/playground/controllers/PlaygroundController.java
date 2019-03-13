@@ -15,7 +15,6 @@ import com.playground.service.*;
 import com.playground.storage.StorageService;
 import com.playground.utils.BadRequestException;
 import com.playground.utils.ResourceNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
+import javax.inject.Inject;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -48,37 +48,26 @@ import java.util.stream.Collectors;
 @RequestMapping("/playgrounds")
 public class PlaygroundController {
 
-    private final PlaygroundService playgroundService;
+    @Inject
+    private PlaygroundService playgroundService;
 
-    private final StorageService storageService;
+    @Inject
+    private StorageService storageService;
 
-    private final UserService userService;
+    @Inject
+    private UserService userService;
 
-    private final SportService sportService;
+    @Inject
+    private SportService sportService;
 
-    private final CommentService commentService;
+    @Inject
+    private CommentService commentService;
 
-    private final ReportPlaygroundService reportPlaygroundService;
+    @Inject
+    private ReportPlaygroundService reportPlaygroundService;
 
-    private final ScheduleService scheduleService;
-
-    /**
-     * PlaygroundController Constructor
-     *
-     * @param playgroundService PlaygroundService
-     */
-    @Autowired
-    public PlaygroundController(PlaygroundService playgroundService, StorageService storageService,
-                                UserService userService, SportService sportService, CommentService commentService,
-                                ReportPlaygroundService reportPlaygroundService, ScheduleService scheduleService) {
-        this.playgroundService = playgroundService;
-        this.storageService = storageService;
-        this.userService = userService;
-        this.sportService = sportService;
-        this.commentService = commentService;
-        this.reportPlaygroundService = reportPlaygroundService;
-        this.scheduleService = scheduleService;
-    }
+    @Inject
+    private ScheduleService scheduleService;
 
     /**
      * [GET] Return all playgrounds
@@ -125,7 +114,7 @@ public class PlaygroundController {
             Set<Schedule> newSchedules = new HashSet<>();
 
             for (ScheduleWrapper scheduleWrapper : playgroundWrapper.getSchedules()) {
-                if(isTimeInvalid(scheduleWrapper)) {
+                if(scheduleService.isTimeInvalid(scheduleWrapper)) {
                     throw new BadRequestException("Invalid time data");
                 }
 
@@ -359,12 +348,5 @@ public class PlaygroundController {
         CompleteScheduleDto playgroundSchedule = new CompleteScheduleDto(playground.getId(), days);
 
         return new ResponseEntity<>(playgroundSchedule, HttpStatus.OK);
-    }
-
-    private boolean isTimeInvalid(ScheduleWrapper scheduleWrapper) {
-        return scheduleWrapper.getOpeningHour() < 0 || scheduleWrapper.getOpeningHour() > 23
-                || scheduleWrapper.getOpeningMinute() < 0 || scheduleWrapper.getOpeningMinute() > 59
-                || scheduleWrapper.getClosureHour() < 0 || scheduleWrapper.getClosureHour() > 23
-                || scheduleWrapper.getClosureMinute() < 0 || scheduleWrapper.getClosureMinute() > 59;
     }
 }

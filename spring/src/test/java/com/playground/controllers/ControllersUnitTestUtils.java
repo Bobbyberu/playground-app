@@ -2,7 +2,15 @@ package com.playground.controllers;
 
 import com.playground.model.entity.Comment;
 import com.playground.model.entity.Playground;
+import com.playground.model.entity.Schedule;
+import com.playground.model.entity.Sport;
 import com.playground.model.entity.User;
+import com.playground.model.wrapper.PlaygroundWrapper;
+
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -13,6 +21,7 @@ public class ControllersUnitTestUtils {
         User user = mock(User.class);
         when(user.getId()).thenReturn(1);
         when(user.getUsername()).thenReturn("user");
+        when(user.getPassword()).thenReturn("pwd");
 
         return user;
     }
@@ -20,6 +29,15 @@ public class ControllersUnitTestUtils {
     public static Playground buildPlayground() {
         Playground playground = mock(Playground.class);
         when(playground.getId()).thenReturn(1);
+        when(playground.getName()).thenReturn("name");
+        when(playground.isCovered()).thenReturn(false);
+        when(playground.isPrivate()).thenReturn(false);
+        when(playground.getLatitude()).thenReturn(Double.valueOf(0));
+        when(playground.getLongitude()).thenReturn(Double.valueOf(0));
+        when(playground.getSurface()).thenReturn("surface");
+        when(playground.getDescription()).thenReturn("description");
+        when(playground.getCity()).thenReturn("Villié-Morgon");
+        when(playground.getAddress()).thenReturn("address");
 
         return playground;
     }
@@ -36,5 +54,28 @@ public class ControllersUnitTestUtils {
         when(comment.getAuthor()).thenReturn(user);
 
         return comment;
+    }
+
+    public static Set<Schedule> buildSchedules() {
+        Set<Schedule> schedules = new HashSet<>();
+
+        Schedule schedule = mock(Schedule.class);
+
+        when(schedule.getOpening()).thenReturn(LocalTime.NOON);
+        when(schedule.getClosure()).thenReturn(LocalTime.MIDNIGHT);
+        when(schedule.getDay()).thenReturn(DayOfWeek.MONDAY);
+        schedules.add(schedule);
+
+        return schedules;
+    }
+
+    public static Sport buildSport() {
+        Sport sport = mock(Sport.class);
+
+        when(sport.getId()).thenReturn(1);
+        when(sport.getName()).thenReturn("sport");
+        when(sport.getSymbol()).thenReturn("");
+
+        return sport;
     }
 }
