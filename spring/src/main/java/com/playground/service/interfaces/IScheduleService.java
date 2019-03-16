@@ -2,6 +2,7 @@ package com.playground.service.interfaces;
 
 import com.playground.model.entity.Playground;
 import com.playground.model.entity.Schedule;
+import com.playground.model.wrapper.ScheduleWrapper;
 
 import java.util.List;
 
@@ -53,4 +54,10 @@ public interface IScheduleService {
      * @param schedule Schedule
      */
     void deleteSchedule(Schedule schedule);
+
+    /**
+     * @param scheduleWrapper
+     * @return true if one of the schedules has invalid data
+     */
+    boolean isTimeInvalid(ScheduleWrapper scheduleWrapper);
 }

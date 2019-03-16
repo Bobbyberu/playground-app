@@ -2,6 +2,7 @@ package com.playground.service;
 
 import com.playground.model.entity.Playground;
 import com.playground.model.entity.Schedule;
+import com.playground.model.wrapper.ScheduleWrapper;
 import com.playground.repository.ScheduleRepository;
 import com.playground.service.interfaces.IScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,5 +60,13 @@ public class ScheduleService implements IScheduleService {
     @Override
     public void deleteSchedule(Schedule schedule) {
         scheduleRepository.delete(schedule);
+    }
+
+    @Override
+    public boolean isTimeInvalid(ScheduleWrapper scheduleWrapper) {
+        return scheduleWrapper.getOpeningHour() < 0 || scheduleWrapper.getOpeningHour() > 23
+                || scheduleWrapper.getOpeningMinute() < 0 || scheduleWrapper.getOpeningMinute() > 59
+                || scheduleWrapper.getClosureHour() < 0 || scheduleWrapper.getClosureHour() > 23
+                || scheduleWrapper.getClosureMinute() < 0 || scheduleWrapper.getClosureMinute() > 59;
     }
 }

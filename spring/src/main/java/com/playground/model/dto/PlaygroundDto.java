@@ -60,6 +60,13 @@ public class PlaygroundDto {
             this.sports = sports;
         }
 
+        if(playground.getPlayers() != null) {
+            Set<UserDto> players = playground.getPlayers().stream()
+                    .map(p -> new UserDto(p))
+                    .collect(Collectors.toSet());
+            this.players = players;
+        }
+
         this.city = playground.getCity();
         this.address = playground.getAddress();
 
