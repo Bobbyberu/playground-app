@@ -3,6 +3,7 @@ package com.playground.controllers;
 import com.playground.model.entity.Comment;
 import com.playground.model.entity.Playground;
 import com.playground.model.entity.ReportComment;
+import com.playground.model.entity.ReportPlayground;
 import com.playground.model.entity.Schedule;
 import com.playground.model.entity.Sport;
 import com.playground.model.entity.User;
@@ -41,6 +42,16 @@ public class ControllersUnitTestUtils {
         when(playground.getAddress()).thenReturn("address");
 
         return playground;
+    }
+
+    public static ReportPlayground buildReportPlayground(Playground playground, User author) {
+        ReportPlayground reportPlayground = mock(ReportPlayground.class);
+
+        when(reportPlayground.getPlayground()).thenReturn(playground);
+        when(reportPlayground.getAuthor()).thenReturn(author);
+        when(reportPlayground.getDescription()).thenReturn("description");
+
+        return reportPlayground;
     }
 
     public static Comment buildComment() {
