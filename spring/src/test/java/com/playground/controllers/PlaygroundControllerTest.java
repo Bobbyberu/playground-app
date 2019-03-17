@@ -5,7 +5,6 @@ import com.playground.model.entity.Schedule;
 import com.playground.model.entity.Sport;
 import com.playground.model.entity.User;
 import com.playground.model.wrapper.ScheduleWrapper;
-<<<<<<< HEAD
 import com.playground.service.CommentService;
 import com.playground.service.PlaygroundService;
 import com.playground.service.ReportPlaygroundService;
@@ -13,11 +12,6 @@ import com.playground.service.ScheduleService;
 import com.playground.service.SportService;
 import com.playground.service.UserService;
 import com.playground.storage.StorageService;
-=======
-import com.playground.service.PlaygroundService;
-import com.playground.service.SportService;
-import com.playground.service.UserService;
->>>>>>> refacto playground unit tests
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -68,19 +62,14 @@ public class PlaygroundControllerTest {
     private PlaygroundService playgroundService;
 
     @MockBean
-<<<<<<< HEAD
     private ReportPlaygroundService reportPlaygroundService;
 
     @MockBean
     private ScheduleService scheduleService;
-=======
-    private UserService userService;
->>>>>>> refacto playground unit tests
 
     @MockBean
     private SportService sportService;
 
-<<<<<<< HEAD
     @MockBean
     private StorageService storageService;
 
@@ -89,10 +78,6 @@ public class PlaygroundControllerTest {
 
     @Test
     public void getPlaygrounds_ExpectOK() throws Exception {
-=======
-    @Test
-    public void testGetPlaygrounds() throws Exception {
->>>>>>> refacto playground unit tests
         when(playgroundService.getPlaygrounds()).thenReturn(Arrays.asList(PLAYGROUND));
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -109,11 +94,7 @@ public class PlaygroundControllerTest {
     }
 
     @Test
-<<<<<<< HEAD
     public void getPlayground_ExistingId_ExpectOK() throws Exception {
-=======
-    public void testGetPlaygroundWithExistingId() throws Exception {
->>>>>>> refacto playground unit tests
         when(playgroundService.getPlayground(anyInt())).thenReturn(PLAYGROUND);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/playgrounds/1").accept(MediaType.APPLICATION_JSON);
@@ -130,7 +111,6 @@ public class PlaygroundControllerTest {
     }
 
     @Test
-<<<<<<< HEAD
     public void getPlayground_NonExistingId_ExpectNotFound() throws Exception {
         when(playgroundService.getPlayground(anyInt())).thenReturn(null);
 
@@ -148,25 +128,6 @@ public class PlaygroundControllerTest {
     public void createPlayground_ExpectCreated() throws Exception {
         when(playgroundService.createPlayground(any(Playground.class))).thenReturn(PLAYGROUND);
 
-=======
-    public void testGetPlaygroundWithNonExistingId() throws Exception {
-        when(playgroundService.getPlayground(anyInt())).thenReturn(null);
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/playgrounds/2").accept(MediaType.APPLICATION_JSON);
-
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-
-        MockHttpServletResponse response = result.getResponse();
-
-        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-        assertEquals("Playground with id 2 not found", result.getResolvedException().getMessage());
-    }
-
-    @Test
-    public void testCreatePlayground() throws Exception {
-        when(playgroundService.createPlayground(any(Playground.class))).thenReturn(PLAYGROUND);
-
->>>>>>> refacto playground unit tests
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .post("/playgrounds")
                 .accept(MediaType.APPLICATION_JSON)
@@ -185,7 +146,6 @@ public class PlaygroundControllerTest {
     }
 
     @Test
-<<<<<<< HEAD
     public void createPlayground_Schedule_ExpectCreated() throws Exception {
         Set<Schedule> schedules = buildSchedules();
 
@@ -195,17 +155,6 @@ public class PlaygroundControllerTest {
         when(playgroundService.createPlayground(any(Playground.class))).thenReturn(playgroundWithSchedules);
         when(playgroundService.updatePlayground(anyInt(), any(Playground.class))).thenReturn(playgroundWithSchedules);
         when(scheduleService.isTimeInvalid(any(ScheduleWrapper.class))).thenReturn(false);
-=======
-    public void testCreatePlaygroundWithSchedule() throws Exception {
-        Set<Schedule> schedules = buildSchedules();
-
-        Playground playgroundWithSchedules = buildPlayground();
-        when(playgroundWithSchedules.getSchedules()).thenReturn(schedules);
-
-        when(playgroundService.createPlayground(any(Playground.class))).thenReturn(playgroundWithSchedules);
-        when(playgroundService.updatePlayground(anyInt(), any(Playground.class))).thenReturn(playgroundWithSchedules);
-        when(playgroundService.isTimeInvalid(any(ScheduleWrapper.class))).thenReturn(false);
->>>>>>> refacto playground unit tests
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .post("/playgrounds")
@@ -225,16 +174,11 @@ public class PlaygroundControllerTest {
     }
 
     @Test
-<<<<<<< HEAD
     public void createPlayground_InvalidSchedule_ExpectBadRequest() throws Exception {
-=======
-    public void testCreatePlaygroundWithInvalidSchedule() throws Exception {
->>>>>>> refacto playground unit tests
         Set<Schedule> schedules = buildSchedules();
 
         Playground playgroundWithSchedules = buildPlayground();
         when(playgroundWithSchedules.getSchedules()).thenReturn(schedules);
-<<<<<<< HEAD
 
         when(playgroundService.createPlayground(any(Playground.class))).thenReturn(playgroundWithSchedules);
         when(playgroundService.updatePlayground(anyInt(), any(Playground.class))).thenReturn(playgroundWithSchedules);
@@ -258,31 +202,6 @@ public class PlaygroundControllerTest {
         Playground newPlayground = buildPlayground();
         when(newPlayground.getCity()).thenReturn("New York");
 
-=======
-
-        when(playgroundService.createPlayground(any(Playground.class))).thenReturn(playgroundWithSchedules);
-        when(playgroundService.updatePlayground(anyInt(), any(Playground.class))).thenReturn(playgroundWithSchedules);
-        when(playgroundService.isTimeInvalid(any(ScheduleWrapper.class))).thenReturn(true);
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .post("/playgrounds")
-                .accept(MediaType.APPLICATION_JSON)
-                .content(CONTENT_WITH_SCHEDULES)
-                .contentType(MediaType.APPLICATION_JSON);
-
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-
-        MockHttpServletResponse response = result.getResponse();
-
-        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-    }
-
-    @Test
-    public void testUpdatePlaygroundWithExistingId() throws Exception {
-        Playground newPlayground = buildPlayground();
-        when(newPlayground.getCity()).thenReturn("New York");
-
->>>>>>> refacto playground unit tests
         when(playgroundService.getPlayground(anyInt())).thenReturn(PLAYGROUND);
         when(playgroundService.updatePlayground(anyInt(), any(Playground.class))).thenReturn(newPlayground);
 
@@ -306,11 +225,7 @@ public class PlaygroundControllerTest {
     }
 
     @Test
-<<<<<<< HEAD
     public void updatePlayground_NonExistingId_ExpectNotFound() throws Exception {
-=======
-    public void testUpdatePlaygroundWithNonExistingId() throws Exception {
->>>>>>> refacto playground unit tests
         when(playgroundService.getPlayground(anyInt())).thenReturn(null);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -328,11 +243,7 @@ public class PlaygroundControllerTest {
     }
 
     @Test
-<<<<<<< HEAD
     public void deletePlayground_ExistingId_ExpectNoContent() throws Exception {
-=======
-    public void testDeletePlaygroundWithExpectingId() throws Exception {
->>>>>>> refacto playground unit tests
         when(playgroundService.getPlayground(anyInt())).thenReturn(PLAYGROUND);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -345,11 +256,7 @@ public class PlaygroundControllerTest {
     }
 
     @Test
-<<<<<<< HEAD
     public void deletePlayground_NonExistingId_ExpectNotFound() throws Exception {
-=======
-    public void testDeletePlaygroundWithNonExpectingId() throws Exception {
->>>>>>> refacto playground unit tests
         when(playgroundService.getPlayground(anyInt())).thenReturn(null);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -363,11 +270,7 @@ public class PlaygroundControllerTest {
     }
 
     @Test
-<<<<<<< HEAD
     public void searchWithKeyword_ExpectOk() throws Exception {
-=======
-    public void testSearchWithKeyword() throws Exception {
->>>>>>> refacto playground unit tests
         when(playgroundService.searchPlaygroundByKeyword(anyString())).thenReturn(Arrays.asList(PLAYGROUND));
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -385,11 +288,7 @@ public class PlaygroundControllerTest {
     }
 
     @Test
-<<<<<<< HEAD
     public void addPlayerToPlayground_ExistingPlaygroundAndUserAndSport_ExpectOK() throws Exception {
-=======
-    public void testAddPlayerToPlaygroundWithExistingPlaygroundAndUserAndSport() throws Exception {
->>>>>>> refacto playground unit tests
         Playground playground = buildPlayground();
 
         Set<Sport> sports = new HashSet<>();
@@ -399,7 +298,6 @@ public class PlaygroundControllerTest {
         Set<User> users = new HashSet<>();
         User user = buildUser();
         users.add(user);
-<<<<<<< HEAD
 
         when(playground.getSports()).thenReturn(sports);
         when(playground.getPlayers()).thenReturn(users);
@@ -409,17 +307,6 @@ public class PlaygroundControllerTest {
 
         playground.setPlayers(users);
 
-=======
-
-        when(playground.getSports()).thenReturn(sports);
-        when(playground.getPlayers()).thenReturn(users);
-        when(playgroundService.getPlayground(anyInt())).thenReturn(playground);
-        when(userService.getUser(anyInt())).thenReturn(user);
-        when(sportService.getSport(anyInt())).thenReturn(sport);
-
-        playground.setPlayers(users);
-
->>>>>>> refacto playground unit tests
         when(playgroundService.addPlayerToPlayground(any(Playground.class), any(User.class), any(Sport.class))).thenReturn(playground);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -440,11 +327,7 @@ public class PlaygroundControllerTest {
     }
 
     @Test
-<<<<<<< HEAD
     public void addPlayerToPlayground_ExistingPlaygroundAndUserAndSportNotInPlayground_ExpectForbidden() throws Exception {
-=======
-    public void testAddPlayerToPlaygroundWithExistingPlaygroundAndUserAndSportNotInPlayground() throws Exception {
->>>>>>> refacto playground unit tests
         Playground playground = buildPlayground();
 
         Set<User> users = new HashSet<>();
@@ -469,11 +352,7 @@ public class PlaygroundControllerTest {
     }
 
     @Test
-<<<<<<< HEAD
     public void addPlayer_NonExistingPlayground_ExpectNotFound() throws Exception {
-=======
-    public void testAddPlayerToNonExistingPlayground() throws Exception {
->>>>>>> refacto playground unit tests
         when(playgroundService.getPlayground(anyInt())).thenReturn(null);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -491,11 +370,7 @@ public class PlaygroundControllerTest {
     }
 
     @Test
-<<<<<<< HEAD
     public void addPlayerToPlayground_NonExistingPlayer_ExpectNotFound() throws Exception {
-=======
-    public void testAddNonExistingPlayerToPlayground() throws Exception {
->>>>>>> refacto playground unit tests
         when(playgroundService.getPlayground(anyInt())).thenReturn(PLAYGROUND);
         when(userService.getUser(anyInt())).thenReturn(null);
 
@@ -514,11 +389,7 @@ public class PlaygroundControllerTest {
     }
 
     @Test
-<<<<<<< HEAD
     public void addPlayerToPlayground_NonExistingSport_ExpectNotFound() throws Exception {
-=======
-    public void testAddPlayerToPlaygroundWithNonExistingSport() throws Exception {
->>>>>>> refacto playground unit tests
         User user = buildUser();
 
         when(playgroundService.getPlayground(anyInt())).thenReturn(PLAYGROUND);
@@ -540,17 +411,12 @@ public class PlaygroundControllerTest {
     }
 
     @Test
-<<<<<<< HEAD
     public void removePlayerFromPlayground_ExistingPlaygroundAndUser_ExpectOK() throws Exception {
-=======
-    public void testRemovePlayerToPlaygroundWithExistingPlaygroundAndUser() throws Exception {
->>>>>>> refacto playground unit tests
         Playground playground = buildPlayground();
 
         Set<User> users = new HashSet<>();
         User user = buildUser();
         users.add(user);
-<<<<<<< HEAD
 
         Set<Sport> sports = new HashSet<>();
         Sport sport = buildSport();
@@ -561,18 +427,6 @@ public class PlaygroundControllerTest {
         when(playground.getPlayers()).thenReturn(users);
         when(playground.getSports()).thenReturn(sports);
 
-=======
-
-        Set<Sport> sports = new HashSet<>();
-        Sport sport = buildSport();
-        sports.add(sport);
-
-        when(playgroundService.getPlayground(anyInt())).thenReturn(playground);
-        when(userService.getUser(anyInt())).thenReturn(user);
-        when(playground.getPlayers()).thenReturn(users);
-        when(playground.getSports()).thenReturn(sports);
-
->>>>>>> refacto playground unit tests
         when(playgroundService.removePlayerFromPlayground(any(Playground.class), any(User.class))).thenReturn(playground);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -593,11 +447,7 @@ public class PlaygroundControllerTest {
     }
 
     @Test
-<<<<<<< HEAD
     public void removePlayerFromPlayground_NonExistingPlayground_ExpectNotFound() throws Exception {
-=======
-    public void testRemovePlayerToPlaygroundWithNonExistingPlayground() throws Exception {
->>>>>>> refacto playground unit tests
         when(playgroundService.getPlayground(anyInt())).thenReturn(null);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
@@ -615,11 +465,7 @@ public class PlaygroundControllerTest {
     }
 
     @Test
-<<<<<<< HEAD
     public void removePlayerFromPlayground_NonExistingUser_ExpectNotFound() throws Exception {
-=======
-    public void testRemovePlayerToPlaygroundWithNonExistingUser() throws Exception {
->>>>>>> refacto playground unit tests
         when(playgroundService.getPlayground(anyInt())).thenReturn(PLAYGROUND);
         when(userService.getUser(anyInt())).thenReturn(null);
 

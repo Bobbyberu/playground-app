@@ -84,10 +84,4 @@ public interface IPlaygroundService {
      * @return List<Playground>
      */
     List<Playground> searchPlaygroundByKeyword(String keyword);
-
-    /**
-     * @param scheduleWrapper
-     * @return true if one of the schedules has invalid data
-     */
-    boolean isTimeInvalid(ScheduleWrapper scheduleWrapper);
 }

@@ -4,33 +4,27 @@ import com.playground.model.dto.SportDto;
 import com.playground.model.entity.Sport;
 import com.playground.service.SportService;
 import com.playground.utils.ResourceNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Class SportController
- */
 @RestController
 @RequestMapping("/sports")
 public class SportController {
 
-    /** SportService sportService */
-    private final SportService sportService;
-
-    /**
-     * SportController Constructor
-     *
-     * @param sportService SportService
-     */
-    @Autowired
-    public SportController(SportService sportService) {
-        this.sportService = sportService;
-    }
+    @Inject
+    private SportService sportService;
 
     /**
      * [GET] Return all sports

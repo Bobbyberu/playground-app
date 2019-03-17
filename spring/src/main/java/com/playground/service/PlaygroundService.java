@@ -3,7 +3,6 @@ package com.playground.service;
 import com.playground.model.entity.Playground;
 import com.playground.model.entity.Sport;
 import com.playground.model.entity.User;
-import com.playground.model.wrapper.ScheduleWrapper;
 import com.playground.repository.PlaygroundRepository;
 import com.playground.service.interfaces.IPlaygroundService;
 import org.springframework.stereotype.Service;
@@ -87,12 +86,5 @@ public class PlaygroundService implements IPlaygroundService {
         playgroundRepository.search(keyword).forEach(playgrounds::add);
 
         return playgrounds;
-    }
-
-    public boolean isTimeInvalid(ScheduleWrapper scheduleWrapper) {
-        return scheduleWrapper.getOpeningHour() < 0 || scheduleWrapper.getOpeningHour() > 23
-                || scheduleWrapper.getOpeningMinute() < 0 || scheduleWrapper.getOpeningMinute() > 59
-                || scheduleWrapper.getClosureHour() < 0 || scheduleWrapper.getClosureHour() > 23
-                || scheduleWrapper.getClosureMinute() < 0 || scheduleWrapper.getClosureMinute() > 59;
     }
 }
