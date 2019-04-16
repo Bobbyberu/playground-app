@@ -4,7 +4,6 @@ import com.playground.model.entity.Sport;
 import com.playground.service.SportService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -20,14 +19,19 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
 
+import static com.playground.controllers.ControllersUnitTestUtils.buildSport;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = SportController.class, secure = false)
 public class SportControllerTest {
 
-    @Autowired
-    private SportController sportController;
+    private static final Sport SPORT = buildSport();
+
+    private final static String CONTENT = "{\"name\":\"Test\",\"symbol\":\"test\"}";
 
     @Autowired
     private MockMvc mockMvc;
@@ -35,11 +39,9 @@ public class SportControllerTest {
     @MockBean
     private SportService sportService;
 
-    private Sport mockSport = new Sport("Badminton", "\uD83C\uDFF8");
-
     @Test
-    public void testGetSportsExpectOk() throws Exception {
-        Mockito.when(sportService.getSports()).thenReturn(Arrays.asList(mockSport));
+    public void getSports_ExpectOk() throws Exception {
+        when(sportService.getSports()).thenReturn(Arrays.asList(SPORT));
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .get("/sports")
@@ -47,37 +49,31 @@ public class SportControllerTest {
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-        System.out.println(result.getResponse().getContentAsString());
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
 
-        String expected = "[{\"id\":0,\"name\":\"Badminton\", \"symbol\":\"\uD83C\uDFF8\"}]";
-
+        String expected = "[{\"id\":1,\"name\":\"sport\",\"symbol\":\"\"}]";
         JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
     }
 
     @Test
-    public void testGetSportWithExistingIdExpectOk() throws Exception {
-        Mockito.when(sportService.getSport(Mockito.anyInt())).thenReturn(mockSport);
+    public void getSport_ExistingId_ExpectOk() throws Exception {
+        when(sportService.getSport(anyInt())).thenReturn(SPORT);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/sports/0").accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-        System.out.println(result.getResponse().getContentAsString());
-
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
 
-        String expected = "{\"id\":0,\"name\":\"Badminton\", \"symbol\":\"\uD83C\uDFF8\"}";
-
+        String expected = "{\"id\":1,\"name\":\"sport\",\"symbol\":\"\"}";
         JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
     }
 
     @Test
-    public void testGetSportWithNonExistingIdExpectNoFound() throws Exception {
-        int id = 2;
+    public void getSport_NonExistingId_ExpectNoFound() throws Exception {
+        when(sportService.getSport(anyInt())).thenReturn(null);
 
-        Mockito.when(sportService.getSport(Mockito.anyInt())).thenReturn(null);
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/sports/" + id).accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/sports/2").accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
@@ -86,92 +82,74 @@ public class SportControllerTest {
         System.out.println(result.getResolvedException().getMessage());
 
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-        assertEquals("Sport with id "+ id +" not found", result.getResolvedException().getMessage());
+        assertEquals("Sport with id 2 not found", result.getResolvedException().getMessage());
     }
 
     @Test
-    public void testCreateSportExpectCreated() throws Exception {
-        Sport mockSport = new Sport("Sport","Symbol");
-
-        Mockito.when(sportService.createSport(Mockito.any(Sport.class))).thenReturn(mockSport);
+    public void createSport_ExpectCreated() throws Exception {
+        when(sportService.createSport(any(Sport.class))).thenReturn(SPORT);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .post("/sports")
                 .accept(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"Test\",\"symbol\":\"test\"}")
+                .content(CONTENT)
                 .contentType(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
         MockHttpServletResponse response = result.getResponse();
 
-        System.out.println(response.getContentAsString());
-
         assertEquals(HttpStatus.CREATED.value(), response.getStatus());
 
-        String expected = "{\"id\":0,\"name\":\"Sport\", \"symbol\":\"Symbol\"}";
-
+        String expected = "{\"id\":1,\"name\":\"sport\",\"symbol\":\"\"}";
         JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
     }
 
     @Test
-    public void testUpdateSportWithExistingIdExpectOk() throws Exception {
-        Sport newMockSport = new Sport(mockSport.getName(), "Change");
-        newMockSport.setId(mockSport.getId());
+    public void updateSport_ExistingId_ExpectOk() throws Exception {
+        Sport newSport = buildSport();
+        when(newSport.getSymbol()).thenReturn("\uD83D\uDC4C");
 
-        Mockito.when(sportService.getSport(Mockito.anyInt())).thenReturn(mockSport);
-        Mockito.when(sportService.updateSport(Mockito.anyInt(), Mockito.any(Sport.class))).thenReturn(newMockSport);
-
-        String content = "{\"name\":\"Badminton\",\"symbol\":\"Change\"}";
+        when(sportService.getSport(anyInt())).thenReturn(SPORT);
+        when(sportService.updateSport(anyInt(), any(Sport.class))).thenReturn(newSport);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .put("/sports/" + mockSport.getId())
+                .put("/sports/0")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(content)
-                ;
+                .content(CONTENT);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
         MockHttpServletResponse response = result.getResponse();
-
-        System.out.println(response.getContentAsString());
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
 
-        String expected = "{\"id\":0,\"name\":\"Badminton\", \"symbol\":\"Change\"}";
-
+        String expected = "{\"id\":1,\"name\":\"sport\",\"symbol\":\"\\uD83D\\uDC4C\"}";
         JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
     }
 
     @Test
-    public void testUpdateSportWithNonExistingIdExpectNotFound() throws Exception {
-        int id = 2;
-
-        Mockito.when(sportService.getSport(Mockito.anyInt())).thenReturn(null);
-
-        String content = "{\"name\":\"Badminton\",\"symbol\":\"Change\"}";
+    public void updateSport_NonExistingId_ExpectNotFound() throws Exception {
+        when(sportService.getSport(anyInt())).thenReturn(null);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .put("/sports/" + id)
+                .put("/sports/2")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(content)
-                ;
+                .content(CONTENT);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
         MockHttpServletResponse response = result.getResponse();
 
-        System.out.println(result.getResolvedException().getMessage());
-
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-        assertEquals("Sport with id "+ id +" not found", result.getResolvedException().getMessage());
+        assertEquals("Sport with id 2 not found", result.getResolvedException().getMessage());
     }
 
     @Test
-    public void testDeleteSportWithExpectingIdExpectNoContent() throws Exception {
-        Mockito.when(sportService.getSport(Mockito.anyInt())).thenReturn(mockSport);
+    public void deleteSport_ExpectingId_ExpectNoContent() throws Exception {
+        when(sportService.getSport(anyInt())).thenReturn(SPORT);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .delete("/sports/0")
@@ -183,20 +161,16 @@ public class SportControllerTest {
     }
 
     @Test
-    public void testDeleteSportWithNonExpectingIdExpectNotFound() throws Exception {
-        int id = 2;
-
-        Mockito.when(sportService.getSport(Mockito.anyInt())).thenReturn(null);
+    public void deleteSport_NonExpectingId_ExpectNotFound() throws Exception {
+        when(sportService.getSport(anyInt())).thenReturn(null);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .delete("/sports/" + id)
+                .delete("/sports/2")
                 .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-        System.out.println(result.getResolvedException().getMessage());
-
         assertEquals(HttpStatus.NOT_FOUND.value(), result.getResponse().getStatus());
-        assertEquals("Sport with id "+ id +" not found", result.getResolvedException().getMessage());
+        assertEquals("Sport with id 2 not found", result.getResolvedException().getMessage());
     }
 }

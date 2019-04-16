@@ -2,6 +2,8 @@ package com.playground.controllers;
 
 import com.playground.model.entity.Comment;
 import com.playground.model.entity.Playground;
+import com.playground.model.entity.ReportComment;
+import com.playground.model.entity.ReportPlayground;
 import com.playground.model.entity.Schedule;
 import com.playground.model.entity.Sport;
 import com.playground.model.entity.User;
@@ -42,6 +44,16 @@ public class ControllersUnitTestUtils {
         return playground;
     }
 
+    public static ReportPlayground buildReportPlayground(Playground playground, User author) {
+        ReportPlayground reportPlayground = mock(ReportPlayground.class);
+
+        when(reportPlayground.getPlayground()).thenReturn(playground);
+        when(reportPlayground.getAuthor()).thenReturn(author);
+        when(reportPlayground.getDescription()).thenReturn("description");
+
+        return reportPlayground;
+    }
+
     public static Comment buildComment() {
         Playground playground = buildPlayground();
 
@@ -54,6 +66,16 @@ public class ControllersUnitTestUtils {
         when(comment.getAuthor()).thenReturn(user);
 
         return comment;
+    }
+
+    public static ReportComment buildReportComment(Comment comment, User author) {
+        ReportComment reportComment = mock(ReportComment.class);
+
+        when(reportComment.getComment()).thenReturn(comment);
+        when(reportComment.getAuthor()).thenReturn(author);
+        when(reportComment.getDescription()).thenReturn("description");
+
+        return reportComment;
     }
 
     public static Set<Schedule> buildSchedules() {
