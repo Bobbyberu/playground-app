@@ -1,0 +1,25 @@
+matrix:
+  warnings_are_errors: false
+
+  include:
+    - language: java
+      install:
+        - cd spring
+        - mvn install -DskipTests=true -Dmaven.javadoc.skip=true
+      script:
+        - mvn test
+        - cd ..
+
+    - language: node_js
+      node_js:
+        - 11
+      before_install:
+        - npm i -g npm@6.9.0
+      before_script:
+        - export CI=false
+      install:
+        - cd playground-web
+        - npm install
+      script:
+        - npm run build
+        - cd ..
