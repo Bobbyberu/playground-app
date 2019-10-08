@@ -54,11 +54,30 @@ class PlaygroundService {
         });
       }
     }).catchError((error){
-
+      _controller.printError(error);
     });
 
 
     return playgrounds;
+  }
+
+
+  ///
+  /// Retrieve playground by Id
+  /// return Playground object
+  ///
+  Future<Playground> getPlaygroundById(int id) async {
+    Playground playground;
+
+    await _controller.getPlaygroundById(id).then((response) {
+      if(response.statusCode == 200) {
+        playground = Playground.fromJson(json.decode(response.body));
+      }
+    }).catchError((error) {
+      _controller.printError(error);
+    });
+
+    return playground;
   }
 
   ///
@@ -86,10 +105,10 @@ class PlaygroundService {
     return playgrounds;
   }
 
-  Future<List<User>> getPlayingUser(Playground playground) async{
+  Future<List<User>> getPlayingUser(int playgroundId) async{
     List<User> players = new List();
 
-    await _controller.getPlayersOfPlayground(playground.id).then((response){
+    await _controller.getPlayersOfPlayground(playgroundId).then((response){
       if (response.statusCode != null && response.statusCode == 200) {
         print(response.body);
         List<dynamic> playersJson = json.decode(response.body);

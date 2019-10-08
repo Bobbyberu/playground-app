@@ -172,7 +172,7 @@ Get corresponding user image
 
 ### Parameters
 
-- *\{userMail\} :* String
+- *\{userMail\} :* String (user email or user id)
 
 ### Response (HTTP)
 

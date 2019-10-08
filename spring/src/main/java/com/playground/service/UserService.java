@@ -124,6 +124,11 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public User getUserById(int id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public User updateUser(int id, User updatedUser){
         updatedUser.setId(id);
         return userRepository.save(updatedUser);

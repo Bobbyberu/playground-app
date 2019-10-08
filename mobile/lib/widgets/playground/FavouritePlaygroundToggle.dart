@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 
 class FavouritePlaygroundToggle extends StatefulWidget {
 
-  final Playground playground;
+  final int playgroundId;
 
-  const FavouritePlaygroundToggle({Key key, this.playground}) : super(key: key);
+  const FavouritePlaygroundToggle({Key key, this.playgroundId}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => FavouritePlaygroundToggleState();
@@ -29,7 +29,7 @@ class FavouritePlaygroundToggleState extends State<FavouritePlaygroundToggle> {
 
   void checkIfFavourite() async {
     _isLoading = true;
-    await _userService.checkIfFavorite(widget.playground).then((response) {
+    await _userService.checkIfFavorite(widget.playgroundId).then((response) {
       setState(() {
         _isFavourite = response;
         _isLoading = false;
@@ -58,7 +58,7 @@ class FavouritePlaygroundToggleState extends State<FavouritePlaygroundToggle> {
         setState(() {
           _isLoading = true;
         });
-        _userService.togglePlaygroundFavorite(widget.playground).then((response) {
+        _userService.togglePlaygroundFavorite(widget.playgroundId).then((response) {
           setState(() {
             _isFavourite = response;
             _isLoading = false;

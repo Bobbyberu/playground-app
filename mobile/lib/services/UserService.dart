@@ -11,7 +11,10 @@ import 'package:http/http.dart';
 class UserService {
 
   static String getUserAvatarUrl(User user) {
-    return CommonController.baseUrl + "users/" + user.mail + "/image";
+    if(user.mail != null)
+      return CommonController.baseUrl + "users/" + user.mail + "/image";
+    else
+      return CommonController.baseUrl + "users/" + user.id.toString() + "/image";
   }
 
   UserController _controller = new UserController();
@@ -38,6 +41,7 @@ class UserService {
     await _controller.getFavouritePlaygrounds().then((response) {
       if(response.statusCode != null && response.statusCode == 200) {
         List<dynamic> playgroundsJson = json.decode(response.body.toString());
+        print(playgroundsJson);
         playgroundsJson.forEach((p) {
           Playground pg = Playground.fromJson(p);
           playgrounds.add(pg);
@@ -50,10 +54,10 @@ class UserService {
     return playgrounds;
   }
 
-  Future<bool> checkIfFavorite(Playground playground) async {
+  Future<bool> checkIfFavorite(int playgroundId) async {
     bool favorite = false;
 
-    await _controller.getPlaygroundFavorite(playground.id).then((response) {
+    await _controller.getPlaygroundFavorite(playgroundId).then((response) {
       if(response.statusCode != null && response.statusCode == 200) {
         favorite = json.decode(response.body) as bool;
       }
@@ -64,10 +68,10 @@ class UserService {
     return favorite;
   }
 
-  Future<bool> togglePlaygroundFavorite(Playground playground) async {
+  Future<bool> togglePlaygroundFavorite(int playgroundId) async {
     bool favorite = false;
 
-    await _controller.putPlaygroundFavorite(playground.id).then((response) {
+    await _controller.putPlaygroundFavorite(playgroundId).then((response) {
       if(response.statusCode != null && response.statusCode == 200) {
         favorite = json.decode(response.body) as bool;
       }

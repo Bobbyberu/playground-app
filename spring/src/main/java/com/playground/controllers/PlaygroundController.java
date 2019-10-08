@@ -97,7 +97,8 @@ public class PlaygroundController {
             throw new ResourceNotFoundException("Playground with id " + id + " not found");
         }
 
-        return new ResponseEntity<>(new PlaygroundDto(playground), HttpStatus.OK);
+        PlaygroundDto dto = new PlaygroundDto(playground);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     /**

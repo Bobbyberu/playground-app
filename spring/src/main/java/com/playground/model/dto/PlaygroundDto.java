@@ -3,6 +3,7 @@ package com.playground.model.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.playground.model.entity.Playground;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -46,6 +47,7 @@ public class PlaygroundDto {
         this.description = playground.getDescription();
         this.isPrivate = playground.isPrivate();
         this.covered = playground.isCovered();
+        this.description = playground.getDescription();
 
         this.latitude = playground.getLatitude();
         this.longitude = playground.getLongitude();

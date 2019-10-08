@@ -101,7 +101,6 @@ class AddressFieldAutocompleteState extends State<AddressFieldAutocomplete> {
         controller: widget.controller,
         focusNode: this._focusNode,
         onChanged: (value) {
-          _address = value;
           loadPredictions(value);
         },
         style: PlaygroundTextFieldStyle.getStyle(context),
