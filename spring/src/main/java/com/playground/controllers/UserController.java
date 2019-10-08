@@ -10,7 +10,6 @@ import com.playground.service.UserService;
 import com.playground.storage.StorageService;
 import com.playground.utils.ResourceNotFoundException;
 import io.jsonwebtoken.Jwts;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -29,37 +29,21 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * Class PlaygroundController
- */
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserService userService;
+    @Inject
+    private UserService userService;
 
-    private final PlaygroundService playgroundService;
+    @Inject
+    private PlaygroundService playgroundService;
 
-    private final StorageService storageService;
+    @Inject
+    private StorageService storageService;
 
-    private final TokenAuthenticationService tokenAuthenticationService;
-
-    /**
-     * UserController Constructor
-     *
-     * @param userService                UserService
-     * @param playgroundService          PlaygroundService
-     * @param storageService             StorageService
-     * @param tokenAuthenticationService TokenAuthenticationService
-     */
-    @Autowired
-    public UserController(UserService userService, PlaygroundService playgroundService, StorageService storageService,
-                          TokenAuthenticationService tokenAuthenticationService) {
-        this.userService = userService;
-        this.playgroundService = playgroundService;
-        this.storageService = storageService;
-        this.tokenAuthenticationService = tokenAuthenticationService;
-    }
+    @Inject
+    private TokenAuthenticationService tokenAuthenticationService;
 
     /**
      * [GET] Return all users

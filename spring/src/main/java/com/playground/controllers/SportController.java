@@ -1,34 +1,30 @@
 package com.playground.controllers;
 
+import com.playground.model.dto.SportDto;
 import com.playground.model.entity.Sport;
 import com.playground.service.SportService;
 import com.playground.utils.ResourceNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.inject.Inject;
 import java.util.List;
+import java.util.stream.Collectors;
 
-/**
- * Class SportController
- */
 @RestController
 @RequestMapping("/sports")
 public class SportController {
 
-    /** SportService sportService */
-    private final SportService sportService;
-
-    /**
-     * SportController Constructor
-     *
-     * @param sportService SportService
-     */
-    @Autowired
-    public SportController(SportService sportService) {
-        this.sportService = sportService;
-    }
+    @Inject
+    private SportService sportService;
 
     /**
      * [GET] Return all sports
@@ -36,8 +32,11 @@ public class SportController {
      * @return ResponseEntity
      */
     @GetMapping(produces = "application/json")
-    public ResponseEntity<List<Sport>> getSports() {
-        return new ResponseEntity<>(sportService.getSports(), HttpStatus.OK);
+    public ResponseEntity<List<SportDto>> getSports() {
+        List<SportDto> sports = sportService.getSports().stream()
+                .map(s -> new SportDto(s))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(sports, HttpStatus.OK);
     }
 
     /**
@@ -50,14 +49,14 @@ public class SportController {
      * @throws ResourceNotFoundException Sport not found
      */
     @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<Sport> getSport(@PathVariable("id") int id) throws ResourceNotFoundException {
+    public ResponseEntity<SportDto> getSport(@PathVariable("id") int id) throws ResourceNotFoundException {
         Sport sport = sportService.getSport(id);
 
         if (sport == null) {
             throw new ResourceNotFoundException("Sport with id " + id + " not found");
         }
 
-        return new ResponseEntity<>(sport, HttpStatus.OK);
+        return new ResponseEntity<>(new SportDto(sport), HttpStatus.OK);
     }
 
     /**
@@ -68,8 +67,8 @@ public class SportController {
      * @return ResponseEntity
      */
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<Sport> createSport(@RequestBody Sport sport) {
-        return new ResponseEntity<>(sportService.createSport(sport), HttpStatus.CREATED);
+    public ResponseEntity<SportDto> createSport(@RequestBody Sport sport) {
+        return new ResponseEntity<>(new SportDto(sportService.createSport(sport)), HttpStatus.CREATED);
     }
 
     /**
@@ -83,14 +82,14 @@ public class SportController {
      * @throws ResourceNotFoundException Sport not found
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Sport> updateSport(@PathVariable("id") int id, @RequestBody Sport sport) throws ResourceNotFoundException {
+    public ResponseEntity<SportDto> updateSport(@PathVariable("id") int id, @RequestBody Sport sport) throws ResourceNotFoundException {
         Sport currentSport = sportService.getSport(id);
 
         if (currentSport == null) {
             throw new ResourceNotFoundException("Sport with id " + id + " not found");
         }
 
-        return new ResponseEntity<>(sportService.updateSport(id, sport), HttpStatus.OK);
+        return new ResponseEntity<>(new SportDto(sportService.updateSport(id, sport)), HttpStatus.OK);
     }
 
     /**

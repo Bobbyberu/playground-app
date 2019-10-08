@@ -1,5 +1,7 @@
 package com.playground.model.entity;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -8,6 +10,8 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "verification_token")
 @EntityListeners(AuditingEntityListener.class)
 public class VerificationToken {
@@ -40,42 +44,6 @@ public class VerificationToken {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MINUTE, expiryTimeInMinutes);
         return new Date(cal.getTime().getTime());
-    }
-
-    public static int getEXPIRATION() {
-        return EXPIRATION;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Date getExpiryDate() {
-        return expiryDate;
-    }
-
-    public void setExpiryDate(Date expiryDate) {
-        this.expiryDate = expiryDate;
     }
 
 }

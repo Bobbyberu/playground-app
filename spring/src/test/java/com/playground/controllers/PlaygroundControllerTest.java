@@ -1,13 +1,19 @@
 package com.playground.controllers;
 
 import com.playground.model.entity.Playground;
+import com.playground.model.entity.Schedule;
 import com.playground.model.entity.Sport;
 import com.playground.model.entity.User;
-import com.playground.service.*;
+import com.playground.model.wrapper.ScheduleWrapper;
+import com.playground.service.CommentService;
+import com.playground.service.PlaygroundService;
+import com.playground.service.ReportPlaygroundService;
+import com.playground.service.ScheduleService;
+import com.playground.service.SportService;
+import com.playground.service.UserService;
 import com.playground.storage.StorageService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -25,20 +31,44 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.playground.controllers.ControllersUnitTestUtils.buildPlayground;
+import static com.playground.controllers.ControllersUnitTestUtils.buildSchedules;
+import static com.playground.controllers.ControllersUnitTestUtils.buildSport;
+import static com.playground.controllers.ControllersUnitTestUtils.buildUser;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = PlaygroundController.class, secure = false)
 public class PlaygroundControllerTest {
 
-    @Autowired
-    private PlaygroundController playgroundController;
+    private final static String CONTENT = "{\"playground\":{\"name\":\"name\"}}";
+
+    private final static String CONTENT_WITH_SCHEDULES = "{\"playground\":{\"name\":\"name\"}, \"schedules\":[{\"day\": 0}]}";
+
+    private final static Playground PLAYGROUND = buildPlayground();
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
+    private CommentService commentService;
+
+    @MockBean
     private PlaygroundService playgroundService;
+
+    @MockBean
+    private ReportPlaygroundService reportPlaygroundService;
+
+    @MockBean
+    private ScheduleService scheduleService;
+
+    @MockBean
+    private SportService sportService;
 
     @MockBean
     private StorageService storageService;
@@ -46,20 +76,9 @@ public class PlaygroundControllerTest {
     @MockBean
     private UserService userService;
 
-    @MockBean
-    private SportService sportService;
-
-    @MockBean
-    private CommentService commentService;
-
-    @MockBean
-    private ReportPlaygroundService reportPlaygroundService;
-
-    private Playground mockPlayground = new Playground("name", false, false, 0, 0, "surface", "description", "city", "address");
-
     @Test
-    public void testGetPlaygroundsExpectOk() throws Exception {
-        Mockito.when(playgroundService.getPlaygrounds()).thenReturn(Arrays.asList(mockPlayground));
+    public void getPlaygrounds_ExpectOK() throws Exception {
+        when(playgroundService.getPlaygrounds()).thenReturn(Arrays.asList(PLAYGROUND));
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .get("/playgrounds")
@@ -69,133 +88,163 @@ public class PlaygroundControllerTest {
 
         MockHttpServletResponse response = result.getResponse();
 
-        System.out.println(response.getContentAsString());
-
-        String expected = "[{\"id\":0,\"name\":\"name\",\"covered\":false,\"latitude\":0.0,\"longitude\":0.0,\"surface\":\"surface\",\"description\":\"description\",\"averageMark\":0.0,\"imageName\":null,\"players\":null,\"sports\":null,\"city\":\"city\",\"address\":\"address\",\"private\":false}]";
+        String expected = "[{\"id\":1,\"latitude\":0.0,\"longitude\":0.0}]";
 
         JSONAssert.assertEquals(expected, response.getContentAsString(), false);
     }
 
     @Test
-    public void testGetPlaygroundWithExistingIdExpectOk() throws Exception {
-        Mockito.when(playgroundService.getPlayground(Mockito.anyInt())).thenReturn(mockPlayground);
+    public void getPlayground_ExistingId_ExpectOK() throws Exception {
+        when(playgroundService.getPlayground(anyInt())).thenReturn(PLAYGROUND);
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/playgrounds/0").accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/playgrounds/1").accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
         MockHttpServletResponse response = result.getResponse();
 
-        System.out.println(response.getContentAsString());
-
         assertEquals(HttpStatus.OK.value(), response.getStatus());
 
-        String expected = "{\"id\":0,\"name\":\"name\",\"covered\":false,\"latitude\":0.0,\"longitude\":0.0,\"surface\":\"surface\",\"description\":\"description\",\"averageMark\":0.0,\"imageName\":null,\"players\":null,\"sports\":null,\"city\":\"city\",\"address\":\"address\",\"private\":false}";
+        String expected = "{\"id\":1,\"name\":\"name\",\"isPrivate\":false,\"covered\":false,\"latitude\":0.0,\"longitude\":0.0,\"surface\":\"surface\",\"description\":\"description\",\"averageMark\":0.0,\"sports\":[],\"city\":\"Villié-Morgon\",\"address\":\"address\",\"schedules\":{\"playgroundId\":1,\"days\":[]}}";
 
         JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
     }
 
     @Test
-    public void testGetPlaygroundWithNonExistingIdExpectNoFound() throws Exception {
-        int id = 2;
+    public void getPlayground_NonExistingId_ExpectNotFound() throws Exception {
+        when(playgroundService.getPlayground(anyInt())).thenReturn(null);
 
-        Mockito.when(playgroundService.getPlayground(Mockito.anyInt())).thenReturn(null);
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/playgrounds/" + id).accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/playgrounds/2").accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
         MockHttpServletResponse response = result.getResponse();
 
-        System.out.println(result.getResolvedException().getMessage());
-
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-        assertEquals("Playground with id "+ id +" not found", result.getResolvedException().getMessage());
+        assertEquals("Playground with id 2 not found", result.getResolvedException().getMessage());
     }
 
     @Test
-    public void testCreatePlaygroundExpectCreated() throws Exception {
-        Playground mockPlayground = new Playground("name", false, false, 0, 0, "surface", "description", "city", "address");
-
-        Mockito.when(playgroundService.createPlayground(Mockito.any(Playground.class))).thenReturn(mockPlayground);
+    public void createPlayground_ExpectCreated() throws Exception {
+        when(playgroundService.createPlayground(any(Playground.class))).thenReturn(PLAYGROUND);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .post("/playgrounds")
                 .accept(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"Test\",\"isPrivate\":false}")
+                .content(CONTENT)
                 .contentType(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
         MockHttpServletResponse response = result.getResponse();
 
-        System.out.println(response.getContentAsString());
-
         assertEquals(HttpStatus.CREATED.value(), response.getStatus());
 
-        String expected = "{\"id\":0,\"name\":\"name\",\"covered\":false,\"latitude\":0.0,\"longitude\":0.0,\"surface\":\"surface\",\"description\":\"description\",\"averageMark\":0.0,\"imageName\":null,\"players\":null,\"sports\":null,\"city\":\"city\",\"address\":\"address\",\"private\":false}";
+        String expected = "{\"id\":1,\"name\":\"name\",\"isPrivate\":false,\"covered\":false,\"latitude\":0.0,\"longitude\":0.0,\"surface\":\"surface\",\"description\":\"description\",\"averageMark\":0.0,\"sports\":[],\"city\":\"Villié-Morgon\",\"address\":\"address\",\"schedules\":{\"playgroundId\":1,\"days\":[]}}";
 
         JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
     }
 
     @Test
-    public void testUpdatePlaygroundWithExistingIdExpectOk() throws Exception {
-        Playground newMockPlayground = new Playground("name", false, false, 0, 0, "surface", "description", "city", "address");
-        newMockPlayground.setId(mockPlayground.getId());
+    public void createPlayground_Schedule_ExpectCreated() throws Exception {
+        Set<Schedule> schedules = buildSchedules();
 
-        Mockito.when(playgroundService.getPlayground(Mockito.anyInt())).thenReturn(mockPlayground);
-        Mockito.when(playgroundService.updatePlayground(Mockito.anyInt(), Mockito.any(Playground.class))).thenReturn(newMockPlayground);
+        Playground playgroundWithSchedules = buildPlayground();
+        when(playgroundWithSchedules.getSchedules()).thenReturn(schedules);
+
+        when(playgroundService.createPlayground(any(Playground.class))).thenReturn(playgroundWithSchedules);
+        when(playgroundService.updatePlayground(anyInt(), any(Playground.class))).thenReturn(playgroundWithSchedules);
+        when(scheduleService.isTimeInvalid(any(ScheduleWrapper.class))).thenReturn(false);
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .post("/playgrounds")
+                .accept(MediaType.APPLICATION_JSON)
+                .content(CONTENT_WITH_SCHEDULES)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+
+        String expected = "{\"id\":1,\"name\":\"name\",\"isPrivate\":false,\"covered\":false,\"latitude\":0.0,\"longitude\":0.0,\"surface\":\"surface\",\"description\":\"description\",\"averageMark\":0.0,\"sports\":[],\"city\":\"Villié-Morgon\",\"address\":\"address\",\"schedules\":{\"playgroundId\":1,\"days\":[{\"day\":\"MONDAY\",\"opening\":\"12:00\",\"closure\":\"00:00\"}]}}";
+
+        JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
+    }
+
+    @Test
+    public void createPlayground_InvalidSchedule_ExpectBadRequest() throws Exception {
+        Set<Schedule> schedules = buildSchedules();
+
+        Playground playgroundWithSchedules = buildPlayground();
+        when(playgroundWithSchedules.getSchedules()).thenReturn(schedules);
+
+        when(playgroundService.createPlayground(any(Playground.class))).thenReturn(playgroundWithSchedules);
+        when(playgroundService.updatePlayground(anyInt(), any(Playground.class))).thenReturn(playgroundWithSchedules);
+        when(scheduleService.isTimeInvalid(any(ScheduleWrapper.class))).thenReturn(true);
+
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .post("/playgrounds")
+                .accept(MediaType.APPLICATION_JSON)
+                .content(CONTENT_WITH_SCHEDULES)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+
+        MockHttpServletResponse response = result.getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+    }
+
+    @Test
+    public void updatePlayground_ExistingIdExpectOK() throws Exception {
+        Playground newPlayground = buildPlayground();
+        when(newPlayground.getCity()).thenReturn("New York");
+
+        when(playgroundService.getPlayground(anyInt())).thenReturn(PLAYGROUND);
+        when(playgroundService.updatePlayground(anyInt(), any(Playground.class))).thenReturn(newPlayground);
 
         String content = "{\"name\":\"Playground\"}";
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .put("/playgrounds/" + mockPlayground.getId())
+                .put("/playgrounds/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(content)
-                ;
+                .content(content);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
         MockHttpServletResponse response = result.getResponse();
 
-        System.out.println(response.getContentAsString());
-
         assertEquals(HttpStatus.OK.value(), response.getStatus());
 
-        String expected = "{\"id\":0,\"name\":\"name\",\"covered\":false,\"latitude\":0.0,\"longitude\":0.0,\"surface\":\"surface\",\"description\":\"description\",\"averageMark\":0.0,\"imageName\":null,\"players\":null,\"sports\":null,\"city\":\"city\",\"address\":\"address\",\"private\":false}";
+        String expected = "{\"id\":1,\"name\":\"name\",\"isPrivate\":false,\"covered\":false,\"latitude\":0.0,\"longitude\":0.0,\"surface\":\"surface\",\"description\":\"description\",\"averageMark\":0.0,\"sports\":[],\"city\":\"New York\",\"address\":\"address\",\"schedules\":{\"playgroundId\":1,\"days\":[]}}";
 
         JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
     }
 
     @Test
-    public void testUpdatePlaygroundWithNonExistingIdExpectNotFound() throws Exception {
-        int id = 2;
-
-        Mockito.when(playgroundService.getPlayground(Mockito.anyInt())).thenReturn(null);
-
-        String content = "{\"name\":\"Badminton\",\"symbol\":\"Change\"}";
+    public void updatePlayground_NonExistingId_ExpectNotFound() throws Exception {
+        when(playgroundService.getPlayground(anyInt())).thenReturn(null);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .put("/playgrounds/" + id)
+                .put("/playgrounds/2")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(content)
-                ;
+                .content(CONTENT);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
         MockHttpServletResponse response = result.getResponse();
 
-        System.out.println(result.getResolvedException().getMessage());
-
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-        assertEquals("Playground with id "+ id +" not found", result.getResolvedException().getMessage());
+        assertEquals("Playground with id 2 not found", result.getResolvedException().getMessage());
     }
 
     @Test
-    public void testDeletePlaygroundWithExpectingIdExpectNoContent() throws Exception {
-        Mockito.when(playgroundService.getPlayground(Mockito.anyInt())).thenReturn(mockPlayground);
+    public void deletePlayground_ExistingId_ExpectNoContent() throws Exception {
+        when(playgroundService.getPlayground(anyInt())).thenReturn(PLAYGROUND);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .delete("/playgrounds/0")
@@ -207,26 +256,22 @@ public class PlaygroundControllerTest {
     }
 
     @Test
-    public void testDeletePlaygroundWithNonExpectingIdExpectNotFound() throws Exception {
-        int id = 2;
-
-        Mockito.when(playgroundService.getPlayground(Mockito.anyInt())).thenReturn(null);
+    public void deletePlayground_NonExistingId_ExpectNotFound() throws Exception {
+        when(playgroundService.getPlayground(anyInt())).thenReturn(null);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .delete("/playgrounds/" + id)
+                .delete("/playgrounds/2")
                 .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-        System.out.println(result.getResolvedException().getMessage());
-
         assertEquals(HttpStatus.NOT_FOUND.value(), result.getResponse().getStatus());
-        assertEquals("Playground with id "+ id +" not found", result.getResolvedException().getMessage());
+        assertEquals("Playground with id 2 not found", result.getResolvedException().getMessage());
     }
 
     @Test
-    public void testSearchWithKeywordExpectOk() throws Exception {
-        Mockito.when(playgroundService.searchPlaygroundByKeyword(Mockito.anyString())).thenReturn(Arrays.asList(mockPlayground));
+    public void searchWithKeyword_ExpectOk() throws Exception {
+        when(playgroundService.searchPlaygroundByKeyword(anyString())).thenReturn(Arrays.asList(PLAYGROUND));
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .get("/playgrounds/search/keyword")
@@ -236,73 +281,67 @@ public class PlaygroundControllerTest {
 
         MockHttpServletResponse response = result.getResponse();
 
-        System.out.println(response.getContentAsString());
+        String expected = "[{\"id\":1,\"name\":\"name\",\"isPrivate\":false,\"covered\":false,\"latitude\":0.0,\"longitude\":0.0,\"surface\":\"surface\",\"description\":\"description\",\"averageMark\":0.0,\"sports\":[],\"city\":\"Villié-Morgon\",\"address\":\"address\",\"schedules\":{\"playgroundId\":1,\"days\":[]}}]";
 
-        String expected = "[{\"id\":0,\"name\":\"name\",\"covered\":false,\"latitude\":0.0,\"longitude\":0.0,\"surface\":\"surface\",\"description\":\"description\",\"averageMark\":0.0,\"imageName\":null,\"players\":null,\"sports\":null,\"city\":\"city\",\"address\":\"address\",\"private\":false}]";
-
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
         JSONAssert.assertEquals(expected, response.getContentAsString(), false);
     }
 
     @Test
-    public void testAddPlayerToPlaygroundWithExistingPlaygroundAndUserAndSportExpectOk() throws Exception {
-        User mockUser = new User("player","player");
-        Sport mockSport = new Sport("Basketball", "🏀");
+    public void addPlayerToPlayground_ExistingPlaygroundAndUserAndSport_ExpectOK() throws Exception {
+        Playground playground = buildPlayground();
 
         Set<Sport> sports = new HashSet<>();
-        sports.add(mockSport);
-
-        mockPlayground.setSports(sports);
-
-        String content = "{\"name\":\"playground\"}";
-
-        Mockito.when(playgroundService.getPlayground(Mockito.anyInt())).thenReturn(mockPlayground);
-        Mockito.when(userService.getUser(Mockito.anyInt())).thenReturn(mockUser);
-        Mockito.when(sportService.getSport(Mockito.anyInt())).thenReturn(mockSport);
+        Sport sport = buildSport();
+        sports.add(sport);
 
         Set<User> users = new HashSet<>();
-        users.add(mockUser);
+        User user = buildUser();
+        users.add(user);
 
-        mockPlayground.setPlayers(users);
+        when(playground.getSports()).thenReturn(sports);
+        when(playground.getPlayers()).thenReturn(users);
+        when(playgroundService.getPlayground(anyInt())).thenReturn(playground);
+        when(userService.getUser(anyInt())).thenReturn(user);
+        when(sportService.getSport(anyInt())).thenReturn(sport);
 
-        Mockito.when(playgroundService.addPlayerToPlayground(Mockito.any(Playground.class), Mockito.any(User.class), Mockito.any(Sport.class))).thenReturn(mockPlayground);
+        playground.setPlayers(users);
+
+        when(playgroundService.addPlayerToPlayground(any(Playground.class), any(User.class), any(Sport.class))).thenReturn(playground);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .put("/playgrounds/0/player/0/sport/0/add")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(content)
+                .content(CONTENT)
                 .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
         MockHttpServletResponse response = result.getResponse();
 
-        System.out.println(response.getContentAsString());
-
         assertEquals(HttpStatus.OK.value(), response.getStatus());
 
-        String expected = "{\"id\":0,\"name\":\"name\",\"covered\":false,\"latitude\":0.0,\"longitude\":0.0,\"surface\":\"surface\",\"description\":\"description\",\"averageMark\":0.0,\"imageName\":null,\"players\":[{\"id\":0,\"username\":\"player\",\"mail\":null,\"birthDate\":null,\"avatarName\":null,\"friends\":null,\"favouriteSports\":null,\"city\":null,\"role\":null,\"enabled\":false,\"archived\":false,\"banned\":false,\"playing\":null,\"credentialsNonExpired\":true,\"accountNonExpired\":true,\"accountNonLocked\":true}],\"sports\":[{\"id\":0,\"name\":\"Basketball\",\"symbol\":\"\\uD83C\\uDFC0\"}],\"city\":\"city\",\"address\":\"address\",\"private\":false}";
+        String expected = "{\"id\":1,\"name\":\"name\",\"isPrivate\":false,\"covered\":false,\"latitude\":0.0,\"longitude\":0.0,\"surface\":\"surface\",\"description\":\"description\",\"averageMark\":0.0,\"players\":[{\"id\":1,\"username\":\"user\",\"enabled\":false,\"archived\":false,\"banned\":false}],\"sports\":[{\"id\":1,\"name\":\"sport\",\"symbol\":\"\"}],\"city\":\"Villié-Morgon\",\"address\":\"address\",\"schedules\":{\"playgroundId\":1,\"days\":[]}}";
 
         JSONAssert.assertEquals(expected, response.getContentAsString(), false);
     }
 
     @Test
-    public void testAddPlayerToPlaygroundWithExistingPlaygroundAndUserAndSportExpectForbidden() throws Exception {
-        User mockUser = new User("player","player");
-        Sport mockSport = new Sport("Basketball", "🏀");
+    public void addPlayerToPlayground_ExistingPlaygroundAndUserAndSportNotInPlayground_ExpectForbidden() throws Exception {
+        Playground playground = buildPlayground();
 
-        Set<Sport> sports = new HashSet<>();
-        mockPlayground.setSports(sports);
+        Set<User> users = new HashSet<>();
+        User user = buildUser();
+        users.add(user);
 
-        String content = "{\"name\":\"playground\"}";
-
-        Mockito.when(playgroundService.getPlayground(Mockito.anyInt())).thenReturn(mockPlayground);
-        Mockito.when(userService.getUser(Mockito.anyInt())).thenReturn(mockUser);
-        Mockito.when(sportService.getSport(Mockito.anyInt())).thenReturn(mockSport);
+        when(playgroundService.getPlayground(anyInt())).thenReturn(playground);
+        when(userService.getUser(anyInt())).thenReturn(user);
+        when(sportService.getSport(anyInt())).thenReturn(mock(Sport.class));
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .put("/playgrounds/0/player/0/sport/0/add")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(content)
+                .content(CONTENT)
                 .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
@@ -313,158 +352,134 @@ public class PlaygroundControllerTest {
     }
 
     @Test
-    public void testAddPlayerToPlaygroundWithNonExistingPlaygroundExpectNotFound() throws Exception {
-        int id = 2;
-        String content = "{\"name\":\"playground\"}";
-
-        Mockito.when(playgroundService.getPlayground(Mockito.anyInt())).thenReturn(null);
+    public void addPlayer_NonExistingPlayground_ExpectNotFound() throws Exception {
+        when(playgroundService.getPlayground(anyInt())).thenReturn(null);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .put("/playgrounds/" + id + "/player/0/sport/0/add")
+                .put("/playgrounds/2/player/0/sport/0/add")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(content)
+                .content(CONTENT)
                 .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
         MockHttpServletResponse response = result.getResponse();
 
-        System.out.println(result.getResolvedException().getMessage());
-
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-        assertEquals("Playground with id "+ id +" not found", result.getResolvedException().getMessage());
+        assertEquals("Playground with id 2 not found", result.getResolvedException().getMessage());
     }
 
     @Test
-    public void testAddPlayerToPlaygroundWithNonExistingUserExpectNotFound() throws Exception {
-        int id = 2;
-        String content = "{\"name\":\"playground\"}";
-
-        Mockito.when(playgroundService.getPlayground(Mockito.anyInt())).thenReturn(mockPlayground);
-        Mockito.when(userService.getUser(Mockito.anyInt())).thenReturn(null);
+    public void addPlayerToPlayground_NonExistingPlayer_ExpectNotFound() throws Exception {
+        when(playgroundService.getPlayground(anyInt())).thenReturn(PLAYGROUND);
+        when(userService.getUser(anyInt())).thenReturn(null);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .put("/playgrounds/0/player/" + id + "/sport/0/add")
+                .put("/playgrounds/0/player/2/sport/0/add")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(content)
+                .content(CONTENT)
                 .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
         MockHttpServletResponse response = result.getResponse();
 
-        System.out.println(result.getResolvedException().getMessage());
-
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-        assertEquals("User with id "+ id +" not found", result.getResolvedException().getMessage());
+        assertEquals("User with id 2 not found", result.getResolvedException().getMessage());
     }
 
     @Test
-    public void testAddPlayerToPlaygroundWithNonExistingSportExpectNotFound() throws Exception {
-        int id = 2;
-        User mockUser = new User("player","player");
-        String content = "{\"name\":\"playground\"}";
+    public void addPlayerToPlayground_NonExistingSport_ExpectNotFound() throws Exception {
+        User user = buildUser();
 
-        Mockito.when(playgroundService.getPlayground(Mockito.anyInt())).thenReturn(mockPlayground);
-        Mockito.when(userService.getUser(Mockito.anyInt())).thenReturn(mockUser);
-        Mockito.when(sportService.getSport(Mockito.anyInt())).thenReturn(null);
+        when(playgroundService.getPlayground(anyInt())).thenReturn(PLAYGROUND);
+        when(userService.getUser(anyInt())).thenReturn(user);
+        when(sportService.getSport(anyInt())).thenReturn(null);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .put("/playgrounds/0/player/0/sport/" + id + "/add")
+                .put("/playgrounds/0/player/0/sport/2/add")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(content)
+                .content(CONTENT)
                 .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
         MockHttpServletResponse response = result.getResponse();
 
-        System.out.println(result.getResolvedException().getMessage());
-
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-        assertEquals("Sport with id "+ id +" not found", result.getResolvedException().getMessage());
+        assertEquals("Sport with id 2 not found", result.getResolvedException().getMessage());
     }
 
     @Test
-    public void testRemovePlayerToPlaygroundWithExistingPlaygroundAndUserExpectOk() throws Exception {
-        User mockUser = new User("player","player");
-
-        Set<Sport> sports = new HashSet<>();
-        mockPlayground.setSports(sports);
-
-        String content = "{\"name\":\"playground\"}";
-
-        Mockito.when(playgroundService.getPlayground(Mockito.anyInt())).thenReturn(mockPlayground);
-        Mockito.when(userService.getUser(Mockito.anyInt())).thenReturn(mockUser);
+    public void removePlayerFromPlayground_ExistingPlaygroundAndUser_ExpectOK() throws Exception {
+        Playground playground = buildPlayground();
 
         Set<User> users = new HashSet<>();
-        mockPlayground.setPlayers(users);
+        User user = buildUser();
+        users.add(user);
 
-        Mockito.when(playgroundService.removePlayerFromPlayground(Mockito.any(Playground.class), Mockito.any(User.class))).thenReturn(mockPlayground);
+        Set<Sport> sports = new HashSet<>();
+        Sport sport = buildSport();
+        sports.add(sport);
+
+        when(playgroundService.getPlayground(anyInt())).thenReturn(playground);
+        when(userService.getUser(anyInt())).thenReturn(user);
+        when(playground.getPlayers()).thenReturn(users);
+        when(playground.getSports()).thenReturn(sports);
+
+        when(playgroundService.removePlayerFromPlayground(any(Playground.class), any(User.class))).thenReturn(playground);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .put("/playgrounds/0/player/0/remove")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(content)
+                .content(CONTENT)
                 .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
         MockHttpServletResponse response = result.getResponse();
 
-        System.out.println(response.getContentAsString());
-
         assertEquals(HttpStatus.OK.value(), response.getStatus());
 
-        String expected = "{\"id\":0,\"name\":\"name\",\"covered\":false,\"latitude\":0.0,\"longitude\":0.0,\"surface\":\"surface\",\"description\":\"description\",\"averageMark\":0.0,\"imageName\":null,\"players\":[],\"sports\":[],\"city\":\"city\",\"address\":\"address\",\"private\":false}";
+        String expected = "{\"id\":1,\"name\":\"name\",\"isPrivate\":false,\"covered\":false,\"latitude\":0.0,\"longitude\":0.0,\"surface\":\"surface\",\"description\":\"description\",\"averageMark\":0.0,\"players\":[{\"id\":1,\"username\":\"user\",\"enabled\":false,\"archived\":false,\"banned\":false}],\"sports\":[{\"id\":1,\"name\":\"sport\",\"symbol\":\"\"}],\"city\":\"Villié-Morgon\",\"address\":\"address\",\"schedules\":{\"playgroundId\":1,\"days\":[]}}";
 
         JSONAssert.assertEquals(expected, response.getContentAsString(), false);
     }
 
     @Test
-    public void testRemovePlayerToPlaygroundWithNonExistingPlaygroundExpectNotFound() throws Exception {
-        int id = 2;
-        String content = "{\"name\":\"playground\"}";
-
-        Mockito.when(playgroundService.getPlayground(Mockito.anyInt())).thenReturn(null);
+    public void removePlayerFromPlayground_NonExistingPlayground_ExpectNotFound() throws Exception {
+        when(playgroundService.getPlayground(anyInt())).thenReturn(null);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .put("/playgrounds/" + id + "/player/0/remove")
+                .put("/playgrounds/2/player/0/remove")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(content)
+                .content(CONTENT)
                 .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
         MockHttpServletResponse response = result.getResponse();
 
-        System.out.println(result.getResolvedException().getMessage());
-
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-        assertEquals("Playground with id "+ id +" not found", result.getResolvedException().getMessage());
+        assertEquals("Playground with id 2 not found", result.getResolvedException().getMessage());
     }
 
     @Test
-    public void testRemovePlayerToPlaygroundWithNonExistingUserExpectNotFound() throws Exception {
-        int id = 2;
-        String content = "{\"name\":\"playground\"}";
-
-        Mockito.when(playgroundService.getPlayground(Mockito.anyInt())).thenReturn(mockPlayground);
-        Mockito.when(userService.getUser(Mockito.anyInt())).thenReturn(null);
+    public void removePlayerFromPlayground_NonExistingUser_ExpectNotFound() throws Exception {
+        when(playgroundService.getPlayground(anyInt())).thenReturn(PLAYGROUND);
+        when(userService.getUser(anyInt())).thenReturn(null);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .put("/playgrounds/0/player/" + id + "/remove")
+                .put("/playgrounds/0/player/2/remove")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(content)
+                .content(CONTENT)
                 .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
         MockHttpServletResponse response = result.getResponse();
 
-        System.out.println(result.getResolvedException().getMessage());
-
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-        assertEquals("User with id "+ id +" not found", result.getResolvedException().getMessage());
+        assertEquals("User with id 2 not found", result.getResolvedException().getMessage());
     }
 }

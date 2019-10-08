@@ -1,6 +1,8 @@
 package com.playground.service.interfaces;
 
+import com.playground.model.entity.Playground;
 import com.playground.model.entity.Schedule;
+import com.playground.model.wrapper.ScheduleWrapper;
 
 import java.util.List;
 
@@ -10,13 +12,6 @@ import java.util.List;
 public interface IScheduleService {
 
     /**
-     * Return all schedules
-     *
-     * @return List<Schedule>
-     */
-    List<Schedule> getSchedules();
-
-    /**
      * Return one schedules
      *
      * @param id int
@@ -24,6 +19,15 @@ public interface IScheduleService {
      * @return Schedule
      */
     Schedule getSchedule(int id);
+
+    /**
+     * Return all schedules for given playground
+     *
+     * @param playground Playground
+     *
+     * @return List<Schedule>
+     */
+    List<Schedule> getPlaygroundSchedule(Playground playground);
 
     /**
      * Create schedule and return it
@@ -50,4 +54,10 @@ public interface IScheduleService {
      * @param schedule Schedule
      */
     void deleteSchedule(Schedule schedule);
+
+    /**
+     * @param scheduleWrapper
+     * @return true if one of the schedules has invalid data
+     */
+    boolean isTimeInvalid(ScheduleWrapper scheduleWrapper);
 }

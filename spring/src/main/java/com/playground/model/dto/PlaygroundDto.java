@@ -2,12 +2,11 @@ package com.playground.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.playground.model.entity.Playground;
-import com.playground.model.entity.Sport;
-import com.playground.model.entity.User;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
@@ -31,18 +30,21 @@ public class PlaygroundDto {
 
     private Double averageMark;
 
-    private Set<User> players;
+    private Set<UserDto> players;
 
-    private Set<Sport> sports;
+    private Set<SportDto> sports;
 
     private String city;
 
     private String address;
 
+    private CompleteScheduleDto schedules;
+
     // to get playground detail
     public PlaygroundDto(Playground playground) {
         this.id = playground.getId();
         this.name = playground.getName();
+        this.description = playground.getDescription();
         this.isPrivate = playground.isPrivate();
         this.covered = playground.isCovered();
         this.description = playground.getDescription();
@@ -52,11 +54,29 @@ public class PlaygroundDto {
 
         this.surface = playground.getSurface();
         this.averageMark = playground.getAverageMark();
-        this.players = playground.getPlayers();
-        this.sports = playground.getSports();
+
+        if(playground.getSports() != null) {
+            Set<SportDto> sports = playground.getSports().stream()
+                    .map(s -> new SportDto(s))
+                    .collect(Collectors.toSet());
+            this.sports = sports;
+        }
+
+        if(playground.getPlayers() != null) {
+            Set<UserDto> players = playground.getPlayers().stream()
+                    .map(p -> new UserDto(p))
+                    .collect(Collectors.toSet());
+            this.players = players;
+        }
 
         this.city = playground.getCity();
         this.address = playground.getAddress();
+
+        if(playground.getSchedules() != null) {
+            Set<DayScheduleDto> daySchedules = playground.getSchedules().stream()
+                    .map(s -> new DayScheduleDto(s)).collect(Collectors.toSet());
+            this.schedules = new CompleteScheduleDto(playground.getId(), daySchedules);
+        }
     }
 
     // to display icon in map

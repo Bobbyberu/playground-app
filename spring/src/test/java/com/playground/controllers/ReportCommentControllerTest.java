@@ -1,12 +1,12 @@
 package com.playground.controllers;
 
-import com.playground.model.entity.ReportComment;
 import com.playground.model.entity.Comment;
-import com.playground.service.ReportCommentService;
+import com.playground.model.entity.ReportComment;
+import com.playground.model.entity.User;
 import com.playground.service.CommentService;
+import com.playground.service.ReportCommentService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -22,14 +22,23 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Arrays;
 
+import static com.playground.controllers.ControllersUnitTestUtils.buildComment;
+import static com.playground.controllers.ControllersUnitTestUtils.buildReportComment;
+import static com.playground.controllers.ControllersUnitTestUtils.buildUser;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = ReportCommentController.class, secure = false)
 public class ReportCommentControllerTest {
 
-    @Autowired
-    private ReportCommentController reportCommentController;
+    private final static String CONTENT = "{\"description\":\"description\"}";
+
+    private final static Comment COMMENT = buildComment();
+    private final static User AUTHOR = buildUser();
+    private final static ReportComment REPORT_COMMENT = buildReportComment(COMMENT, AUTHOR);
 
     @Autowired
     private MockMvc mockMvc;
@@ -40,13 +49,9 @@ public class ReportCommentControllerTest {
     @MockBean
     private CommentService commentService;
 
-    private Comment mockComment = new Comment();
-
-    private ReportComment mockReportComment = new ReportComment(null, mockComment, "description");
-
     @Test
-    public void testGetReportCommentsExpectOk() throws Exception {
-        Mockito.when(reportCommentService.getReportComments()).thenReturn(Arrays.asList(mockReportComment));
+    public void getReportComments_ExpectOK() throws Exception {
+        when(reportCommentService.getReportComments()).thenReturn(Arrays.asList(REPORT_COMMENT));
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .get("/reportComments")
@@ -54,99 +59,74 @@ public class ReportCommentControllerTest {
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-        System.out.println(result.getResponse().getContentAsString());
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
 
-        String expected = "[{\"id\":0,\"comment\":{\"id\":0,\"playground\":null,\"author\":null,\"archived\":false,\"comment\":null,\"mark\":0.0},\"author\":null,\"description\":\"description\"}]";
-
+        String expected = "[{\"id\":0,\"comment\":{\"id\":1,\"playgroundId\":1,\"author\":{\"id\":1,\"username\":\"user\",\"enabled\":false,\"archived\":false,\"banned\":false},\"mark\":0.0},\"author\":{\"id\":1,\"username\":\"user\",\"enabled\":false,\"archived\":false,\"banned\":false}}]";
         JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
     }
 
     @Test
-    public void testGetReportCommentWithExistingCommentAndExistingIdExpectOk() throws Exception {
-        Mockito.when(commentService.getComment(Mockito.anyInt())).thenReturn(mockComment);
-        Mockito.when(reportCommentService.getReportComment(Mockito.anyInt())).thenReturn(mockReportComment);
+    public void getReportComment_ExistingCommentAndExistingId_ExpectOK() throws Exception {
+        when(commentService.getComment(anyInt())).thenReturn(COMMENT);
+        when(reportCommentService.getReportComment(anyInt())).thenReturn(REPORT_COMMENT);
 
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/reportComments/0").accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .get("/reportComments/0")
+                .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-
-        System.out.println(result.getResponse().getContentAsString());
 
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
 
-        String expected = "{\"id\":0,\"comment\":{\"id\":0,\"playground\":null,\"author\":null,\"archived\":false,\"comment\":null,\"mark\":0.0},\"author\":null,\"description\":\"description\"}";
+        String expected = "{\"id\":0,\"comment\":{\"id\":1,\"playgroundId\":1,\"author\":{\"id\":1,\"username\":\"user\",\"enabled\":false,\"archived\":false,\"banned\":false},\"mark\":0.0},\"author\":{\"id\":1,\"username\":\"user\",\"enabled\":false,\"archived\":false,\"banned\":false}}";
 
         JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
     }
 
     @Test
-    public void testGetReportCommentWithExistingCommentAndNonExistingIdExpectNoFound() throws Exception {
-        int id = 2;
+    public void getReportComment_ExistingCommentAndNonExistingId_ExpectNotFound() throws Exception {
+        when(commentService.getComment(anyInt())).thenReturn(COMMENT);
+        when(reportCommentService.getReportComment(anyInt())).thenReturn(null);
 
-        Mockito.when(commentService.getComment(Mockito.anyInt())).thenReturn(mockComment);
-        Mockito.when(reportCommentService.getReportComment(Mockito.anyInt())).thenReturn(null);
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/reportComments/" + id).accept(MediaType.APPLICATION_JSON);
-
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-
-        MockHttpServletResponse response = result.getResponse();
-
-        System.out.println(result.getResolvedException().getMessage());
-
-        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-        assertEquals("ReportComment with id "+ id +" not found for this comment", result.getResolvedException().getMessage());
-    }
-
-    @Test
-    public void testGetReportCommentWithNonExistingCommentExpectNoFound() throws Exception {
-        int id = 2;
-
-        Mockito.when(commentService.getComment(Mockito.anyInt())).thenReturn(null);
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/comments/" + id + "/reportComments/0").accept(MediaType.APPLICATION_JSON);
+        RequestBuilder requestBuilder = MockMvcRequestBuilders
+                .get("/reportComments/2")
+                .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
         MockHttpServletResponse response = result.getResponse();
 
-        System.out.println(result.getResolvedException().getMessage());
-
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-        assertEquals("Comment with id "+ id +" not found", result.getResolvedException().getMessage());
+        assertEquals("ReportComment with id 2 not found for this comment", result.getResolvedException().getMessage());
     }
 
     @Test
-    public void testCreateReportCommentExpectCreated() throws Exception {
-        ReportComment mockReportComment = new ReportComment(null, mockComment, "description");
-
-        Mockito.when(commentService.getComment(Mockito.anyInt())).thenReturn(mockComment);
-        Mockito.when(reportCommentService.createReportComment(Mockito.any(Comment.class), Mockito.any(ReportComment.class))).thenReturn(mockReportComment);
+    public void createReportComment_ExpectCreated() throws Exception {
+        when(commentService.getComment(anyInt())).thenReturn(COMMENT);
+        when(reportCommentService.createReportComment(any(Comment.class), any(ReportComment.class))).thenReturn(REPORT_COMMENT);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .post("/comments/0/reportComments")
                 .accept(MediaType.APPLICATION_JSON)
-                .content("{\"description\":\"description\"}")
+                .content(CONTENT)
                 .contentType(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
         MockHttpServletResponse response = result.getResponse();
 
-        System.out.println(response.getContentAsString());
-
         assertEquals(HttpStatus.CREATED.value(), response.getStatus());
 
-        String expected = "{\"id\":0,\"comment\":{\"id\":0,\"playground\":null,\"author\":null,\"archived\":false,\"comment\":null,\"mark\":0.0},\"author\":null,\"description\":\"description\"}";
+        String expected = "{\"id\":0,\"comment\":{\"id\":1,\"playgroundId\":1,\"author\":{\"id\":1,\"username\":\"user\",\"enabled\":false,\"archived\":false,\"banned\":false},\"mark\":0.0},\"author\":{\"id\":1,\"username\":\"user\",\"enabled\":false,\"archived\":false,\"banned\":false}}";
 
         JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
     }
 
 
     @Test
-    public void testDeleteReportCommentWithExistingCommentAndExistingIdExpectNoContent() throws Exception {
-        Mockito.when(commentService.getComment(Mockito.anyInt())).thenReturn(mockComment);
-        Mockito.when(reportCommentService.getReportComment(Mockito.anyInt())).thenReturn(mockReportComment);
+    public void deleteReportComment_ExistingCommentAndExistingId_ExpectNoContent() throws Exception {
+        when(commentService.getComment(anyInt())).thenReturn(COMMENT);
+        when(reportCommentService.getReportComment(anyInt())).thenReturn(REPORT_COMMENT);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
                 .delete("/reportComments/0")
@@ -158,39 +138,16 @@ public class ReportCommentControllerTest {
     }
 
     @Test
-    public void testDeleteReportCommentWithNonExistingCommentExpectNotFound() throws Exception {
-        int id = 2;
-
-        Mockito.when(commentService.getComment(Mockito.anyInt())).thenReturn(null);
+    public void deleteReportComment_NonExistingComment_ExpectNotFound() throws Exception {
+        when(commentService.getComment(anyInt())).thenReturn(null);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .delete("/comments/" + id + "/reportComments/0")
+                .delete("/reportComments/2")
                 .accept(MediaType.APPLICATION_JSON);
 
         MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-        System.out.println(result.getResolvedException().getMessage());
-
         assertEquals(HttpStatus.NOT_FOUND.value(), result.getResponse().getStatus());
-        assertEquals("Comment with id "+ id +" not found", result.getResolvedException().getMessage());
-    }
-
-    @Test
-    public void testDeleteReportCommentWithExistingCommentAndNonExistingIdExpectNotFound() throws Exception {
-        int id = 2;
-
-        Mockito.when(commentService.getComment(Mockito.anyInt())).thenReturn(mockComment);
-        Mockito.when(reportCommentService.getReportComment(Mockito.anyInt())).thenReturn(null);
-
-        RequestBuilder requestBuilder = MockMvcRequestBuilders
-                .delete("/reportComments/" + id)
-                .accept(MediaType.APPLICATION_JSON);
-
-        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-
-        System.out.println(result.getResolvedException().getMessage());
-
-        assertEquals(HttpStatus.NOT_FOUND.value(), result.getResponse().getStatus());
-        assertEquals("ReportComment with id "+ id +" not found for this comment", result.getResolvedException().getMessage());
+        assertEquals("ReportComment with id 2 not found for this comment", result.getResolvedException().getMessage());
     }
 }

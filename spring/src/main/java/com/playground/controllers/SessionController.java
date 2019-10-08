@@ -1,34 +1,30 @@
 package com.playground.controllers;
 
+import com.playground.model.dto.SessionDto;
 import com.playground.model.entity.Session;
 import com.playground.service.SessionService;
 import com.playground.utils.ResourceNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.inject.Inject;
 import java.util.List;
+import java.util.stream.Collectors;
 
-/**
- * Class SessionController
- */
 @RestController
 @RequestMapping("/sessions")
 public class SessionController {
 
-    /** SessionService sessionService */
-    private final SessionService sessionService;
-
-    /**
-     * SessionController Constructor
-     *
-     * @param sessionService SessionService
-     */
-    @Autowired
-    public SessionController(SessionService sessionService) {
-        this.sessionService = sessionService;
-    }
+    @Inject
+    private SessionService sessionService;
 
     /**
      * [GET] Return all sessions
@@ -36,8 +32,11 @@ public class SessionController {
      * @return ResponseEntity
      */
     @GetMapping(produces = "application/json")
-    public ResponseEntity<List<Session>> getSessions() {
-        return new ResponseEntity<>(sessionService.getSessions(), HttpStatus.OK);
+    public ResponseEntity<List<SessionDto>> getSessions() {
+        List<SessionDto> sessions = sessionService.getSessions().stream()
+                .map(s -> new SessionDto(s))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(sessions, HttpStatus.OK);
     }
 
     /**
@@ -50,14 +49,14 @@ public class SessionController {
      * @throws ResourceNotFoundException Session not found
      */
     @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<Session> getSession(@PathVariable("id") int id) throws ResourceNotFoundException {
+    public ResponseEntity<SessionDto> getSession(@PathVariable("id") int id) throws ResourceNotFoundException {
         Session session = sessionService.getSession(id);
 
         if (session == null) {
             throw new ResourceNotFoundException("Session with id " + id + " not found");
         }
 
-        return new ResponseEntity<>(session, HttpStatus.OK);
+        return new ResponseEntity<>(new SessionDto(session), HttpStatus.OK);
     }
 
     /**
@@ -68,8 +67,8 @@ public class SessionController {
      * @return ResponseEntity
      */
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<Session> createSession(@RequestBody Session session) {
-        return new ResponseEntity<>(sessionService.createSession(session), HttpStatus.CREATED);
+    public ResponseEntity<SessionDto> createSession(@RequestBody Session session) {
+        return new ResponseEntity<>(new SessionDto(sessionService.createSession(session)), HttpStatus.CREATED);
     }
 
     /**
@@ -83,14 +82,14 @@ public class SessionController {
      * @throws ResourceNotFoundException Session not found
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Session> updateSession(@PathVariable("id") int id, @RequestBody Session session) throws ResourceNotFoundException {
+    public ResponseEntity<SessionDto> updateSession(@PathVariable("id") int id, @RequestBody Session session) throws ResourceNotFoundException {
         Session currentSession = sessionService.getSession(id);
 
         if (currentSession == null) {
             throw new ResourceNotFoundException("Session with id " + id + " not found");
         }
 
-        return new ResponseEntity<>(sessionService.updateSession(id, session), HttpStatus.OK);
+        return new ResponseEntity<>(new SessionDto(sessionService.updateSession(id, session)), HttpStatus.OK);
     }
 
     /**

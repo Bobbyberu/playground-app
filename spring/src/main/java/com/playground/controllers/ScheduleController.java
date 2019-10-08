@@ -3,62 +3,24 @@ package com.playground.controllers;
 import com.playground.model.entity.Schedule;
 import com.playground.service.ScheduleService;
 import com.playground.utils.ResourceNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import javax.inject.Inject;
 
-/**
- * Class ScheduleController
- */
 @RestController
 @RequestMapping("/schedules")
 public class ScheduleController {
 
-    /** ScheduleService scheduleService */
-    private final ScheduleService scheduleService;
-
-    /**
-     * ScheduleController Constructor
-     *
-     * @param scheduleService ScheduleService
-     */
-    @Autowired
-    public ScheduleController(ScheduleService scheduleService) {
-        this.scheduleService = scheduleService;
-    }
-
-    /**
-     * [GET] Return all schedules
-     *
-     * @return ResponseEntity
-     */
-    @GetMapping(produces = "application/json")
-    public ResponseEntity<List<Schedule>> getSchedules() {
-        return new ResponseEntity<>(scheduleService.getSchedules(), HttpStatus.OK);
-    }
-
-    /**
-     * [GET] Return one schedule by id
-     *
-     * @param id int
-     *
-     * @return ResponseEntity
-     *
-     * @throws ResourceNotFoundException Schedule not found
-     */
-    @GetMapping(value = "/{id}", produces = "application/json")
-    public ResponseEntity<Schedule> getSchedule(@PathVariable("id") int id) throws ResourceNotFoundException {
-        Schedule schedule = scheduleService.getSchedule(id);
-
-        if (schedule == null) {
-            throw new ResourceNotFoundException("Schedule with id " + id + " not found");
-        }
-
-        return new ResponseEntity<>(schedule, HttpStatus.OK);
-    }
+    @Inject
+    private ScheduleService scheduleService;
 
     /**
      * [POST] Create a schedule and return it

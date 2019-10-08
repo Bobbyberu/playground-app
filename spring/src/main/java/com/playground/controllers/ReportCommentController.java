@@ -6,37 +6,28 @@ import com.playground.model.entity.ReportComment;
 import com.playground.service.CommentService;
 import com.playground.service.ReportCommentService;
 import com.playground.utils.ResourceNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Class ReportCommentController
- */
 @RestController
 public class ReportCommentController {
 
-    /** ReportCommentService reportCommentService */
-    private final ReportCommentService reportCommentService;
+    @Inject
+    private ReportCommentService reportCommentService;
 
-    /** CommentService commentService */
-    private final CommentService commentService;
-
-    /**
-     * ReportCommentController constructor
-     *
-     * @param reportCommentService ReportCommentService
-     * @param commentService CommentService
-     */
-    @Autowired
-    public ReportCommentController(ReportCommentService reportCommentService, CommentService commentService) {
-        this.reportCommentService = reportCommentService;
-        this.commentService = commentService;
-    }
+    @Inject
+    private CommentService commentService;
 
     /**
      * [GET] Return all reports for comments

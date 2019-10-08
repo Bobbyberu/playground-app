@@ -1,112 +1,111 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { withStyles } from '@material-ui/core/styles';
-import { fade } from '@material-ui/core/styles/colorManipulator';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import Favorite from '@material-ui/icons/Favorite';
-import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
-import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
-import Emoji from '../../common-components/emoji/emoji';
-import green from '@material-ui/core/colors/green';
-import grey from '@material-ui/core/colors/grey';
-import defaultPlayground from '../../assets/img/default_playground.png';
-import PlaygroundAPI from '../../services/playground-api';
-import AuthService from '../../services/auth';
-import Delete from '@material-ui/icons/Delete';
+import React from "react";
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
+import { fade } from "@material-ui/core/styles/colorManipulator";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import Favorite from "@material-ui/icons/Favorite";
+import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
+import IconButton from "@material-ui/core/IconButton";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import Divider from "@material-ui/core/Divider";
+import Emoji from "../../common-components/emoji/emoji";
+import green from "@material-ui/core/colors/green";
+import grey from "@material-ui/core/colors/grey";
+import PlaygroundAPI from "../../services/playground-api";
+import AuthService from "../../services/auth";
+import Delete from "@material-ui/icons/Delete";
 
 // Override de certains éléments de la card
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: green[700],
+      main: green[700]
     },
     secondary: {
-      main: grey[50],
-    },
+      main: grey[50]
+    }
   },
   overrides: {
     MuiListItem: {
       gutters: {
         paddingLeft: 0,
-        paddingRight: 0,
+        paddingRight: 0
       },
       root: {
         paddingTop: 0,
-        paddingBottom: 0,
-      },
+        paddingBottom: 0
+      }
     },
     MuiAvatar: {
       colorDefault: {
-        backgroundColor: 'transparent',
-      },
+        backgroundColor: "transparent"
+      }
     },
     MuiCardContent: {
       root: {
-        paddingBottom: 0,
-      },
+        paddingBottom: 0
+      }
     },
     MuiTypography: {
       root: {
-        paddingBottom: 0,
-      },
-    },
-  },
+        paddingBottom: 0
+      }
+    }
+  }
 });
 
 // Styles appliqués aux éléments de la card
 const styles = theme => ({
   card: {
-    width: 360,
+    width: 360
   },
   media: {
-    height: 140,
+    height: 140
   },
   button: {
-    display: 'flex',
+    display: "flex",
     flexGrow: 1,
-    justifyContent: 'space-between',
+    justifyContent: "space-between"
   },
   title: {
     marginBottom: 0,
-    fontWeight: 'bold',
+    fontWeight: "bold"
   },
   subtitle: {
-    fontStyle: 'italic',
+    fontStyle: "italic",
     fontSize: 13,
-    marginTop: 0,
+    marginTop: 0
   },
   private: {
-    fontWeight: 'bold',
-    fontSize: 12,
+    fontWeight: "bold",
+    fontSize: 12
   },
   avatar: {
-    height: 'auto',
-    width: 'auto',
+    height: "auto",
+    width: "auto"
   },
   section1: {
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2
   },
   section2: {
-    marginBottom: theme.spacing.unit,
+    marginBottom: theme.spacing.unit
   },
   link: {
     color: green[500],
-    '&:hover': {
-      textDecoration: 'none',
-      color: fade(green[500], 0.8),
-    },
-  },
+    "&:hover": {
+      textDecoration: "none",
+      color: fade(green[500], 0.8)
+    }
+  }
 });
 
 /*
@@ -116,9 +115,9 @@ class PlaygroundDetails extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = ({
+    this.state = {
       favorited: false
-    });
+    };
 
     this.toggleFavorite = this.toggleFavorite.bind(this);
   }
@@ -144,29 +143,30 @@ class PlaygroundDetails extends React.Component {
 
     let user = AuthService.getUser();
 
-    PlaygroundAPI.updateFavorite(user.id, this.props.playground.id)
-      .catch(err => {
+    PlaygroundAPI.updateFavorite(user.id, this.props.playground.id).catch(
+      err => {
         console.log(err);
         this.setState({
           favorited: !this.state.favorited
         });
-      });
+      }
+    );
   }
 
   deletePlayground = () => {
-    let confirm = window.confirm("Voulez-vous vraiment supprimer ce playground ?");
+    let confirm = window.confirm(
+      "Voulez-vous vraiment supprimer ce playground ?"
+    );
     if (confirm) {
       PlaygroundAPI.deletePlayground(this.props.playground.id)
         .then(() => window.location.reload())
         .catch(err => console.log(err));
     }
-  }
+  };
 
   displayFavoriteIcon() {
     // On modifie l'icône 'favori' en fonction de l'état du playground sélectionné
-    return (
-      this.state.favorited ? <Favorite /> : <FavoriteBorder />
-    );
+    return this.state.favorited ? <Favorite /> : <FavoriteBorder />;
   }
 
   render() {
@@ -194,47 +194,53 @@ class PlaygroundDetails extends React.Component {
               </div>
               <div>
                 <Typography className={classes.private} component="h3">
-                  {this.props.playground.private ? 'Privé' : 'Public'}
+                  {this.props.playground.private ? "Privé" : "Public"}
                 </Typography>
                 <Divider variant="fullWidth" />
               </div>
               <div className={classes.section2}>
-                <Typography className={classes.p} component="p">
+                <Typography component="div">
                   {/* Récupération des sports d'un playground associés à leur emoji */}
                   <List>
-                    {
-                      this.props.playground.sports.map(sport => (
-                        <ListItem>
-                          <Emoji symbol={sport.symbol} label={sport.name} />
-                          <ListItemText primary={sport.name} />
-                        </ListItem>
-                      ))
-                    }
+                    {this.props.playground.sports.map(sport => (
+                      <ListItem key={sport.id}>
+                        <Emoji symbol={sport.symbol} label={sport.name} />
+                        <ListItemText primary={sport.name} />
+                      </ListItem>
+                    ))}
                   </List>
                 </Typography>
               </div>
             </CardContent>
             {/* Actions associés à l acard (favoris et détails) */}
             <CardActions className={classes.button}>
-              <Link to={'/details/' + this.props.playground.id} className={classes.link}>
+              <Link
+                to={"/details/" + this.props.playground.id}
+                className={classes.link}
+              >
                 <Button size="small" color="primary">
                   Détails
                 </Button>
               </Link>
-              {AuthService.isUser() &&
-                <IconButton aria-label="Ajouter aux favoris" color="primary" onClick={() => this.toggleFavorite()}>
+              {AuthService.isUser() && (
+                <IconButton
+                  aria-label="Ajouter aux favoris"
+                  color="primary"
+                  onClick={() => this.toggleFavorite()}
+                >
                   {this.displayFavoriteIcon()}
                 </IconButton>
-              }
-              {AuthService.isAdmin() &&
-                <IconButton title="Supprimer le playground"
+              )}
+              {AuthService.isAdmin() && (
+                <IconButton
+                  title="Supprimer le playground"
                   aria-label="Supprimer le playground"
                   color="primary"
                   onClick={this.deletePlayground}
                 >
                   <Delete />
                 </IconButton>
-              }
+              )}
             </CardActions>
           </Card>
         </div>
@@ -245,7 +251,7 @@ class PlaygroundDetails extends React.Component {
 
 PlaygroundDetails.propTypes = {
   playground: PropTypes.object.isRequired,
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
 // La fonction mapStateToProps permet d'abonner le composant aux changements du store Redux

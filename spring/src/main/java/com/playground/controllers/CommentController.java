@@ -6,11 +6,11 @@ import com.playground.model.dto.CommentDto;
 import com.playground.service.CommentService;
 import com.playground.service.PlaygroundService;
 import com.playground.utils.ResourceNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,21 +20,11 @@ import java.util.stream.Collectors;
 @RestController
 public class CommentController {
 
-    private final CommentService commentService;
+    @Inject
+    private CommentService commentService;
 
-    private final PlaygroundService playgroundService;
-
-    /**
-     * CommentController Constructor
-     *
-     * @param commentService    CommentService
-     * @param playgroundService PlaygroundService
-     */
-    @Autowired
-    public CommentController(CommentService commentService, PlaygroundService playgroundService) {
-        this.commentService = commentService;
-        this.playgroundService = playgroundService;
-    }
+    @Inject
+    private PlaygroundService playgroundService;
 
     /**
      * [GET] Return all comments

@@ -3,6 +3,7 @@ package com.playground.service.interfaces;
 import com.playground.model.entity.Playground;
 import com.playground.model.entity.Sport;
 import com.playground.model.entity.User;
+import com.playground.model.wrapper.ScheduleWrapper;
 
 import java.util.List;
 
@@ -22,7 +23,6 @@ public interface IPlaygroundService {
      * Return one playground
      *
      * @param id int
-     *
      * @return Playground
      */
     Playground getPlayground(int id);
@@ -31,7 +31,6 @@ public interface IPlaygroundService {
      * Create a playground and return it
      *
      * @param playground Playground
-     *
      * @return Playground
      */
     Playground createPlayground(Playground playground);
@@ -39,9 +38,8 @@ public interface IPlaygroundService {
     /**
      * Update a playground and return it
      *
-     * @param id int
+     * @param id         int
      * @param playground Playground
-     *
      * @return Playground
      */
     Playground updatePlayground(int id, Playground playground);
@@ -83,7 +81,6 @@ public interface IPlaygroundService {
      * Get all playgrounds which are linked with the keyword
      *
      * @param keyword String
-     *
      * @return List<Playground>
      */
     List<Playground> searchPlaygroundByKeyword(String keyword);

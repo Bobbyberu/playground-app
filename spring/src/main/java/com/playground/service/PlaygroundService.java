@@ -5,9 +5,9 @@ import com.playground.model.entity.Sport;
 import com.playground.model.entity.User;
 import com.playground.repository.PlaygroundRepository;
 import com.playground.service.interfaces.IPlaygroundService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -18,21 +18,11 @@ import java.util.Set;
 @Service
 public class PlaygroundService implements IPlaygroundService {
 
-    /** PlaygroundRepository playgroundRepository */
-    private final PlaygroundRepository playgroundRepository;
+    @Inject
+    private PlaygroundRepository playgroundRepository;
 
-    private final UserService userService;
-
-    /**
-     * PlaygroundService Constructor
-     *
-     * @param playgroundRepository PlaygroundRepository
-     */
-    @Autowired
-    public PlaygroundService(PlaygroundRepository playgroundRepository, UserService userService) {
-        this.playgroundRepository = playgroundRepository;
-        this.userService = userService;
-    }
+    @Inject
+    private UserService userService;
 
     @Override
     public List<Playground> getPlaygrounds() {

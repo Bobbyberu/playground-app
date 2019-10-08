@@ -6,37 +6,28 @@ import com.playground.model.entity.ReportPlayground;
 import com.playground.service.PlaygroundService;
 import com.playground.service.ReportPlaygroundService;
 import com.playground.utils.ResourceNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Class ReportPlaygroundController
- */
 @RestController
 public class ReportPlaygroundController {
 
-    /** ReportPlaygroundService reportPlaygroundService */
-    private final ReportPlaygroundService reportPlaygroundService;
+    @Inject
+    private ReportPlaygroundService reportPlaygroundService;
 
-    /** PlaygroundService playgroundService */
-    private final PlaygroundService playgroundService;
-
-    /**
-     * ReportPlaygroundController constructor
-     *
-     * @param reportPlaygroundService ReportPlaygroundService
-     * @param playgroundService playgroundService
-     */
-    @Autowired
-    public ReportPlaygroundController(ReportPlaygroundService reportPlaygroundService, PlaygroundService playgroundService) {
-        this.reportPlaygroundService = reportPlaygroundService;
-        this.playgroundService = playgroundService;
-    }
+    @Inject
+    private PlaygroundService playgroundService;
 
     /**
      * [GET] Return all reports for playgrounds
@@ -69,7 +60,7 @@ public class ReportPlaygroundController {
         ReportPlayground reportPlayground = reportPlaygroundService.getReportPlayground(reportPlaygroundId);
 
         if (reportPlayground == null) {
-            throw new ResourceNotFoundException("ReportPlayground with id " + reportPlaygroundId + " not found for this playground");
+            throw new ResourceNotFoundException("ReportPlayground with id " + reportPlaygroundId + " was not found");
         }
 
         return new ResponseEntity<>(new ReportPlaygroundDto(reportPlayground), HttpStatus.OK);
@@ -116,7 +107,7 @@ public class ReportPlaygroundController {
         ReportPlayground currentReportPlayground = reportPlaygroundService.getReportPlayground(reportPlaygroundId);
 
         if (currentReportPlayground == null) {
-            throw new ResourceNotFoundException("ReportPlayground with id " + reportPlaygroundId + " not found for this playground");
+            throw new ResourceNotFoundException("ReportPlayground with id " + reportPlaygroundId + " was not found");
         }
 
         return new ResponseEntity<>(
@@ -139,7 +130,7 @@ public class ReportPlaygroundController {
         ReportPlayground currentReportPlayground = reportPlaygroundService.getReportPlayground(reportPlaygroundId);
 
         if (currentReportPlayground == null) {
-            throw new ResourceNotFoundException("ReportPlayground with id " + reportPlaygroundId + " not found for this playground");
+            throw new ResourceNotFoundException("ReportPlayground with id " + reportPlaygroundId + " was not found");
         }
 
         reportPlaygroundService.deleteReportPlayground(currentReportPlayground);
