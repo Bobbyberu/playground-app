@@ -82,14 +82,15 @@ class LocationService {
 
   static Future<LatLng> getLocation() async {
     LatLng currentLocation;
-    var data;
+    LocationData data;
     try {
       data = await location.getLocation();
     } on PlatformException {
       currentLocation = null;
     }
-    if(data["latitude"] != null && data["longitude"] != null) {
-      currentLocation = new LatLng(data["latitude"], data["longitude"]);
+    print(data.toString());
+    if(data.latitude != null && data.longitude != null) {
+      currentLocation = new LatLng(data.latitude, data.longitude);
     }
     return currentLocation;
   }
